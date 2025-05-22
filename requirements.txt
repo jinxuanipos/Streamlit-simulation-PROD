@@ -3,4 +3,4 @@ pandas
 openpyxl
 datetime
 os
-matplotlib.pyplot
+matplotlib
