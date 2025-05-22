@@ -162,9 +162,9 @@ progress_bar.empty()
 quota_status.markdown("🎉 All quotas have been applied.")
 
 
-    union_df = pd.concat([task_df_pf11, task_df_pf12])
-    output_path = "OutsourceE&S.xlsx"
-    union_df.to_excel(output_path, index=False)
+union_df = pd.concat([task_df_pf11, task_df_pf12])
+output_path = "OutsourceE&S.xlsx"
+union_df.to_excel(output_path, index=False)
 
 # Reload the processed file and extract in-house tasks
 task_df_outsource = pd.read_excel("OutsourceE&S.xlsx")
