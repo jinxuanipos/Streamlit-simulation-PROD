@@ -1,172 +1,363 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
 import streamlit as st
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
+import os
+import openpyxl
+import matplotlib.pyplot as plt
+from openpyxl import load_workbook
 
-# === LOAD INPUT ===
-task_df = pd.read_excel('DivisionFiles_All.xlsx')
+# === STREAMLIT APP ===
+st.title("Outsourcing Quota Processor")
 
-# === DEFINE CONSTANTS ===
+# --- User Input ---
+eot = st.selectbox("Select EOT Value", [26, 30, 35])
+file_mapping = {
+    26: "DivisionFiles_All_26.xlsx",
+    30: "DivisionFiles_All_30.xlsx",
+    35: "DivisionFiles_All_35.xlsx"
+}
+
+
+# === Capacity Parameters Input ===
+excel_path = "Capacity-FOA for Python.xlsx"
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=75)
+pphgrowth_v = 1 + pphgrowth / 100
+
+secdivert = st.slider("Enter secondary job divert for 25-26", min_value=0, max_value=100, value=75)
+secdivert_v = 1 + secdivert / 100
+
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=75)
+stretch_v = 1 + stretch / 100  # Fixed this line
+
+# --- Update Excel, choose right filelist ---
+if st.button("Start Simulation"):
+    wb = openpyxl.load_workbook(excel_path)
+    sheet = wb["Calculate Capacity"]
+    sheet["I6"] = pphgrowth_v
+    sheet["I21"] = secdivert_v
+    sheet["I27"] = stretch_v
+    wb.save(excel_path)
+    
+filename = file_mapping.get(eot)
+task_df = None
+
+if not os.path.exists(filename):
+    st.error(f"File '{filename}' not found in the current directory.")
+else:
+    task_df = pd.read_excel(filename)
+
+    
+# === Define Constants ===
 div_order = ['Div1', 'Div2', 'Div3', 'Div4']
 
 # Outsource quotas
-st.title("Outsource Quota Simulation")
-
-# === USER INPUT for pf12_quotas ===
-st.header("Set PF12 Quotas per Year")
-
-# List of years you want users to adjust
-pf12_years = [2026, 2027, 2028, 2029, 2030]
-
-# Create an empty dict to hold user inputs
-pf12_quotas = {}
-
-for year in pf12_years:
-    pf12_quotas[year] = st.number_input(
-        f"PF12 Quota for {year}", 
-        min_value=0, 
-        value=2000 if year == 2027 else 1500, 
-        step=100,
-        key=f"pf12_{year}"  # unique key added
-    )
-
-st.write("### User-defined PF12 Quotas")
-st.write(pf12_quotas)
+pf11_quotas = {
+    2025: 3000,
+    2026: 4200,
+    2027: 4656,
+    2028: 2000,
+    2029: 1500,
+    2030: 1000
+}
 
 
-# === USER INPUT for pf11_quotas ===
-st.header("Set PF11 Quotas per Year")
-
-# List of years you want users to adjust
-pf11_years = [2026, 2027, 2028, 2029, 2030]
-
-# Create an empty dict to hold user inputs
-pf11_quotas = {}
-
-for year in pf11_years:
-    pf11_quotas[year] = st.number_input(
-        f"PF11 Quota for {year}", 
-        min_value=0, 
-        value=2000 if year == 2027 else 1500, 
-        step=100,
-        key=f"pf11_{year}"  # unique key added
-    )
-
-st.write("### User-defined PF11 Quotas")
-st.write(pf11_quotas)
-
+pf12_quotas = {
+    2026: 2000,
+    2027: 2500,
+    2028: 2500,
+    2029: 3000,
+    2030: 3000
+}
 
 # Thresholds
 pf11_thresholds = {
-    2025: date(2023, 1, 1),
-    2026: date(2024, 1, 1),
-    2027: date(2025, 1, 1),
-    2028: date(2026, 7, 1),
-    2029: date(2027, 7, 1),
-    2030: date(2028, 7, 1),
+    2025: date(2024, 1, 1),
+    2026: date(2025, 7, 1),
+    2027: date(2026, 7, 1),
+    2028: date(2027, 7, 1),
+    2029: date(2028, 7, 1),
+    2030: date(2029, 7, 1),
 }
 
 pf12_thresholds = {
-    2026: date(2024, 1, 1),
-    2027: date(2025, 1, 1),
-    2028: date(2026, 1, 1),
-    2029: date(2027, 7, 1),
-    2030: date(2028, 7, 1),
+    2026: date(2025, 10, 1),
+    2027: date(2026, 10, 1),
+    2028: date(2027, 10, 1),
+    2029: date(2028, 10, 1),
+    2030: date(2029, 10, 1),
 }
 
-
-# === DATA PREP ===
-
-# Split by S&E type
-task_df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
-task_df_pf11 = task_df[task_df['S&E'] == 'PF11'].copy()
-task_df_pf12 = task_df[task_df['S&E'] == 'PF12'].copy()
-
-# Sort PF11 for consistent ordering
-task_df_pf11.sort_values(by='S&E Lodge Date', inplace=True)
-task_df_pf12.sort_values(by='S&E Lodge Date', inplace=True)
-
-
-# Initialize outsource flags
-task_df_pf11['Outsource S'] = task_df_pf11.get('Outsource S', '')
-task_df_pf11['Outsource Year'] = task_df_pf11.get('Outsource Year', pd.NA)
-task_df_pf12['Outsource E'] = task_df_pf12.get('Outsource E', '')
-task_df_pf12['Outsource Year'] = task_df_pf12.get('Outsource Year', pd.NA)
-
-# === COMMON FUNCTION ===
+def calculate_division_quotas(div_shares, year_qty, div_order):
+    raw_quotas = {div: div_shares.get(div, 0) * year_qty for div in div_order}
+    quotas = {div: int(raw_quotas[div]) for div in div_order}
+    allocated = sum(quotas.values())
+    if allocated < year_qty:
+        largest_div = max(div_shares, key=div_shares.get)
+        quotas[largest_div] += year_qty - allocated
+    return quotas
 
 def apply_quotas_for_year(year, year_qty, task_df, date_threshold, flag_col):
     task_df_remaining = task_df[task_df[flag_col] != 'Y'].copy()
-    #task_df_remaining = task_df[(task_df[flag_col] != 'Y') & (task_df['S&E Lodge Date'].dt.date < date_threshold)].copy()
-
     division_counts = task_df_remaining['Division Transformed'].value_counts().to_dict()
     total_now = len(task_df_remaining)
     div_shares = {div: division_counts.get(div, 0) / total_now for div in div_order}
-    '''
-    quotas = {}
-    allocated = 0
-    for div in div_order[:-1]:
-        quotas[div] = int(div_shares[div] * year_qty)
-        allocated += quotas[div]
-    quotas['Div4'] = year_qty - allocated
-    '''
     quotas = calculate_division_quotas(div_shares, year_qty, div_order)
 
     div_counts = {div: 0 for div in div_order}
 
     for index, task in task_df.iterrows():
-        if task.get(flag_col) == 'Y':
+        if task.get(flag_col) == 'Y' or task['S&E Lodge Date'].date() < date_threshold:
             continue
-        if task['S&E Lodge Date'].date() < date_threshold:
-            continue
-
         current_div = task['Division Transformed']
         if div_counts.get(current_div, 0) >= quotas.get(current_div, 0):
             continue
-
         task_df.at[index, 'Outsource Year'] = year
         task_df.at[index, flag_col] = 'Y'
         div_counts[current_div] += 1
-
         if sum(div_counts.values()) == year_qty:
             break
-
     return task_df
 
+# Proceed only if file was loaded
+if task_df is not None:
+    task_df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
+    
+    task_df_pf11 = task_df[task_df['S&E'] == 'PF11'].copy()
+    task_df_pf12 = task_df[task_df['S&E'] == 'PF12'].copy()
+    
+    task_df_pf11.sort_values(by='S&E Lodge Date', inplace=True)
+    task_df_pf12.sort_values(by='S&E Lodge Date', inplace=True)
+    
+    task_df_pf11['Outsource S'] = task_df_pf11.get('Outsource S', '')
+    task_df_pf11['Outsource Year'] = task_df_pf11.get('Outsource Year', pd.NA)
+    task_df_pf12['Outsource E'] = task_df_pf12.get('Outsource E', '')
+    task_df_pf12['Outsource Year'] = task_df_pf12.get('Outsource Year', pd.NA)
 
-def calculate_division_quotas(div_shares, year_qty, div_order):
-    # Calculate raw (float) quotas
-    raw_quotas = {div: div_shares.get(div, 0) * year_qty for div in div_order}
+    for year, qty in pf11_quotas.items():
+        task_df_pf11 = apply_quotas_for_year(year, qty, task_df_pf11, pf11_thresholds[year], 'Outsource S')
 
-    # Round down to integers
-    quotas = {div: int(raw_quotas[div]) for div in div_order}
-    allocated = sum(quotas.values())
+    for year, qty in pf12_quotas.items():
+        task_df_pf12 = apply_quotas_for_year(year, qty, task_df_pf12, pf12_thresholds[year], 'Outsource E')
 
-    # Assign the remainder to the division with the largest share
-    if allocated < year_qty:
-        largest_div = max(div_shares, key=div_shares.get)
-        quotas[largest_div] += year_qty - allocated
+    union_df = pd.concat([task_df_pf11, task_df_pf12])
+    output_path = "OutsourceE&S.xlsx"
+    union_df.to_excel(output_path, index=False)
 
-    return quotas
+# Reload the processed file and extract in-house tasks
+task_df_outsource = pd.read_excel("OutsourceE&S.xlsx")
+task_df_inhouse = task_df_outsource[task_df_outsource['Outsource Year'].isnull()]
+divisions = ['Div1', 'Div2', 'Div3', 'Div4']
 
-# === APPLY PF11 OUTSOURCING ===
-for year, qty in pf11_quotas.items():
-    task_df_pf11 = apply_quotas_for_year(year, qty, task_df_pf11, pf11_thresholds[year], 'Outsource S')
+# Save each division's in-house tasks to a separate sheet
+with pd.ExcelWriter('DivisionFiles_NoOutsource.xlsx') as writer:
+    for div in divisions:
+        div_df = task_df_inhouse[task_df_inhouse['Division Transformed'] == div]
+        div_df.to_excel(writer, sheet_name=div, index=False)
 
-# === APPLY PF12 OUTSOURCING ===
-for year, qty in pf12_quotas.items():
-    task_df_pf12 = apply_quotas_for_year(year, qty, task_df_pf12, pf12_thresholds[year], 'Outsource E')
+# Load required capacity and working day data
+max_tasks_df = pd.read_excel('Capacity-FOA for Python.xlsx', sheet_name="Python-FOA", index_col=0)
+max_cap_df = pd.read_excel('Capacity-FOA for Python.xlsx', sheet_name="Python-Cap", index_col=0)
+calendar_df = pd.read_excel('WorkingDays25-30_withFY.xlsx', sheet_name="2025-2030", parse_dates=['Date'])
+working_days_df = calendar_df[calendar_df['NWD_Indicator'] == 'No']
 
-# === FINAL OUTPUT ===
-union_df = pd.concat([task_df_pf11, task_df_pf12])
-union_df.to_excel('OutsourceE&S.xlsx', index=False)
+# Define weights
+SAndE_Points = {'PF11': 0.97, 'PF12': 0.47}
+
+# FOA scheduling by division
+for current_div in divisions:
+    div_task_df = pd.read_excel('DivisionFiles_NoOutsource.xlsx', sheet_name=current_div)
+    div_task_df.sort_values(by='S&E Lodge Date', inplace=True)
+
+    working_day_index = 0
+    maxwkdays = len(working_days_df)
+    task_completed = 0
+    capacity_used = 0
+
+    for index, task in div_task_df.iterrows():
+        if working_day_index >= maxwkdays:
+            break
+
+        quarter_label = working_days_df['Quarter'].iloc[working_day_index]
+        max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
+        max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
+
+        SAndEType = task['S&E']
+        SAndEPoint = SAndE_Points.get(SAndEType, 0)
+
+        if max_capacity > capacity_used and max_tasks_per_day > task_completed:
+            foa = working_days_df['Date'].iloc[working_day_index]
+            fy = working_days_df['FY'].iloc[working_day_index]
+            capacity_used += SAndEPoint
+            task_completed += 1
+
+        elif max_capacity > capacity_used and max_tasks_per_day == task_completed:
+            currentday_quarter = quarter_label
+            working_day_index += 1
+            if working_day_index >= maxwkdays:
+                break
+            quarter_label = working_days_df['Quarter'].iloc[working_day_index]
+            foa = working_days_df['Date'].iloc[working_day_index]
+            fy = working_days_df['FY'].iloc[working_day_index]
+            capacity_used = SAndEPoint if quarter_label != currentday_quarter else capacity_used + SAndEPoint
+            task_completed = 1
+
+        elif max_capacity <= capacity_used:
+            next_quarter = 'Q' + str(int(quarter_label[1:]) + 1)
+            while working_day_index < maxwkdays and working_days_df['Quarter'].iloc[working_day_index] != next_quarter:
+                working_day_index += 1
+            if working_day_index >= maxwkdays:
+                break
+            foa = working_days_df['Date'].iloc[working_day_index]
+            fy = working_days_df['FY'].iloc[working_day_index]
+            capacity_used = SAndEPoint
+            task_completed = 1
+
+        div_task_df.at[index, 'FOA'] = foa
+        div_task_df.at[index, 'FY'] = fy
+
+        # Save division results
+        div_task_df.to_excel(f'{current_div}Results.xlsx', index=False)
+
+#results here
+# --- Helper function to compute average age ---
+def compute_avg_age(grouped_df, start_dates, end_dates, quantities, add_months, additional_time):
+    avg_list = []
+    for i in range(len(quantities)):
+        min_date = grouped_df.iloc[i]
+        max_date = grouped_df.iloc[i]
+        avg_days = ((start_dates[i] - min_date).days + (end_dates[i] - max_date).days) / 2
+        avg_list.append(quantities[i] * avg_days)
+    avg_age = sum(avg_list) / sum(quantities) / 30.5 + additional_time
+    return avg_age
+
+# --- Load inhouse results and combine ---
+div_files = [pd.read_excel(f'Div{i}Results.xlsx') for i in range(1, 5)]
+excel_merged = pd.concat(div_files, ignore_index=True)
+
+# --- Add time calculations ---
+excel_merged['time_c'] = ((excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5).clip(lower=1)
+excel_merged['original time'] = (excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5
+#excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
+
+# --- Load outsource data ---
+task_df = pd.read_excel('OutsourceE&S.xlsx')
+task_df_pf12 = task_df[task_df['Outsource E'] == 'Y']
+task_df_pf11 = task_df[task_df['Outsource S'] == 'Y']
+
+# --- Define quantities ---
+e_qty = [2000, 2500, 2500, 3000, 3000]
+s_qty = [3000, 4200, 4656, 2000, 1500, 1000]
+outsource_e_time, outsource_s_time = 7, 5
 
 
-# In[ ]:
+# --- Compute E files returned each year ---
+no_of_mths = 15 - outsource_e_time
+fy_e = [
+    round(e_qty[0]/12 * no_of_mths),
+    e_qty[0] - round(e_qty[0]/12 * no_of_mths) + round(e_qty[1]/12 * no_of_mths),
+    round(e_qty[1] - e_qty[1]/12 * no_of_mths) + round(e_qty[2]/12 * no_of_mths),
+    round(e_qty[2] - e_qty[2]/12 * no_of_mths) + round(e_qty[3]/12 * no_of_mths),
+    round(e_qty[3] - e_qty[3]/12 * no_of_mths) + round(e_qty[4]/12 * no_of_mths)
+]
+
+# --- Fiscal year start/end dates ---
+sdates = [datetime(y, 1, 1) for y in range(2025, 2031)]
+edates = [datetime(y, 12, 31) for y in range(2025, 2031)]
+
+
+# Compute avg_E_age properly using min and max dates per year
+min_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].min().tolist()
+max_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].max().tolist()
+
+avg_list = []
+for i in range(len(e_qty)):
+    avg_days = ((sdates[i+1] - min_dates[i]).days + (edates[i+1] - max_dates[i]).days) / 2
+    avg_list.append(e_qty[i] * avg_days)
+
+avg_E_age = sum(avg_list) / sum(e_qty) / 30.5 + outsource_e_time
+
+
+# --- Calculate average age of outsourced S ---
+avg_S_list = []
+grp_pf11 = task_df_pf11.groupby('Outsource Year')['S&E Lodge Date']
+min_pf11 = grp_pf11.min().tolist()
+max_pf11 = grp_pf11.max().tolist()
+
+for i in range(6):
+    avg_days = ((sdates[i] - min_pf11[i]).days + (edates[i] - max_pf11[i]).days) / 2
+    avg_S_list.append((avg_days / 30.5) + outsource_s_time)
+print(avg_S_list)
+
+# --- Merge all FOA counts and averages ---
+fy_sums = excel_merged.groupby('FY')['time_c'].sum().to_dict()
+fy_counts = excel_merged.groupby('FY')['time_c'].count().to_dict()
+
+
+# Load the workbook and sheet
+wb = load_workbook('Capacity-FOA for Python.xlsx')
+sheet = wb['Calculate Capacity']  # Adjust sheet name
+
+# Get value from a specific cell (e.g., B2)
+# --- Define PPH projections ---
+pph_growth = sheet['I6'].value
+pph_base = 714
+
+def projected_pph(year_multiplier):
+    return round(pph_base * (pph_growth ** year_multiplier))
+
+# --- Updated total_sum_count using both age and time ---
+def total_sum_count(fy, s_qty, e_qty=0, s_age=0, e_age=0, s_time=0, e_time=0, year_mult=0):
+    projected_sum = projected_pph(year_mult) * 10
+    projected_count = projected_pph(year_mult)
+
+    total_sum = (
+        fy_sums.get(fy, 0)
+        + (s_qty * (s_age + s_time))
+        + (e_qty * (e_age + e_time))
+        + projected_sum
+    )
+    total_count = (
+        fy_counts.get(fy, 0)
+        + s_qty
+        + e_qty
+        + projected_count
+    )
+    return total_sum, total_count
+
+# --- Final FOA values per fiscal year ---
+foa_values = []
+for i, fy in enumerate(['FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']):
+    e = fy_e[i - 1] if i > 0 else 0
+    foa_sum, foa_count = total_sum_count(
+        fy,
+        s_qty[i],
+        e_qty=e,
+        s_age=avg_S_list[i] - outsource_s_time,
+        e_age=avg_E_age - outsource_e_time,
+        s_time=outsource_s_time,
+        e_time=outsource_e_time,
+        year_mult=i + 1
+    )
+    foa_values.append(round(foa_sum / foa_count, 1))
+
+# --- Append FY23 and FY24 historical data ---
+years = ['FY23', 'FY24', 'FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']
+values = [15.4, 19.8] + foa_values
+
+# --- Plot ---
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(years, values, marker='o')
+ax.set_title('FOA')
+ax.set_xlabel('Fiscal Year')
+ax.set_ylabel('FOA (months)')
+ax.grid(True)
+
+for i, v in enumerate(values):
+    ax.text(i, v + 0.2, f'{v:.1f}', ha='center')
+
+ax.set_ylim(min(values) - 1, max(values) + 2)
+st.pyplot(fig)
+
 
 
 
