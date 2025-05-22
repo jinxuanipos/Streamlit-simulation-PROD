@@ -197,6 +197,9 @@ total_divs = len(divisions)
 for i, current_div in enumerate(divisions):
     div_task_df = pd.read_excel('DivisionFiles_NoOutsource.xlsx', sheet_name=current_div)
     div_task_df.sort_values(by='S&E Lodge Date', inplace=True)
+    
+    foa = None
+    fy = None
 
     working_day_index = 0
     maxwkdays = len(working_days_df)
