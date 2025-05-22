@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 
 # === STREAMLIT APP ===
-st.title("Outsourcing Quota Processor")
+st.title("Running FOA Simulations")
 
 # --- User Input ---
 eot = st.selectbox("Select EOT Value", [26, 30, 35])
@@ -133,11 +133,34 @@ if task_df is not None:
     task_df_pf12['Outsource E'] = task_df_pf12.get('Outsource E', '')
     task_df_pf12['Outsource Year'] = task_df_pf12.get('Outsource Year', pd.NA)
 
-    for year, qty in pf11_quotas.items():
-        task_df_pf11 = apply_quotas_for_year(year, qty, task_df_pf11, pf11_thresholds[year], 'Outsource S')
+    # --- Apply quotas with visual progress and displayed quota counts ---
+st.subheader("Applying Quotas for PF11 and PF12")
+progress_text = "Allocating PF11 and PF12 quotas..."
+progress_bar = st.progress(0, text=progress_text)
+quota_status = st.empty()
 
-    for year, qty in pf12_quotas.items():
-        task_df_pf12 = apply_quotas_for_year(year, qty, task_df_pf12, pf12_thresholds[year], 'Outsource E')
+total = len(pf11_quotas) + len(pf12_quotas)
+current = 0
+
+# PF11 Quotas
+for year, qty in pf11_quotas.items():
+    task_df_pf11 = apply_quotas_for_year(year, qty, task_df_pf11, pf11_thresholds[year], 'Outsource S')
+    current += 1
+    percent = current / total
+    progress_bar.progress(percent, text=f"{progress_text} (PF11 - {year})")
+    quota_status.markdown(f"✅ **PF11 - {year} Quota Applied**: {qty}")
+
+# PF12 Quotas
+for year, qty in pf12_quotas.items():
+    task_df_pf12 = apply_quotas_for_year(year, qty, task_df_pf12, pf12_thresholds[year], 'Outsource E')
+    current += 1
+    percent = current / total
+    progress_bar.progress(percent, text=f"{progress_text} (PF12 - {year})")
+    quota_status.markdown(f"✅ **PF12 - {year} Quota Applied**: {qty}")
+
+progress_bar.empty()
+quota_status.markdown("🎉 All quotas have been applied.")
+
 
     union_df = pd.concat([task_df_pf11, task_df_pf12])
     output_path = "OutsourceE&S.xlsx"
@@ -164,7 +187,14 @@ working_days_df = calendar_df[calendar_df['NWD_Indicator'] == 'No']
 SAndE_Points = {'PF11': 0.97, 'PF12': 0.47}
 
 # FOA scheduling by division
-for current_div in divisions:
+# FOA scheduling by division with nested progress bars
+st.subheader("Scheduling FOA by Division")
+
+main_progress = st.progress(0, text="Starting FOA scheduling...")
+status_text = st.empty()
+total_divs = len(divisions)
+
+for i, current_div in enumerate(divisions):
     div_task_df = pd.read_excel('DivisionFiles_NoOutsource.xlsx', sheet_name=current_div)
     div_task_df.sort_values(by='S&E Lodge Date', inplace=True)
 
@@ -173,7 +203,11 @@ for current_div in divisions:
     task_completed = 0
     capacity_used = 0
 
-    for index, task in div_task_df.iterrows():
+    status_text.markdown(f"📄 Processing **{current_div}**...")
+    div_progress = st.progress(0, text=f"Scheduling tasks for {current_div}...")
+    total_tasks = len(div_task_df)
+
+    for j, (index, task) in enumerate(div_task_df.iterrows()):
         if working_day_index >= maxwkdays:
             break
 
@@ -215,8 +249,18 @@ for current_div in divisions:
         div_task_df.at[index, 'FOA'] = foa
         div_task_df.at[index, 'FY'] = fy
 
-        # Save division results
-        div_task_df.to_excel(f'{current_div}Results.xlsx', index=False)
+        # Update inner progress
+        div_progress.progress((j + 1) / total_tasks, text=f"{current_div}: {j + 1}/{total_tasks} tasks scheduled")
+
+    div_task_df.to_excel(f'{current_div}Results.xlsx', index=False)
+
+    # Update main progress
+    main_progress.progress((i + 1) / total_divs, text=f"Completed {current_div}")
+
+div_progress.empty()
+status_text.markdown("✅ All divisions scheduled.")
+main_progress.empty()
+
 
 #results here
 # --- Helper function to compute average age ---
@@ -357,8 +401,4 @@ for i, v in enumerate(values):
 
 ax.set_ylim(min(values) - 1, max(values) + 2)
 st.pyplot(fig)
-
-
-
-
 
