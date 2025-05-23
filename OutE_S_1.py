@@ -5,34 +5,48 @@ import os
 import openpyxl
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
+import io
 
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
 # --- User Input ---
-eot = st.selectbox("Select EOT Value", [26, 30, 35])
+hire = st.selectbox("Select Hiring Plan", 
+                    ["Accelerated - Hire additional 20 by Jan 26",
+                     "Moderate - Hire additional 10 by Jan 26",
+                     "Slow - Hire additional 20 by Jul 26"])
+
+hire_mapping = {
+    "Accelerated - Hire additional 20 by Jan 26": "a",
+    "Moderate - Hire additional 10 by Jan 26": "b",
+    "Slow - Hire additional 20 by Jul 26": "c"
+}
+
+
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50)
+stretch_v = 1 + stretch / 100
+
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10)
+pphgrowth_v = 1 + pphgrowth / 100
+
+eot = st.selectbox("Select EOT Waiver Success Rate", [26, 30, 35])
 file_mapping = {
     26: "DivisionFiles_All_26.xlsx",
     30: "DivisionFiles_All_30.xlsx",
     35: "DivisionFiles_All_35.xlsx"
 }
 
+secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
+secdivert_v = 1 + secdivert / 100
 
 # === Capacity Parameters Input ===
 excel_path = "Capacity-FOA for Python.xlsx"
-pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=75)
-pphgrowth_v = 1 + pphgrowth / 100
-
-secdivert = st.slider("Enter secondary job divert for 25-26", min_value=0, max_value=100, value=75)
-secdivert_v = 1 + secdivert / 100
-
-stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=75)
-stretch_v = 1 + stretch / 100  # Fixed this line
 
 # --- Update Excel, choose right filelist ---
 if st.button("Start Simulation"):
     wb = openpyxl.load_workbook(excel_path)
     sheet = wb["Calculate Capacity"]
+    sheet["I2"] = hire_mapping.get(hire)
     sheet["I6"] = pphgrowth_v
     sheet["I21"] = secdivert_v
     sheet["I27"] = stretch_v
@@ -163,25 +177,37 @@ quota_status.markdown("🎉 All quotas have been applied.")
 
 
 union_df = pd.concat([task_df_pf11, task_df_pf12])
-output_path = "OutsourceE&S.xlsx"
-union_df.to_excel(output_path, index=False)
-
-# Reload the processed file and extract in-house tasks
-task_df_outsource = pd.read_excel("OutsourceE&S.xlsx")
-task_df_inhouse = task_df_outsource[task_df_outsource['Outsource Year'].isnull()]
+task_df_inhouse = union_df[union_df['Outsource Year'].isnull()]
 divisions = ['Div1', 'Div2', 'Div3', 'Div4']
 
-# Save each division's in-house tasks to a separate sheet
-with pd.ExcelWriter('DivisionFiles_NoOutsource.xlsx') as writer:
+# Use BytesIO instead of writing to a file
+division_buffer = io.BytesIO()
+with pd.ExcelWriter(division_buffer, engine='xlsxwriter') as writer:
     for div in divisions:
         div_df = task_df_inhouse[task_df_inhouse['Division Transformed'] == div]
         div_df.to_excel(writer, sheet_name=div, index=False)
+division_buffer.seek(0)
 
-# Load required capacity and working day data
-max_tasks_df = pd.read_excel('Capacity-FOA for Python.xlsx', sheet_name="Python-FOA", index_col=0)
-max_cap_df = pd.read_excel('Capacity-FOA for Python.xlsx', sheet_name="Python-Cap", index_col=0)
-calendar_df = pd.read_excel('WorkingDays25-30_withFY.xlsx', sheet_name="2025-2030", parse_dates=['Date'])
+#Step 1: Read capacity file bytes into memory buffer once
+with open('Capacity-FOA for Python.xlsx', 'rb') as f:
+    capacity_bytes = f.read()
+capacity_buffer = io.BytesIO(capacity_bytes)
+
+# Step 2: Read calendar file bytes into memory buffer once
+with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
+    calendar_bytes = f.read()
+calendar_buffer = io.BytesIO(calendar_bytes)
+
+# Step 3: Load capacity dataframes from capacity_buffer
+with pd.ExcelFile(capacity_buffer) as xls:
+    max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
+    max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
+
+# Step 4: Load calendar dataframe from calendar_buffer
+calendar_buffer.seek(0)  # Important: reset pointer before reading
+calendar_df = pd.read_excel(calendar_buffer, sheet_name="2025-2030", parse_dates=['Date'])
 working_days_df = calendar_df[calendar_df['NWD_Indicator'] == 'No']
+
 
 # Define weights
 SAndE_Points = {'PF11': 0.97, 'PF12': 0.47}
@@ -193,9 +219,12 @@ st.subheader("Scheduling FOA by Division")
 main_progress = st.progress(0, text="Starting FOA scheduling...")
 status_text = st.empty()
 total_divs = len(divisions)
+xls_divisions = pd.ExcelFile(division_buffer)
 
+division_results_buffers = {}
 for i, current_div in enumerate(divisions):
-    div_task_df = pd.read_excel('DivisionFiles_NoOutsource.xlsx', sheet_name=current_div)
+    # Read division sheet from in-memory ExcelFile instead of disk
+    div_task_df = pd.read_excel(xls_divisions, sheet_name=current_div)
     div_task_df.sort_values(by='S&E Lodge Date', inplace=True)
 
     working_day_index = 0
@@ -210,10 +239,7 @@ for i, current_div in enumerate(divisions):
     for j, (index, task) in enumerate(div_task_df.iterrows()):
         if working_day_index >= maxwkdays:
             break
-            
-        foa = pd.NaT
-        fy = pd.NA
-        
+
         quarter_label = working_days_df['Quarter'].iloc[working_day_index]
         max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
         max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
@@ -252,12 +278,18 @@ for i, current_div in enumerate(divisions):
         div_task_df.at[index, 'FOA'] = foa
         div_task_df.at[index, 'FY'] = fy
 
-        # Update inner progress
         div_progress.progress((j + 1) / total_tasks, text=f"{current_div}: {j + 1}/{total_tasks} tasks scheduled")
 
-    div_task_df.to_excel(f'{current_div}Results.xlsx', index=False)
+   # Save results to an in-memory buffer instead of a file
+    output_buffer = io.BytesIO()
+    with pd.ExcelWriter(output_buffer, engine='xlsxwriter') as writer:
+        div_task_df.to_excel(writer, index=False, sheet_name=current_div)
+    output_buffer.seek(0)  # Reset pointer to start
 
-    # Update main progress
+    # Store buffer in dictionary for later use
+    division_results_buffers[current_div] = output_buffer
+
+    # Update main progress bar
     main_progress.progress((i + 1) / total_divs, text=f"Completed {current_div}")
 
 div_progress.empty()
@@ -278,7 +310,12 @@ def compute_avg_age(grouped_df, start_dates, end_dates, quantities, add_months, 
     return avg_age
 
 # --- Load inhouse results and combine ---
-div_files = [pd.read_excel(f'Div{i}Results.xlsx') for i in range(1, 5)]
+div_files = []
+for div in divisions:  
+    buffer = division_results_buffers[div]  # get the BytesIO for this division
+    # Read the Excel content from the buffer
+    df = pd.read_excel(buffer, sheet_name=div)
+    div_files.append(df)
 excel_merged = pd.concat(div_files, ignore_index=True)
 
 # --- Add time calculations ---
@@ -339,10 +376,6 @@ print(avg_S_list)
 fy_sums = excel_merged.groupby('FY')['time_c'].sum().to_dict()
 fy_counts = excel_merged.groupby('FY')['time_c'].count().to_dict()
 
-
-# Load the workbook and sheet
-wb = load_workbook('Capacity-FOA for Python.xlsx')
-sheet = wb['Calculate Capacity']  # Adjust sheet name
 
 # Get value from a specific cell (e.g., B2)
 # --- Define PPH projections ---
