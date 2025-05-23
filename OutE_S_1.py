@@ -237,46 +237,50 @@ for i, current_div in enumerate(divisions):
     total_tasks = len(div_task_df)
 
     for j, (index, task) in enumerate(div_task_df.iterrows()):
+    if working_day_index >= maxwkdays:
+        break
+
+    quarter_label = working_days_df['Quarter'].iloc[working_day_index]
+    max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
+    max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
+
+    SAndEType = task['S&E']
+    SAndEPoint = SAndE_Points.get(SAndEType, 0)
+
+    # Fallback initialization
+    foa = pd.NaT
+    fy = None
+
+    if max_capacity > capacity_used and max_tasks_per_day > task_completed:
+        foa = working_days_df['Date'].iloc[working_day_index]
+        fy = working_days_df['FY'].iloc[working_day_index]
+        capacity_used += SAndEPoint
+        task_completed += 1
+
+    elif max_capacity > capacity_used and max_tasks_per_day == task_completed:
+        currentday_quarter = quarter_label
+        working_day_index += 1
         if working_day_index >= maxwkdays:
             break
-
         quarter_label = working_days_df['Quarter'].iloc[working_day_index]
-        max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
-        max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
+        foa = working_days_df['Date'].iloc[working_day_index]
+        fy = working_days_df['FY'].iloc[working_day_index]
+        capacity_used = SAndEPoint if quarter_label != currentday_quarter else capacity_used + SAndEPoint
+        task_completed = 1
 
-        SAndEType = task['S&E']
-        SAndEPoint = SAndE_Points.get(SAndEType, 0)
-
-        if max_capacity > capacity_used and max_tasks_per_day > task_completed:
-            foa = working_days_df['Date'].iloc[working_day_index]
-            fy = working_days_df['FY'].iloc[working_day_index]
-            capacity_used += SAndEPoint
-            task_completed += 1
-
-        elif max_capacity > capacity_used and max_tasks_per_day == task_completed:
-            currentday_quarter = quarter_label
+    elif max_capacity <= capacity_used:
+        next_quarter = 'Q' + str(int(quarter_label[1:]) + 1)
+        while working_day_index < maxwkdays and working_days_df['Quarter'].iloc[working_day_index] != next_quarter:
             working_day_index += 1
-            if working_day_index >= maxwkdays:
-                break
-            quarter_label = working_days_df['Quarter'].iloc[working_day_index]
-            foa = working_days_df['Date'].iloc[working_day_index]
-            fy = working_days_df['FY'].iloc[working_day_index]
-            capacity_used = SAndEPoint if quarter_label != currentday_quarter else capacity_used + SAndEPoint
-            task_completed = 1
+        if working_day_index >= maxwkdays:
+            break
+        foa = working_days_df['Date'].iloc[working_day_index]
+        fy = working_days_df['FY'].iloc[working_day_index]
+        capacity_used = SAndEPoint
+        task_completed = 1
 
-        elif max_capacity <= capacity_used:
-            next_quarter = 'Q' + str(int(quarter_label[1:]) + 1)
-            while working_day_index < maxwkdays and working_days_df['Quarter'].iloc[working_day_index] != next_quarter:
-                working_day_index += 1
-            if working_day_index >= maxwkdays:
-                break
-            foa = working_days_df['Date'].iloc[working_day_index]
-            fy = working_days_df['FY'].iloc[working_day_index]
-            capacity_used = SAndEPoint
-            task_completed = 1
-
-        div_task_df.at[index, 'FOA'] = foa
-        div_task_df.at[index, 'FY'] = fy
+    div_task_df.at[index, 'FOA'] = foa
+    div_task_df.at[index, 'FY'] = fy
 
         div_progress.progress((j + 1) / total_tasks, text=f"{current_div}: {j + 1}/{total_tasks} tasks scheduled")
 
