@@ -246,6 +246,10 @@ for i, current_div in enumerate(divisions):
 
         SAndEType = task['S&E']
         SAndEPoint = SAndE_Points.get(SAndEType, 0)
+
+        # Default fallback values
+        foa = pd.NaT
+        fy = None
       
         if max_capacity > capacity_used and max_tasks_per_day > task_completed:
             foa = working_days_df['Date'].iloc[working_day_index]
