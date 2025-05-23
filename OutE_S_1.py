@@ -197,9 +197,6 @@ total_divs = len(divisions)
 for i, current_div in enumerate(divisions):
     div_task_df = pd.read_excel('DivisionFiles_NoOutsource.xlsx', sheet_name=current_div)
     div_task_df.sort_values(by='S&E Lodge Date', inplace=True)
-    
-    foa = None
-    fy = None
 
     working_day_index = 0
     maxwkdays = len(working_days_df)
@@ -282,8 +279,6 @@ div_files = [pd.read_excel(f'Div{i}Results.xlsx') for i in range(1, 5)]
 excel_merged = pd.concat(div_files, ignore_index=True)
 
 # --- Add time calculations ---
-excel_merged['FOA'] = pd.to_datetime(excel_merged['FOA'], errors='coerce')
-excel_merged['S&E Lodge Date'] = pd.to_datetime(excel_merged['S&E Lodge Date'], errors='coerce')
 excel_merged['time_c'] = ((excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5).clip(lower=1)
 excel_merged['original time'] = (excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5
 #excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
