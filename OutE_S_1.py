@@ -87,6 +87,12 @@ if not os.path.exists(filename):
 else:
     task_df = pd.read_excel(filename)
 
+st.download_button(
+    label="Download Capacity Excel File",
+    data=f,
+    file_name=filename,
+    mime= mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
     
 # === Define Constants ===
 div_order = ['Div1', 'Div2', 'Div3', 'Div4']
