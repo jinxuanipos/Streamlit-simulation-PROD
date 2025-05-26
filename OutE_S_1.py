@@ -91,7 +91,7 @@ st.download_button(
     label="Download Capacity Excel File",
     data=f,
     file_name=filename,
-    mime= mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
     
 # === Define Constants ===
