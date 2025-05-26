@@ -42,16 +42,43 @@ secdivert_v = secdivert / 100
 # === Capacity Parameters Input ===
 excel_path = "Capacity-FOA for Python.xlsx"
 
-# --- Update Excel, choose right filelist ---
+# --- Update Excel and store in session_state ---
 if st.button("Start Simulation"):
-    wb = openpyxl.load_workbook(excel_path)
+    wb = load_workbook(excel_path)
     sheet = wb["Calculate Capacity"]
+
     sheet["I2"] = hire_mapping.get(hire)
     sheet["I6"] = pphgrowth_v
     sheet["I21"] = secdivert_v
     sheet["I27"] = stretch_v
-    wb.save(excel_path)
-    
+
+    # Save to in-memory BytesIO
+    excel_buffer = io.BytesIO()
+    wb.save(excel_buffer)
+    excel_buffer.seek(0)  # Reset pointer to start
+
+    # Store in session state
+    st.session_state["updated_excel"] = excel_buffer
+
+    st.success("Excel file updated and stored in memory.")
+
+    # Preview values
+    st.write("Updated Values:")
+    st.write("I2 (Hire):", sheet["I2"].value)
+    st.write("I6 (PPH Growth):", sheet["I6"].value)
+    st.write("I21 (Diversion):", sheet["I21"].value)
+    st.write("I27 (Stretch):", sheet["I27"].value)
+
+# --- Optional download button ---
+if "updated_excel" in st.session_state:
+    st.download_button(
+        label="Download Updated Excel",
+        data=st.session_state["updated_excel"],
+        file_name="Updated_Capacity_FOA.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+
 filename = file_mapping.get(eot)
 task_df = None
 
