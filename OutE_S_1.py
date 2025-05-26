@@ -239,7 +239,9 @@ for i, current_div in enumerate(divisions):
     for j, (index, task) in enumerate(div_task_df.iterrows()):
         if working_day_index >= maxwkdays:
             break
-
+        # Default in case no condition met
+        foa = pd.NaT
+        fy = pd.NA
         quarter_label = working_days_df['Quarter'].iloc[working_day_index]
         max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
         max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
@@ -381,7 +383,8 @@ fy_counts = excel_merged.groupby('FY')['time_c'].count().to_dict()
 
 # Get value from a specific cell (e.g., B2)
 # --- Define PPH projections ---
-pph_growth = sheet['I6'].value
+def projected_pph(year_multiplier):
+    return round(pph_base * (pphgrowth_v ** year_multiplier))
 pph_base = 714
 
 def projected_pph(year_multiplier):
