@@ -326,6 +326,23 @@ div_progress.empty()
 status_text.markdown("✅ All divisions scheduled.")
 main_progress.empty()
 
+# Combine all division buffers into a single Excel file with multiple sheets
+combined_buffer = io.BytesIO()
+with pd.ExcelWriter(combined_buffer, engine='xlsxwriter') as writer:
+    for div_name, buffer in division_results_buffers.items():
+        buffer.seek(0)
+        df = pd.read_excel(buffer)
+        df.to_excel(writer, index=False, sheet_name=div_name)
+combined_buffer.seek(0)
+ 
+# Download button for the combined Excel file
+st.download_button(
+    label="Download Complete Schedule (.xlsx)",
+    data=combined_buffer,
+    file_name="schedule_output.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
+
 
 #results here
 # --- Helper function to compute average age ---
