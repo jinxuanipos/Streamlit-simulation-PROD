@@ -388,7 +388,7 @@ def projected_pph(year_multiplier):
 pph_base = 714
 
 def projected_pph(year_multiplier):
-    return round(pph_base * (pph_growth ** year_multiplier))
+    return round(pph_base * (pphgrowth_v ** year_multiplier))
 
 # --- Updated total_sum_count using both age and time ---
 def total_sum_count(fy, s_qty, e_qty=0, s_age=0, e_age=0, s_time=0, e_time=0, year_mult=0):
