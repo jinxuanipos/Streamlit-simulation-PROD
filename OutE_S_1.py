@@ -96,7 +96,8 @@ else:
     label="Download Capacity Excel File",
     data=file_bytes,
     file_name=filename,
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
     
 # === Define Constants ===
