@@ -323,12 +323,14 @@ for div in divisions:
 excel_merged = pd.concat(div_files, ignore_index=True)
 
 # --- Add time calculations ---
+excel_merged['FOA'] = pd.to_datetime(excel_merged['FOA'], errors='coerce')
+excel_merged['S&E Lodge Date'] = pd.to_datetime(excel_merged['S&E Lodge Date'], errors='coerce')
 excel_merged['time_c'] = ((excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5).clip(lower=1)
 excel_merged['original time'] = (excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5
 #excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
 
 # --- Load outsource data ---
-task_df = pd.read_excel('OutsourceE&S.xlsx')
+task_df = union_df[union_df['Outsource Year'].notnull()]
 task_df_pf12 = task_df[task_df['Outsource E'] == 'Y']
 task_df_pf11 = task_df[task_df['Outsource S'] == 'Y']
 
