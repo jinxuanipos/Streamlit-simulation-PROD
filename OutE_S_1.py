@@ -240,10 +240,7 @@ for i, current_div in enumerate(divisions):
         if working_day_index >= maxwkdays:
             break
           
-        # Default in case no condition met
-        foa = pd.NaT
-        fy = pd.NA
-
+      
         quarter_label = working_days_df['Quarter'].iloc[working_day_index]
         max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
         max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
