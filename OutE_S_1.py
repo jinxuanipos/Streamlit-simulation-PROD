@@ -24,7 +24,7 @@ hire_mapping = {
 
 
 stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50)
-stretch_v = 1 + stretch / 100
+stretch_v = stretch / 100
 
 pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10)
 pphgrowth_v = 1 + pphgrowth / 100
@@ -37,7 +37,7 @@ file_mapping = {
 }
 
 secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
-secdivert_v = 1 + secdivert / 100
+secdivert_v = secdivert / 100
 
 # === Capacity Parameters Input ===
 excel_path = "Capacity-FOA for Python.xlsx"
