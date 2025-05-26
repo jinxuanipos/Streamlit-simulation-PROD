@@ -29,11 +29,11 @@ stretch_v = stretch / 100
 pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10)
 pphgrowth_v = 1 + pphgrowth / 100
 
-eot = st.selectbox("Select EOT Waiver Success Rate", [26, 30, 35])
+eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
 file_mapping = {
-    26: "DivisionFiles_All_26.xlsx",
-    30: "DivisionFiles_All_30.xlsx",
-    35: "DivisionFiles_All_35.xlsx"
+    "26%": "DivisionFiles_All_26.xlsx",
+    "30%": "DivisionFiles_All_30.xlsx",
+    "35%": "DivisionFiles_All_35.xlsx"
 }
 
 secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
@@ -69,28 +69,28 @@ pf11_quotas = {
     2025: 3000,
     2026: 4200,
     2027: 4656,
-    2028: 2000,
-    2029: 1500,
+    2028: 5232,
+    2029: 2000,
     2030: 1000
 }
 
 
 pf12_quotas = {
-    2026: 2000,
-    2027: 2500,
-    2028: 2500,
+    2026: 1500,
+    2027: 2000,
+    2028: 3000,
     2029: 3000,
-    2030: 3000
+    2030: 3500
 }
 
 # Thresholds
 pf11_thresholds = {
     2025: date(2024, 1, 1),
-    2026: date(2025, 7, 1),
-    2027: date(2026, 7, 1),
-    2028: date(2027, 7, 1),
-    2029: date(2028, 7, 1),
-    2030: date(2029, 7, 1),
+    2026: date(2025, 5, 1),
+    2027: date(2026, 5, 1),
+    2028: date(2027, 5, 1),
+    2029: date(2028, 5, 1),
+    2030: date(2029, 5, 1),
 }
 
 pf12_thresholds = {
@@ -236,11 +236,13 @@ for i, current_div in enumerate(divisions):
     div_progress = st.progress(0, text=f"Scheduling tasks for {current_div}...")
     total_tasks = len(div_task_df)
 
+    # Default in case no condition met
+    foa = pd.NaT
+    fy = pd.NA
     for j, (index, task) in enumerate(div_task_df.iterrows()):
         if working_day_index >= maxwkdays:
             break
           
-      
         quarter_label = working_days_df['Quarter'].iloc[working_day_index]
         max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
         max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
@@ -332,9 +334,9 @@ task_df_pf12 = task_df[task_df['Outsource E'] == 'Y']
 task_df_pf11 = task_df[task_df['Outsource S'] == 'Y']
 
 # --- Define quantities ---
-e_qty = [2000, 2500, 2500, 3000, 3000]
-s_qty = [3000, 4200, 4656, 2000, 1500, 1000]
-outsource_e_time, outsource_s_time = 7, 5
+e_qty = [1500, 2000, 3000, 3000, 3500]
+s_qty = [3000, 4200, 4656, 5232, 2000, 1000]
+outsource_e_time, outsource_s_time = 9, 5
 
 
 # --- Compute E files returned each year ---
@@ -439,4 +441,5 @@ for i, v in enumerate(values):
 
 ax.set_ylim(min(values) - 1, max(values) + 2)
 st.pyplot(fig)
+
 
