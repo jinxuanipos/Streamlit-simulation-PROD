@@ -87,9 +87,14 @@ if not os.path.exists(filename):
 else:
     task_df = pd.read_excel(filename)
 
-st.download_button(
+ # Read the file into memory for download
+    with open(filename, "rb") as f:
+        file_bytes = f.read()
+
+ # Show the download button
+ st.download_button(
     label="Download Capacity Excel File",
-    data=f,
+    data=file_bytes,
     file_name=filename,
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
