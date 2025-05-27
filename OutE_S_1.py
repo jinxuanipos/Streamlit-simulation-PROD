@@ -215,20 +215,26 @@ with pd.ExcelWriter(division_buffer, engine='xlsxwriter') as writer:
         div_df.to_excel(writer, sheet_name=div, index=False)
 division_buffer.seek(0)
 
-#Step 1: Read capacity file bytes into memory buffer once
-with open('Updated_Capacity_FOA.xlsx', 'rb') as f:
-    capacity_bytes = f.read()
-capacity_buffer = io.BytesIO(capacity_bytes)
+# ✅ Step 1: Use the in-memory Excel data from Streamlit session state
+if "updated_excel" not in st.session_state:
+    st.error("Updated Excel file not found in session state.")
+    st.stop()
 
-# Step 2: Read calendar file bytes into memory buffer once
-with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
-    calendar_bytes = f.read()
-calendar_buffer = io.BytesIO(calendar_bytes)
+capacity_buffer = io.BytesIO(st.session_state["updated_excel"])
 
-# Step 3: Load capacity dataframes from capacity_buffer
+# ✅ Step 2: Read calendar file from disk (if it exists)
+try:
+    with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
+        calendar_bytes = f.read()
+    calendar_buffer = io.BytesIO(calendar_bytes)
+except FileNotFoundError:
+    st.error("Calendar file 'WorkingDays25-30_withFY.xlsx' not found.")
+    st.stop()
+
+# ✅ Step 3: Load dataframes from capacity buffer
 with pd.ExcelFile(capacity_buffer) as xls:
     max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
-    max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0) 
+    max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
 
 # Step 4: Load calendar dataframe from calendar_buffer
 calendar_buffer.seek(0)  # Important: reset pointer before reading
