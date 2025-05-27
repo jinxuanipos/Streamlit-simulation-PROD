@@ -237,12 +237,8 @@ with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
     calendar_bytes = f.read()
 calendar_buffer = io.BytesIO(calendar_bytes)
 
-# Step 3: Load capacity dataframes from capacity_buffer
-with pd.ExcelFile(capacity_buffer) as xls:
-    max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
-    max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
 
-# Step 4: Load calendar dataframe from calendar_buffer
+# Step 3: Load calendar dataframe from calendar_buffer
 calendar_buffer.seek(0)  # Important: reset pointer before reading
 calendar_df = pd.read_excel(calendar_buffer, sheet_name="2025-2030", parse_dates=['Date'])
 working_days_df = calendar_df[calendar_df['NWD_Indicator'] == 'No']
