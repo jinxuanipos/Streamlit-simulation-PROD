@@ -91,6 +91,10 @@ deductions = [3050, 3632, 3852, 4132, 2564, 2079]
 years = list(range(2025, 2031))  # 2025 to 2030
 pph_base = 714
 
+# --- Define PPH projections ---
+def projected_pph(year_multiplier):
+    return round(pph_base * (pphgrowth_v ** year_multiplier))
+
 for i in range(len(deductions)):
     year_multiplier = i + 1  # 2025 corresponds to 1
     proj_pph = projected_pph(year_multiplier)
@@ -100,9 +104,7 @@ for i in range(len(deductions)):
 #st.write("Updated deductions after subtracting adjusted PPH:")
 #st.write(deductions)
 
-# --- Define PPH projections ---
-def projected_pph(year_multiplier):
-    return round(pph_base * (pphgrowth_v ** year_multiplier))
+
 
 #load right eot file
 filename = file_mapping.get(eot)
