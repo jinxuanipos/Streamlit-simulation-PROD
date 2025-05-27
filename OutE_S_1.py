@@ -215,19 +215,17 @@ with pd.ExcelWriter(division_buffer, engine='xlsxwriter') as writer:
         div_df.to_excel(writer, sheet_name=div, index=False)
 division_buffer.seek(0)
 
-# ✅ Step 1: Use the in-memory Excel data from Streamlit session state
-if "updated_excel" not in st.session_state:
-    st.error("Updated Excel file not found in session state.")
-    st.stop()
-
-capacity_buffer = io.BytesIO(st.session_state["updated_excel"])
+#Step 1: Read capacity file bytes into memory buffer once
+with open('Capacity-FOA for Python.xlsx', 'rb') as f:
+    capacity_bytes = f.read()
+capacity_buffer = io.BytesIO(capacity_bytes)
 
 # Step 2: Read calendar file bytes into memory buffer once
 with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
     calendar_bytes = f.read()
 calendar_buffer = io.BytesIO(calendar_bytes)
 
-# ✅ Step 3: Load dataframes from capacity buffer
+# Step 3: Load capacity dataframes from capacity_buffer
 with pd.ExcelFile(capacity_buffer) as xls:
     max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
     max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
@@ -394,6 +392,7 @@ fy_e = [
     round(e_qty[2] - e_qty[2]/12 * no_of_mths) + round(e_qty[3]/12 * no_of_mths),
     round(e_qty[3] - e_qty[3]/12 * no_of_mths) + round(e_qty[4]/12 * no_of_mths)
 ]
+
 
 # --- Fiscal year start/end dates ---
 sdates_e = [datetime(2026, 4, 1)] + [datetime(y, 1, 1) for y in range(2027, 2031)]
