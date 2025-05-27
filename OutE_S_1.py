@@ -81,15 +81,7 @@ else:
     with open(filename, "rb") as f:
         file_bytes = f.read()
 
-# Show the download button
-st.download_button(
-    label="Download Original Capacity Excel File",
-    data=file_bytes,
-    file_name=filename,
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-)
-
-    
+   
 # === Define Constants ===
 div_order = ['Div1', 'Div2', 'Div3', 'Div4']
 
