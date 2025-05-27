@@ -216,19 +216,31 @@ with pd.ExcelWriter(division_buffer, engine='xlsxwriter') as writer:
 division_buffer.seek(0)
 
 #Step 1: Read capacity file bytes into memory buffer once
-with open('Capacity-FOA for Python.xlsx', 'rb') as f:
-    capacity_bytes = f.read()
-capacity_buffer = io.BytesIO(capacity_bytes)
-
+if "updated_excel" not in st.session_state:
+    st.error("Capacity file not found in memory.")
+    st.stop()
+ 
+try:
+    excel_buffer = st.session_state["updated_excel"]
+    excel_buffer.seek(0)  # Reset buffer pointer before reading
+    with pd.ExcelFile(excel_buffer) as xls:
+        max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
+        max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
+except Exception as e:
+    st.error(f"Failed to load capacity data from in-memory: {e}")
+    st.stop()
+ 
+ 
 # Step 2: Read calendar file bytes into memory buffer once
 with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
     calendar_bytes = f.read()
 calendar_buffer = io.BytesIO(calendar_bytes)
-
+ 
 # Step 3: Load capacity dataframes from capacity_buffer
-with pd.ExcelFile(capacity_buffer) as xls:
+with pd.ExcelFile(excel_buffer) as xls:
     max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
     max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
+
 
 # Step 4: Load calendar dataframe from calendar_buffer
 calendar_buffer.seek(0)  # Important: reset pointer before reading
@@ -394,17 +406,18 @@ fy_e = [
 ]
 
 # --- Fiscal year start/end dates ---
+sdates_e = [datetime(2026, 4, 1)] + [datetime(y, 1, 1) for y in range(2027, 2031)]
 sdates = [datetime(y, 1, 1) for y in range(2025, 2031)]
 edates = [datetime(y, 12, 31) for y in range(2025, 2031)]
-
-
+ 
+ 
 # Compute avg_E_age properly using min and max dates per year
 min_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].min().tolist()
 max_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].max().tolist()
-
+ 
 avg_list = []
 for i in range(len(e_qty)):
-    avg_days = ((sdates[i+1] - min_dates[i]).days + (edates[i+1] - max_dates[i]).days) / 2
+    avg_days = ((sdates_e[i] - min_dates[i]).days + (edates[i+1] - max_dates[i]).days) / 2
     avg_list.append(e_qty[i] * avg_days)
 
 avg_E_age = sum(avg_list) / sum(e_qty) / 30.5 + outsource_e_time
