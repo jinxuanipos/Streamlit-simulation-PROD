@@ -222,14 +222,10 @@ if "updated_excel" not in st.session_state:
 
 capacity_buffer = io.BytesIO(st.session_state["updated_excel"])
 
-# ✅ Step 2: Read calendar file from disk (if it exists)
-try:
-    with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
-        calendar_bytes = f.read()
-    calendar_buffer = io.BytesIO(calendar_bytes)
-except FileNotFoundError:
-    st.error("Calendar file 'WorkingDays25-30_withFY.xlsx' not found.")
-    st.stop()
+# Step 2: Read calendar file bytes into memory buffer once
+with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
+    calendar_bytes = f.read()
+calendar_buffer = io.BytesIO(calendar_bytes)
 
 # ✅ Step 3: Load dataframes from capacity buffer
 with pd.ExcelFile(capacity_buffer) as xls:
