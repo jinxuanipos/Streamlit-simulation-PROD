@@ -10,11 +10,19 @@ import io
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
+# --- Initialize session state ---
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+
+# Disable widgets AFTER submission
+disable_inputs = st.session_state.submitted  # **This disables inputs only after button is clicked**
+
 # --- User Input ---
 hire = st.selectbox("Select Hiring Plan", 
                     ["Accelerated - Hire additional 20 by Jan 26",
                      "Moderate - Hire additional 10 by Jan 26",
-                     "Slow - Hire additional 20 by Jul 26"])
+                     "Slow - Hire additional 20 by Jul 26"],
+                   disabled=disable_inputs)
 
 hire_mapping = {
     "Accelerated - Hire additional 20 by Jan 26": "a",
@@ -23,27 +31,27 @@ hire_mapping = {
 }
 
 
-stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50)
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, disabled=disable_inputs  # **Disabled after submission**)
 stretch_v = stretch / 100
 
-pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10)
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10, disabled=disable_inputs  # **Disabled after submission**)
 pphgrowth_v = 1 + pphgrowth / 100
 
-eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"],disabled=disable_inputs  # **Disabled after submission**)
 file_mapping = {
     "26%": "DivisionFiles_All_26.xlsx",
     "30%": "DivisionFiles_All_30.xlsx",
     "35%": "DivisionFiles_All_35.xlsx"
 }
 
-secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
+secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, disabled=disable_inputs  # **Disabled after submission**)
 secdivert_v = secdivert / 100
 
 # === Capacity Parameters Input ===
 excel_path = "Capacity-FOA for Python.xlsx"
 
 # --- Update Excel and store in session_state ---
-if st.button("Start Simulation"):
+if st.button("Start Simulation") and not st.session_state.submitted:
     wb = load_workbook(excel_path)
     sheet = wb["Calculate Capacity"]
 
