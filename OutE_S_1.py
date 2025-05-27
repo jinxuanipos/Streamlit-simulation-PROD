@@ -31,20 +31,20 @@ hire_mapping = {
 }
 
 
-stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, disabled=disable_inputs  # **Disabled after submission**)
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, disabled=disable_inputs)
 stretch_v = stretch / 100
 
-pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10, disabled=disable_inputs  # **Disabled after submission**)
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10, disabled=disable_inputs)
 pphgrowth_v = 1 + pphgrowth / 100
 
-eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"],disabled=disable_inputs  # **Disabled after submission**)
+eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"],disabled=disable_inputs)
 file_mapping = {
     "26%": "DivisionFiles_All_26.xlsx",
     "30%": "DivisionFiles_All_30.xlsx",
     "35%": "DivisionFiles_All_35.xlsx"
 }
 
-secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, disabled=disable_inputs  # **Disabled after submission**)
+secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, disabled=disable_inputs)
 secdivert_v = secdivert / 100
 
 # === Capacity Parameters Input ===
