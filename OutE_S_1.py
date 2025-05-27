@@ -270,7 +270,7 @@ for i, current_div in enumerate(divisions):
     status_text.markdown(f"📄 Processing **{current_div}**...")
     div_progress = st.progress(0, text=f"Scheduling tasks for {current_div}...")
     total_tasks = len(div_task_df)
-    
+
     # Default in case no condition met
     foa = pd.NaT
     fy = pd.NA
