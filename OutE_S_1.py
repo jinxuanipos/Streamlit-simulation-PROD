@@ -17,16 +17,63 @@ hire = st.selectbox("Select Hiring Plan",
                      "Slow - Hire additional 20 by Jul 26"])
 
 hire_mapping = {
-    "Accelerated - Hire additional 20 by Jan 26": "a",
-    "Moderate - Hire additional 10 by Jan 26": "b",
-    "Slow - Hire additional 20 by Jul 26": "c"
+    "Accelerated - Hire additional 20 by Jan 26": [7500, 8979, 10162, 11377, 12799, 13198],
+    "Moderate - Hire additional 10 by Jan 26":     [7500, 9157, 10016, 11043, 11914, 12174],
+    "Slow - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
 }
-
 
 stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50)
 stretch_v = stretch / 100
 
-pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=100, value=10)
+
+# Base incentive schemes representing 10% take-up by default
+incentive_accelerated = {
+    "Div1": {2025: 102, 2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
+    "Div2": {2025: 96,  2026: 232, 2027: 250, 2028: 284, 2029: 318, 2030: 339},
+    "Div3": {2025: 77,  2026: 181, 2027: 206, 2028: 249, 2029: 291, 2030: 299},
+    "Div4": {2025: 100, 2026: 230, 2027: 268, 2028: 278, 2029: 309, 2030: 318}
+}
+
+incentive_moderate = {
+    "Div1": {2025: 102,  2026: 255, 2027: 284, 2028: 313, 2029: 337, 2030: 340},
+    "Div2": {2025: 96,  2026: 232, 2027: 251, 2028: 272, 2029: 303, 2030: 313},
+    "Div3": {2025: 77,  2026: 190, 2027: 207, 2028: 245, 2029: 266, 2030: 273},
+    "Div4": {2025: 100,  2026: 239, 2027: 260, 2028: 274, 2029: 285, 2030: 292}
+}
+
+incentive_slow = {
+    "Div1": {2025: 102,  2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
+    "Div2": {2025: 96,  2026: 232, 2027: 250, 2028: 284, 2029: 318, 2030: 338},
+    "Div3": {2025: 77,  2026: 181, 2027: 206, 2028: 249, 2029: 281, 2030: 298},
+    "Div4": {2025: 100,  2026: 230, 2027: 268, 2028: 278, 2029: 300, 2030: 317}
+}
+
+incentive_scheme_mapping = {
+    "Accelerated - Hire additional 20 by Jan 26": incentive_accelerated,
+    "Moderate - Hire additional 10 by Jan 26": incentive_moderate,
+    "Slow - Hire additional 20 by Jul 26": incentive_slow
+}
+
+def scale_incentives(incentives, stretch_v):
+    factor = stretch_v / 0.1  # scale relative to base 10%
+    scaled = {}
+    for div, years in incentives.items():
+        scaled[div] = {year: int(round(val * factor)) for year, val in years.items()}
+    return scaled
+
+# Get base incentives per hiring plan
+base_incentives = incentive_scheme_mapping[hire]
+
+# Scale incentives by stretch_v relative to 10%
+selected_incentives = scale_incentives(base_incentives, stretch_v)
+
+# Show results
+#st.write(f"Incentive Scheme scaled by stretch value ({stretch}% take-up) for {hire}:")
+#st.write(selected_incentives)
+
+
+
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
 pphgrowth_v = 1 + pphgrowth / 100
 
 eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
@@ -39,48 +86,238 @@ file_mapping = {
 secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
 secdivert_v = secdivert / 100
 
-# === Capacity Parameters Input ===
-excel_path = "Capacity-FOA for Python.xlsx"
+deductions = [3050, 3632, 3852, 4132, 2564, 2079]
 
-# --- Update Excel and store in session_state ---
-if st.button("Start Simulation"):
-    wb = load_workbook(excel_path)
-    sheet = wb["Calculate Capacity"]
+years = list(range(2025, 2031))  # 2025 to 2030
+pph_base = 714
 
-    sheet["I2"] = hire_mapping.get(hire)
-    sheet["I6"] = pphgrowth_v
-    sheet["I21"] = secdivert_v
-    sheet["I27"] = stretch_v
+for i in range(len(deductions)):
+    year_multiplier = i + 1  # 2025 corresponds to 1
+    proj_pph = projected_pph(year_multiplier)
+    adjusted_pph = proj_pph * 0.97
+    deductions[i] = deductions[i] - adjusted_pph
 
-    # Save to in-memory BytesIO
-    excel_buffer = io.BytesIO()
-    wb.save(excel_buffer)
-    excel_buffer.seek(0)  # Reset pointer to start
+#st.write("Updated deductions after subtracting adjusted PPH:")
+#st.write(deductions)
 
-    # Store in session state
-    st.session_state["updated_excel"] = excel_buffer
+# --- Define PPH projections ---
+def projected_pph(year_multiplier):
+    return round(pph_base * (pphgrowth_v ** year_multiplier))
 
-    st.success("Excel file updated and stored in memory.")
-
-    # Preview values
-    st.write("Updated Values:")
-    st.write("I2 (Hire):", sheet["I2"].value)
-    st.write("I6 (PPH Growth):", sheet["I6"].value)
-    st.write("I21 (Diversion):", sheet["I21"].value)
-    st.write("I27 (Stretch):", sheet["I27"].value)
-
-# --- Optional download button ---
-if "updated_excel" in st.session_state:
-    st.download_button(
-        label="Download Updated Excel",
-        data=st.session_state["updated_excel"],
-        file_name="Updated_Capacity_FOA.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-
-
+#load right eot file
 filename = file_mapping.get(eot)
 task_df = None
+
+
+#calculate AI gains
+est_AI_dict = {
+    "pf11": [],
+    "pf12": []
+}
+
+for i in range(len(deductions)):
+    pf11_val = int(deductions[i] * 0.7 / 0.97)
+    pf12_val = int(deductions[i] * 0.3 / 0.47)
+    est_AI_dict["pf11"].append(pf11_val)
+    est_AI_dict["pf12"].append(pf12_val)
+
+#st.write("PF11 and PF12 volumes over years 2025-2030:")
+#st.write(pf_dict)
+
+ai_dict = {
+    "PAS - PF11": {
+        2025: 0.0,
+        2026: 10.0,
+        2027: 15.0,
+        2028: 20.0,
+        2029: 25.0,
+        2030: 25.0
+    },
+    "Report Drafter - PF11": {
+        2025: 0.0,
+        2026: 0.0,
+        2027: 3.0,
+        2028: 6.0,
+        2029: 10.0,
+        2030: 10.0
+    },
+    "Report Drafter - PF12": {
+        2025: 0.0,
+        2026: 0.0,
+        2027: 3.0,
+        2028: 6.0,
+        2029: 10.0,
+        2030: 10.0
+    }
+}
+
+ai_gains = {}
+for i, year in enumerate(years):
+    pf11 = est_AI_dict["pf11"][i]
+    pf12 = est_AI_dict["pf12"][i]
+
+    # Get AI impact percentages for the year
+    pas = ai_dict["PAS - PF11"][year] / 100
+    rd_pf11 = ai_dict["Report Drafter - PF11"][year] / 100
+    rd_pf12 = ai_dict["Report Drafter - PF12"][year] / 100
+
+    # Calculate AI gain
+    gain = (pf11 * pas * 0.5) + (pf11 * rd_pf11 * 0.47 * 0.1) + (pf12 * rd_pf12 * 0.47 * 0.1)
+    ai_gains[year] = int(gain)  # Store as integer
+
+# Display result in Streamlit
+#st.write("AI Gains from 2025 to 2030:")
+#st.write(ai_gains)
+
+
+# Initialize dictionary
+secdivert_deductions = {}
+
+# Apply only for 2025 and 2026
+for i, year in enumerate([2025, 2026]):
+    diverted_val = deductions[i] * 0.25 * secdivert_v
+    secdivert_deductions[year] = int(diverted_val)
+
+# Display in Streamlit
+#st.write("Deductions after applying secondary diversion (2025–2026 only):")
+#st.write(secdivert_deductions)
+
+
+#qc for out e
+qc_effort = {
+    2025: 0,
+    2026: 94,
+    2027: 322,
+    2028: 300,
+    2029: 405,
+    2030: 468
+}
+
+
+for i, year in enumerate(years):
+    # Start with current deduction value
+    value = deductions[i]
+    
+    # Subtract secdivert only for 2025 and 2026
+    if year in secdivert_deductions:
+        value -= secdivert_deductions[year]
+    
+    # Subtract qc_effort
+    value -= qc_effort[year]
+
+    # Add AI gains
+    value += ai_gains[year]
+    
+    # Update the deductions list
+    deductions[i] = int(value)  # Ensure it's stored as integer
+
+# Display updated deductions
+#st.write("Final updated Deductions after applying secdivert, QC Effort, and AI Gains:")
+#st.write(deductions)
+
+
+capacity_split = {
+    "Div1": {2025: 27.1, 2026: 28.4, 2027: 28.7, 2028: 28.7, 2029: 28.2, 2030: 27.7},
+    "Div2": {2025: 25.8, 2026: 25.9, 2027: 24.6, 2028: 25.0, 2029: 24.9, 2030: 25.7},
+    "Div3": {2025: 20.5, 2026: 20.2, 2027: 20.3, 2028: 21.9, 2029: 22.7, 2030: 22.6},
+    "Div4": {2025: 26.6, 2026: 25.6, 2027: 26.4, 2028: 24.4, 2029: 24.2, 2030: 24.0}
+}
+
+
+# Initialize the result dictionary
+capacity_with_incentives = {div: {} for div in capacity_split.keys()}
+
+for div in capacity_split:
+    for year in years:
+        # capacity split % for division and year (as decimal)
+        split = capacity_split[div][year] / 100
+        
+        # base capacity (e.g., deductions) for the year
+        base_capacity = deductions[year - 2025]
+        
+        # incentive for division and year
+        incentive_val = selected_incentives[div][year]
+        
+        # calculate final value
+        final_val = int(round(base_capacity * split + incentive_val))
+        
+        # store in dictionary
+        capacity_with_incentives[div][year] = final_val
+
+# Display result in Streamlit
+#st.write("Capacity split by division with incentives added (2025-2030):")
+#st.write(capacity_with_incentives)
+
+
+quarterly_split = {
+    "Div1": {"Qtr1": 30.3, "Qtr2": 22.1, "Qtr3": 25.2, "Qtr4": 22.5},
+    "Div2": {"Qtr1": 29.4, "Qtr2": 24.8, "Qtr3": 25.2, "Qtr4": 20.6},
+    "Div3": {"Qtr1": 24.1, "Qtr2": 23.2, "Qtr3": 23.4, "Qtr4": 29.3},
+    "Div4": {"Qtr1": 25.6, "Qtr2": 23.2, "Qtr3": 24.4, "Qtr4": 26.8}
+}
+
+# Initialize dict to hold quarterly capacities
+quarterly_capacity = {div: {year: {} for year in range(2025, 2031)} for div in quarterly_split.keys()}
+
+for div, quarters in quarterly_split.items():
+    for year in range(2025, 2031):
+        yearly_capacity = capacity_with_incentives[div][year]
+        for qtr, pct in quarters.items():
+            quarterly_capacity[div][year][qtr] = int(round(yearly_capacity * (pct / 100)))
+
+# Example output in Streamlit
+st.write("Quarterly disbursed capacity by division and year:")
+st.write(quarterly_capacity)
+
+
+foa_base = {
+    "Div1": {"Q1": 7, "Q2": 6, "Q3": 5, "Q4": 5},
+    "Div2": {"Q1": 6, "Q2": 6, "Q3": 5, "Q4": 4},
+    "Div3": {"Q1": 6, "Q2": 7, "Q3": 5, "Q4": 7},
+    "Div4": {"Q1": 7, "Q2": 7, "Q3": 6, "Q4": 7},
+}
+
+
+
+# Original foa_per_quarter dictionary (before update)
+foa_per_quarter = {
+    "Div1": {"Q1": 7, "Q2": 6, "Q3": 5, "Q4": 5},
+    "Div2": {"Q1": 6, "Q2": 6, "Q3": 5, "Q4": 4},
+    "Div3": {"Q1": 6, "Q2": 7, "Q3": 5, "Q4": 7},
+    "Div4": {"Q1": 7, "Q2": 7, "Q3": 6, "Q4": 7},
+}
+
+# Calculate % gains from 2025 for each year 2026-2030
+base_value = deductions[0]  # 2025 value
+percentage_gains = {}
+
+for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030
+    current_value = deductions[year_idx]
+    gain = (current_value - base_value) / base_value
+    percentage_gains[2025 + year_idx] = max(gain, 0)  # convert negative gains to 0
+
+# Now update foa_per_quarter for each year 2026-2030
+# We create a nested dict: {year: {division: {quarter: updated_foa}}}
+updated_foa = {}
+
+for year in range(2025, 2031):
+    updated_foa[year] = {}
+    if year == 2025:
+        # For base year, no change
+        updated_foa[year] = foa_per_quarter
+    else:
+        gain = percentage_gains[year]
+        updated_foa[year] = {}
+        for div, quarters in foa_per_quarter.items():
+            updated_foa[year][div] = {}
+            for qtr, count in quarters.items():
+                new_count = int(round(count * (1 + gain)))
+                updated_foa[year][div][qtr] = new_count
+
+# Optional: Display result for a sample year (e.g., 2026)
+#import pprint
+#pprint.pprint(updated_foa[2026])
+
 
 if not os.path.exists(filename):
     st.error(f"File '{filename}' not found in the current directory.")
@@ -121,7 +358,7 @@ pf11_thresholds = {
 }
 
 pf12_thresholds = {
-    2026: date(2025, 10, 1),
+    2026: date(2026, 1, 1),
     2027: date(2026, 10, 1),
     2028: date(2027, 10, 1),
     2029: date(2028, 10, 1),
@@ -215,20 +452,24 @@ with pd.ExcelWriter(division_buffer, engine='xlsxwriter') as writer:
         div_df.to_excel(writer, sheet_name=div, index=False)
 division_buffer.seek(0)
 
+'''
 #Step 1: Read capacity file bytes into memory buffer once
 with open('Capacity-FOA for Python.xlsx', 'rb') as f:
     capacity_bytes = f.read()
 capacity_buffer = io.BytesIO(capacity_bytes)
+'''
 
 # Step 2: Read calendar file bytes into memory buffer once
 with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
     calendar_bytes = f.read()
 calendar_buffer = io.BytesIO(calendar_bytes)
 
+'''
 # Step 3: Load capacity dataframes from capacity_buffer
 with pd.ExcelFile(capacity_buffer) as xls:
     max_tasks_df = pd.read_excel(xls, sheet_name="Python-FOA", index_col=0)
     max_cap_df = pd.read_excel(xls, sheet_name="Python-Cap", index_col=0)
+'''
 
 # Step 4: Load calendar dataframe from calendar_buffer
 calendar_buffer.seek(0)  # Important: reset pointer before reading
@@ -271,8 +512,20 @@ for i, current_div in enumerate(divisions):
             break
           
         quarter_label = working_days_df['Quarter'].iloc[working_day_index]
-        max_capacity = max_cap_df.loc[quarter_label, current_div] if quarter_label in max_cap_df.index else 0
-        max_tasks_per_day = max_tasks_df.loc[quarter_label, current_div] if quarter_label in max_tasks_df.index else 0
+        
+        # Get current date to derive year and quarter
+        current_date = working_days_df['Date'].iloc[working_day_index]
+        current_year = current_date.year
+        current_quarter = working_days_df['Quarter'].iloc[working_day_index]
+
+        # Defensive default
+        max_capacity = 0
+        max_tasks_per_day = 0
+
+        # Use quarterly_capacity and updated_foa
+        if (current_div in quarterly_capacity and current_year in quarterly_capacity[current_div] and current_quarter in foa_per_quarter[current_div]):
+            max_capacity = quarterly_capacity[current_div][current_year][current_quarter]
+            max_tasks_per_day = updated_foa[current_year][current_div][current_quarter]
 
         SAndEType = task['S&E']
         SAndEPoint = SAndE_Points.get(SAndEType, 0)
@@ -383,27 +636,16 @@ s_qty = [3000, 4200, 4656, 5232, 2000, 1000]
 outsource_e_time, outsource_s_time = 9, 5
 
 
-# --- Compute E files returned each year ---
-no_of_mths = 15 - outsource_e_time
-fy_e = [
-    round(e_qty[0]/12 * no_of_mths),
-    e_qty[0] - round(e_qty[0]/12 * no_of_mths) + round(e_qty[1]/12 * no_of_mths),
-    round(e_qty[1] - e_qty[1]/12 * no_of_mths) + round(e_qty[2]/12 * no_of_mths),
-    round(e_qty[2] - e_qty[2]/12 * no_of_mths) + round(e_qty[3]/12 * no_of_mths),
-    round(e_qty[3] - e_qty[3]/12 * no_of_mths) + round(e_qty[4]/12 * no_of_mths)
-]
-
-
 # --- Fiscal year start/end dates ---
 sdates_e = [datetime(2026, 4, 1)] + [datetime(y, 1, 1) for y in range(2027, 2031)]
 sdates = [datetime(y, 1, 1) for y in range(2025, 2031)]
 edates = [datetime(y, 12, 31) for y in range(2025, 2031)]
- 
- 
+
+
 # Compute avg_E_age properly using min and max dates per year
 min_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].min().tolist()
 max_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].max().tolist()
- 
+
 avg_list = []
 for i in range(len(e_qty)):
     avg_days = ((sdates_e[i] - min_dates[i]).days + (edates[i+1] - max_dates[i]).days) / 2
@@ -428,13 +670,6 @@ fy_sums = excel_merged.groupby('FY')['time_c'].sum().to_dict()
 fy_counts = excel_merged.groupby('FY')['time_c'].count().to_dict()
 
 
-# Get value from a specific cell (e.g., B2)
-# --- Define PPH projections ---
-def projected_pph(year_multiplier):
-    return round(pph_base * (pphgrowth_v ** year_multiplier))
-pph_base = 714
-
-
 # --- Updated total_sum_count using both age and time ---
 def total_sum_count(fy, s_qty, e_qty=0, s_age=0, e_age=0, s_time=0, e_time=0, year_mult=0):
     projected_sum = projected_pph(year_mult) * 10
@@ -456,8 +691,10 @@ def total_sum_count(fy, s_qty, e_qty=0, s_age=0, e_age=0, s_time=0, e_time=0, ye
 
 # --- Final FOA values per fiscal year ---
 foa_values = []
-for i, fy in enumerate(['FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']):
-    e = fy_e[i - 1] if i > 0 else 0
+fy_list = ['FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']
+for i, fy in enumerate(fy_list):
+    # Use e_qty directly
+    e = e_qty[i] if i < len(e_qty) else 0
     foa_sum, foa_count = total_sum_count(
         fy,
         s_qty[i],
