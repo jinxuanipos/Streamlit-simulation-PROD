@@ -219,7 +219,7 @@ division_buffer.seek(0)
 
 
 if "updated_excel" not in st.session_state:
-    st.error("Capacity file not found in memory.")
+    st.error("Click Start Simulation")
     st.stop()
  
 try:
