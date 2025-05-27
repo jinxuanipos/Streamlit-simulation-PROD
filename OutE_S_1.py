@@ -216,9 +216,7 @@ with pd.ExcelWriter(division_buffer, engine='xlsxwriter') as writer:
 division_buffer.seek(0)
 
 #Step 1: Read capacity file bytes into memory buffer once
-with open('Capacity-FOA for Python.xlsx', 'rb') as f:
-    capacity_bytes = f.read()
-capacity_buffer = io.BytesIO(capacity_bytes)
+capacity_buffer = io.BytesIO(st.session_state["updated_excel"].getvalue())
 
 # Step 2: Read calendar file bytes into memory buffer once
 with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
