@@ -252,10 +252,10 @@ for div in capacity_split:
 
 
 quarterly_split = {
-    "Div1": {"Qtr1": 30.3, "Qtr2": 22.1, "Qtr3": 25.2, "Qtr4": 22.5},
-    "Div2": {"Qtr1": 29.4, "Qtr2": 24.8, "Qtr3": 25.2, "Qtr4": 20.6},
-    "Div3": {"Qtr1": 24.1, "Qtr2": 23.2, "Qtr3": 23.4, "Qtr4": 29.3},
-    "Div4": {"Qtr1": 25.6, "Qtr2": 23.2, "Qtr3": 24.4, "Qtr4": 26.8}
+    "Div1": {"Q1": 30.3, "Q2": 22.1, "Q3": 25.2, "Q4": 22.5},
+    "Div2": {"Q1": 29.4, "Q2": 24.8, "Q3": 25.2, "Q4": 20.6},
+    "Div3": {"Q1": 24.1, "Q2": 23.2, "Q3": 23.4, "Q4": 29.3},
+    "Div4": {"Q1": 25.6, "Q2": 23.2, "Q3": 24.4, "Q4": 26.8}
 }
 
 # Initialize dict to hold quarterly capacities
