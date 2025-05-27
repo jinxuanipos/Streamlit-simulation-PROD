@@ -274,7 +274,6 @@ for i, current_div in enumerate(divisions):
     # Default in case no condition met
     foa = pd.NaT
     fy = pd.NA
-
     for j, (index, task) in enumerate(div_task_df.iterrows()):
         if working_day_index >= maxwkdays:
             break
