@@ -332,8 +332,11 @@ if st.button("Start Simulation"):
                     updated_foa[year][div][qtr] = new_count
 
     # Optional: Display result for a sample year (e.g., 2026)
-    import pprint
-    pprint.pprint(updated_foa)
+    # import pprint
+    # pprint.pprint(updated_foa)
+    # Example output in Streamlit
+    st.write("Display result for a sample")
+    st.write(updated_foa)
 
 
     # === Define Constants ===
