@@ -169,18 +169,18 @@ if st.button("Start Simulation"):
         pf11 = est_AI_dict["pf11"][i]
         pf12 = est_AI_dict["pf12"][i]
 
-    # Get AI impact percentages for the year
-    pas = ai_dict["PAS - PF11"][year] / 100
-    rd_pf11 = ai_dict["Report Drafter - PF11"][year] / 100
-    rd_pf12 = ai_dict["Report Drafter - PF12"][year] / 100
+        # Get AI impact percentages for the year
+        pas = ai_dict["PAS - PF11"][year] / 100
+        rd_pf11 = ai_dict["Report Drafter - PF11"][year] / 100
+        rd_pf12 = ai_dict["Report Drafter - PF12"][year] / 100
 
-    # Calculate AI gain
-    gain = (pf11 * pas * 0.5) + (pf11 * rd_pf11 * 0.47 * 0.1) + (pf12 * rd_pf12 * 0.47 * 0.1)
-    ai_gains[year] = int(gain)  # Store as integer
+        # Calculate AI gain
+        gain = (pf11 * pas * 0.5) + (pf11 * rd_pf11 * 0.47 * 0.1) + (pf12 * rd_pf12 * 0.47 * 0.1)
+        ai_gains[year] = int(gain)  # Store as integer
 
-    # Display result in Streamlit
-    st.write("AI Gains from 2025 to 2030:")
-    st.write(ai_gains)
+        # Display result in Streamlit
+        #st.write("AI Gains from 2025 to 2030:")
+        #st.write(ai_gains)
 
 
     # Initialize dictionary
