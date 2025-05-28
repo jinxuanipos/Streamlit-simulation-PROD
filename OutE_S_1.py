@@ -647,6 +647,13 @@ if st.button("Start Simulation"):
     excel_merged['time_c'] = ((excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5).clip(lower=1)
     excel_merged['original time'] = (excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5
     #excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
+    # Download button for the combined Excel file
+    st.download_button(
+        label="Download Excel Merged File (.xlsx)",
+        data=excel_merged,
+        file_name="excel_merged.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
     # --- Load outsource data ---
     task_df = union_df[union_df['Outsource Year'].notnull()]
