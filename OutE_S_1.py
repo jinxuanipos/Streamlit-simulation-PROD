@@ -647,13 +647,21 @@ if st.button("Start Simulation"):
     excel_merged['time_c'] = ((excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5).clip(lower=1)
     excel_merged['original time'] = (excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5
     #excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
+    
+    # Convert DataFrame to in-memory Excel file
+    excel_buffer = io.BytesIO()
+    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
+      excel_merged.to_excel(writer, index=False)
+    excel_buffer.seek(0)  # Important: move to the beginning of the buffer
+
     # Download button for the combined Excel file
     st.download_button(
-        label="Download Excel Merged File (.xlsx)",
-        data=excel_merged,
-        file_name="excel_merged.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      label="Download Excel Merged File (.xlsx)",
+      data=excel_buffer,
+      file_name="excel_merged.xlsx",
+      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
     # --- Load outsource data ---
     task_df = union_df[union_df['Outsource Year'].notnull()]
