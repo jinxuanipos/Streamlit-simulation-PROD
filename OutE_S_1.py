@@ -506,8 +506,8 @@ if st.button("Start Simulation"):
         total_tasks = len(div_task_df)
 
         # Default in case no condition met
-        foa = pd.NaT
-        fy = pd.NA
+        # foa = pd.NaT
+        # fy = pd.NA
         for j, (index, task) in enumerate(div_task_df.iterrows()):
             if working_day_index >= maxwkdays:
                 break
