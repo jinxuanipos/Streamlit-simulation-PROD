@@ -121,6 +121,8 @@ if st.button("Start Simulation"):
 
     # Subtract deductions from capacity year by year
     adjusted_capacity = [cap - ded for cap, ded in zip(capacity, deductions)]
+    st.write("adjusted_capacity")
+    st.write(adjusted_capacity)
     
     #calculate AI gains
     est_AI_dict = {
@@ -134,8 +136,8 @@ if st.button("Start Simulation"):
         est_AI_dict["pf11"].append(pf11_val)
         est_AI_dict["pf12"].append(pf12_val)
 
-    #st.write("PF11 and PF12 volumes over years 2025-2030:")
-    #st.write(pf_dict)
+    st.write("PF11 and PF12 volumes over years 2025-2030:")
+    st.write(pf_dict)
 
     ai_dict = {
         "PAS - PF11": {
@@ -179,8 +181,8 @@ if st.button("Start Simulation"):
         ai_gains[year] = int(gain)  # Store as integer
 
         # Display result in Streamlit
-        #st.write("AI Gains from 2025 to 2030:")
-        #st.write(ai_gains)
+        st.write("AI Gains from 2025 to 2030:")
+        st.write(ai_gains)
 
 
     # Initialize dictionary
