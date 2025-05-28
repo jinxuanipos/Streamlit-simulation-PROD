@@ -137,7 +137,7 @@ if st.button("Start Simulation"):
         est_AI_dict["pf12"].append(pf12_val)
 
     st.write("PF11 and PF12 volumes over years 2025-2030:")
-    st.write(pf_dict)
+    st.write(est_AI_dict)
 
     ai_dict = {
         "PAS - PF11": {
