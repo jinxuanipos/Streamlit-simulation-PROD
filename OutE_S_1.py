@@ -179,8 +179,8 @@ if st.button("Start Simulation"):
     ai_gains[year] = int(gain)  # Store as integer
 
     # Display result in Streamlit
-    #st.write("AI Gains from 2025 to 2030:")
-    #st.write(ai_gains)
+    st.write("AI Gains from 2025 to 2030:")
+    st.write(ai_gains)
 
 
     # Initialize dictionary
