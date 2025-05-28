@@ -513,6 +513,8 @@ if st.button("Start Simulation"):
                 break
 
             quarter_label = working_days_df['Quarter'].iloc[working_day_index]
+            st.write("Display result for quarter label")
+            st.write(quarter_label)
 
             # Get current date to derive year and quarter
             current_date = working_days_df['Date'].iloc[working_day_index]
