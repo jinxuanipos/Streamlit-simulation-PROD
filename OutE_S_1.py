@@ -549,16 +549,37 @@ if st.button("Start Simulation"):
                 capacity_used = SAndEPoint if quarter_label != currentday_quarter else capacity_used + SAndEPoint
                 task_completed = 1
 
+            #elif max_capacity <= capacity_used:
+                #next_quarter = 'Q' + str(int(quarter_label[1:]) + 1)
+                #while working_day_index < maxwkdays and working_days_df['Quarter'].iloc[working_day_index] != next_quarter:
+                    #working_day_index += 1
+                #if working_day_index >= maxwkdays:
+                    #break
+                #foa = working_days_df['Date'].iloc[working_day_index]
+                #fy = working_days_df['FY'].iloc[working_day_index]
+                #capacity_used = SAndEPoint
+                #task_completed = 1
+
             elif max_capacity <= capacity_used:
-                next_quarter = 'Q' + str(int(quarter_label[1:]) + 1)
-                while working_day_index < maxwkdays and working_days_df['Quarter'].iloc[working_day_index] != next_quarter:
-                    working_day_index += 1
+                current_quarter = working_days_df['Quarter'].iloc[working_day_index]
+                current_year = working_days_df['Date'].iloc[working_day_index].year
+
+                # Look ahead for next available date with a *different quarter or year*
+                while working_day_index < maxwkdays:
+                  next_quarter = working_days_df['Quarter'].iloc[working_day_index]
+                  next_year = working_days_df['Date'].iloc[working_day_index].year
+                  if next_quarter != current_quarter or next_year != current_year:
+                      break
+                  working_day_index += 1
+
                 if working_day_index >= maxwkdays:
                     break
+
                 foa = working_days_df['Date'].iloc[working_day_index]
                 fy = working_days_df['FY'].iloc[working_day_index]
                 capacity_used = SAndEPoint
                 task_completed = 1
+
 
             div_task_df.at[index, 'FOA'] = foa
             div_task_df.at[index, 'FY'] = fy
