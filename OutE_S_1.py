@@ -188,11 +188,14 @@ if st.button("Start Simulation"):
     # Initialize dictionary
     secdivert_deductions = {}
 
-    # Apply only for 2025 and 2026
-    for i, year in enumerate([2025, 2026]):
-        diverted_val = adjusted_capacity[i] * 0.25 * secdivert_v
+    # Apply diversion logic for 2025 to 2030
+    for i, year in enumerate(range(2025, 2031)):
+        if year in [2025, 2026]:
+            diverted_val = adjusted_capacity[i] * 0.25 * secdivert_v
+        else:  # For 2027 to 2030
+            diverted_val = adjusted_capacity[i] * 0.25
         secdivert_deductions[year] = int(diverted_val)
-
+      
     # Display in Streamlit
     #st.write("Deductions after applying secondary diversion (2025–2026 only):")
     #st.write(secdivert_deductions)
@@ -260,8 +263,8 @@ if st.button("Start Simulation"):
             capacity_with_incentives[div][year] = final_val
 
     # Display result in Streamlit
-    #st.write("Capacity split by division with incentives added (2025-2030):")
-    #st.write(capacity_with_incentives)
+    st.write("Capacity split by division with incentives added (2025-2030):")
+    st.write(capacity_with_incentives)
 
 
     quarterly_split = {
