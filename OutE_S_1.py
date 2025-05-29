@@ -95,7 +95,7 @@ years = list(range(2025, 2031))  # 2025 to 2030
 
 
 # --- start calculations
-if st.button("Start Simulation") and not st.session_state.submitted:quota_status.markdown("🎉 All quotas have been applied.")
+if st.button("Start Simulation") and not st.session_state.submitted:
     #load right eot file
     filename = file_mapping.get(eot)
     task_df = None
