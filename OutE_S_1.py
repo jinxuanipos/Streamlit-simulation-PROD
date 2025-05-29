@@ -27,7 +27,7 @@ if not st.session_state.simulation_started:
          "Paced - Hire additional 20 by Jul 26"],
         key="hire"
     )
-    st.slider("Enter % take up of incentive scheme", min_value=0, max_value=25, value=50, key="stretch")
+    st.slider("Enter % take up of incentive scheme", min_value=0, max_value=25, value=10, key="stretch")
     st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10, key="pphgrowth")
     st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"], key="eot")
     st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, key="secdivert")
@@ -107,13 +107,14 @@ years = list(range(2025, 2031))  # 2025 to 2030
 if st.button("Start Simulation") and not st.session_state.simulation_started:
     st.session_state.simulation_started = True
 
-    # Read selections from session_state
+    # Read inputs from session state
     hire = st.session_state.hire
     stretch_v = st.session_state.stretch / 100
     pphgrowth_v = 1 + st.session_state.pphgrowth / 100
     eot = st.session_state.eot
     secdivert_v = st.session_state.secdivert / 100
-    
+
+   
     #load right eot file
     filename = file_mapping.get(eot)
     task_df = None
