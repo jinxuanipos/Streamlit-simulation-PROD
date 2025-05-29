@@ -310,11 +310,13 @@ if st.button("Start Simulation"):
     st.write("base value to adjust foa is:")
     st.write(base_value)
 
-    for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030
+
+    for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030 
         current_value = adjusted_capacity[year_idx]
         gain = (current_value - base_value) / base_value
-        percentage_gains[2025 + year_idx] = max(gain, 0)  # convert negative gains to 0
-
+        gain = round(gain, 2)  # Round gain to 2 decimal places
+        percentage_gains[2025 + year_idx] = max(gain, 0)  # Convert negative gains to 0
+ 
     # Now update foa_per_quarter for each year 2026-2030
     # We create a nested dict: {year: {division: {quarter: updated_foa}}}
     updated_foa = {}
