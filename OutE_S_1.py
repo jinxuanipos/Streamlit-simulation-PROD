@@ -10,35 +10,17 @@ import io
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
-# Use session_state to track whether the simulation has started
-if "simulation_started" not in st.session_state:
-    st.session_state.simulation_started = False
-
-# Reminder before the user clicks "Start Simulation"
-if not st.session_state.simulation_started:
-    st.info("Please configure the settings below and click **Start Simulation** to proceed.")
-
 # --- User Input ---
-if not st.session_state.simulation_started:
-    st.selectbox(
-        "Select Hiring Plan",
-        ["Accelerated - Hire additional 20 by Jan 26",
-         "Moderate - Hire additional 10 by Jan 26",
-         "Paced - Hire additional 20 by Jul 26"],
-        key="hire"
-    )
-    st.slider("Enter % take up of incentive scheme", min_value=0, max_value=25, value=10, key="stretch")
-    st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10, key="pphgrowth")
-    st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"], key="eot")
-    st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, key="secdivert")
+hire = st.selectbox("Select Hiring Plan", 
+                    ["Accelerated - Hire additional 20 by Jan 26",
+                     "Moderate - Hire additional 10 by Jan 26",
+                     "Paced - Hire additional 20 by Jul 26"])
 
-else:
-    # Display locked-in user selections
-    st.write(f"**Selected Hiring Plan:** {st.session_state.hire}")
-    st.write(f"**% Take-Up of Incentive Scheme:** {st.session_state.stretch}%")
-    st.write(f"**PPH Growth Y-o-Y:** {st.session_state.pphgrowth}%")
-    st.write(f"**EOT Waiver Success Rate:** {st.session_state.eot}")
-    st.write(f"**% Secondary Job Diversion for 2025-26:** {st.session_state.secdivert}%")
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=25, value=10)
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
+eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
+
 
 #mapping and calculation for user selected values
 hire_mapping = {
@@ -96,6 +78,7 @@ def scale_incentives(incentives, stretch_v):
         scaled[div] = {year: int(round(val * factor)) for year, val in years.items()}
     return scaled
 
+
 # --- Define PPH projections ---
 def projected_pph(year_multiplier):
     return round(pph_base * (pphgrowth_v ** year_multiplier))
@@ -103,18 +86,9 @@ def projected_pph(year_multiplier):
 deductions = [3050, 3632, 3852, 4132, 2564, 2079]
 years = list(range(2025, 2031))  # 2025 to 2030
 
-# --- Simulation Trigger ---
-if st.button("Start Simulation") and not st.session_state.simulation_started:
-    st.session_state.simulation_started = True
 
-    # Read inputs from session state
-    hire = st.session_state.hire
-    stretch_v = st.session_state.stretch / 100
-    pphgrowth_v = 1 + st.session_state.pphgrowth / 100
-    eot = st.session_state.eot
-    secdivert_v = st.session_state.secdivert / 100
-
-   
+# --- start calculations
+if st.button("Start Simulation"):
     #load right eot file
     filename = file_mapping.get(eot)
     task_df = None
