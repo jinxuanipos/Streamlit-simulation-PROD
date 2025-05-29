@@ -478,9 +478,6 @@ if st.button("Start Simulation") and not st.session_state.submitted:
             div_df.to_excel(writer, sheet_name=div, index=False)
     division_buffer.seek(0)
 
-    if "updated_excel" not in st.session_state:
-        st.error("Click Start Simulation")
-        st.stop()
     
     # Step 2: Read calendar file bytes into memory buffer once
     with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
