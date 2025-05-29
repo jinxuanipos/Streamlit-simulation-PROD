@@ -21,17 +21,17 @@ if not st.session_state.simulation_started:
 # --- User Input ---
 if not st.session_state.simulation_started:
     st.selectbox(
-        "Select Hiring Plan", 
+        "Select Hiring Plan",
         ["Accelerated - Hire additional 20 by Jan 26",
          "Moderate - Hire additional 10 by Jan 26",
-         "Slow - Hire additional 20 by Jul 26"], 
+         "Paced - Hire additional 20 by Jul 26"],
         key="hire"
     )
-
-    st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, key="stretch")
+    st.slider("Enter % take up of incentive scheme", min_value=0, max_value=25, value=50, key="stretch")
     st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10, key="pphgrowth")
     st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"], key="eot")
     st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, key="secdivert")
+
 else:
     # Display locked-in user selections
     st.write(f"**Selected Hiring Plan:** {st.session_state.hire}")
@@ -44,7 +44,7 @@ else:
 hire_mapping = {
     "Accelerated - Hire additional 20 by Jan 26": [7500, 8979, 10162, 11377, 12799, 13198],
     "Moderate - Hire additional 10 by Jan 26":     [7500, 9157, 10016, 11043, 11914, 12174],
-    "Slow - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
+    "Paced - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
 }
 
 stretch_v = stretch / 100
@@ -63,7 +63,7 @@ incentive_moderate = {
     "Div4": {2025: 100,  2026: 239, 2027: 260, 2028: 274, 2029: 285, 2030: 292}
 }
 
-incentive_slow = {
+incentive_paced = {
     "Div1": {2025: 102,  2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
     "Div2": {2025: 96,  2026: 232, 2027: 250, 2028: 284, 2029: 318, 2030: 338},
     "Div3": {2025: 77,  2026: 181, 2027: 206, 2028: 249, 2029: 281, 2030: 298},
@@ -73,7 +73,7 @@ incentive_slow = {
 incentive_scheme_mapping = {
     "Accelerated - Hire additional 20 by Jan 26": incentive_accelerated,
     "Moderate - Hire additional 10 by Jan 26": incentive_moderate,
-    "Slow - Hire additional 20 by Jul 26": incentive_slow
+    "Paced - Hire additional 20 by Jul 26": incentive_paced
 }
 
 pphgrowth_v = 1 + pphgrowth / 100
