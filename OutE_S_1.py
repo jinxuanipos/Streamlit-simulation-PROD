@@ -7,52 +7,47 @@ import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 import io
 
+# === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
-# === SESSION STATE INIT ===
+# Use session_state to track whether the simulation has started
 if "simulation_started" not in st.session_state:
     st.session_state.simulation_started = False
 
-# === USER REMINDER ===
+# Reminder before the user clicks "Start Simulation"
 if not st.session_state.simulation_started:
-    st.info("Please configure the settings above and click **Start Simulation** to proceed.")
+    st.info("Please configure the settings below and click **Start Simulation** to proceed.")
 
-# === USER INPUTS ===
+# --- User Input ---
 if not st.session_state.simulation_started:
-    st.session_state.hire = st.selectbox(
-        "Select Hiring Plan",
+    st.selectbox(
+        "Select Hiring Plan", 
         ["Accelerated - Hire additional 20 by Jan 26",
          "Moderate - Hire additional 10 by Jan 26",
-         "Slow - Hire additional 20 by Jul 26"],
+         "Slow - Hire additional 20 by Jul 26"], 
         key="hire"
     )
-    st.session_state.stretch = st.slider(
-        "Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, key="stretch"
-    )
-    st.session_state.pphgrowth = st.slider(
-        "Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10, key="pphgrowth"
-    )
-    st.session_state.eot = st.selectbox(
-        "Select EOT Waiver Success Rate", ["26%", "30%", "35%"], key="eot"
-    )
-    st.session_state.secdivert = st.slider(
-        "Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, key="secdivert"
-    )
+
+    st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, key="stretch")
+    st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10, key="pphgrowth")
+    st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"], key="eot")
+    st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, key="secdivert")
 else:
-    # Show locked values after simulation starts
+    # Display locked-in user selections
     st.write(f"**Selected Hiring Plan:** {st.session_state.hire}")
     st.write(f"**% Take-Up of Incentive Scheme:** {st.session_state.stretch}%")
     st.write(f"**PPH Growth Y-o-Y:** {st.session_state.pphgrowth}%")
     st.write(f"**EOT Waiver Success Rate:** {st.session_state.eot}")
     st.write(f"**% Secondary Job Diversion for 2025-26:** {st.session_state.secdivert}%")
 
-# === DATA MAPPINGS ===
+# --- Mappings and constants ---
 hire_mapping = {
     "Accelerated - Hire additional 20 by Jan 26": [7500, 8979, 10162, 11377, 12799, 13198],
     "Moderate - Hire additional 10 by Jan 26":     [7500, 9157, 10016, 11043, 11914, 12174],
     "Slow - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
 }
 
+# Base incentive schemes representing 10% take-up by default
 incentive_accelerated = {
     "Div1": {2025: 102, 2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
     "Div2": {2025: 96,  2026: 232, 2027: 250, 2028: 284, 2029: 318, 2030: 339},
@@ -84,7 +79,11 @@ file_mapping = {
     "35%": "DivisionFiles_All_35.xlsx"
 }
 
-# === CALCULATIONS ===
+pph_base = 714
+deductions = [3050, 3632, 3852, 4132, 2564, 2079]
+years = list(range(2025, 2031))
+
+# --- Utility Functions ---
 def scale_incentives(incentives, stretch_v):
     factor = stretch_v / 0.1  # scale relative to base 10%
     scaled = {}
@@ -92,20 +91,20 @@ def scale_incentives(incentives, stretch_v):
         scaled[div] = {year: int(round(val * factor)) for year, val in years.items()}
     return scaled
 
-def projected_pph(year_multiplier):
-    return round(714 * (1 + st.session_state.pphgrowth / 100) ** year_multiplier)
+def projected_pph(year_multiplier, pphgrowth_v):
+    return round(pph_base * (pphgrowth_v ** year_multiplier))
 
-# === SIMULATION START ===
-if not st.session_state.simulation_started:
-    if st.button("Start Simulation"):
-        st.session_state.simulation_started = True
+# --- Simulation Trigger ---
+if st.button("Start Simulation") and not st.session_state.simulation_started:
+    st.session_state.simulation_started = True
 
-if st.session_state.simulation_started:
-    # You can now safely access inputs from session_state
+    # Read selections from session_state
+    hire = st.session_state.hire
     stretch_v = st.session_state.stretch / 100
     pphgrowth_v = 1 + st.session_state.pphgrowth / 100
+    eot = st.session_state.eot
     secdivert_v = st.session_state.secdivert / 100
-
+    
     #load right eot file
     filename = file_mapping.get(eot)
     task_df = None
