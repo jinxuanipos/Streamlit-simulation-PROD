@@ -10,16 +10,23 @@ import io
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
+# --- Initialize session state ---
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+
+# Disable widgets AFTER submission
+disable_inputs = st.session_state.submitted  # **This disables inputs only after button is clicked**
+
 # --- User Input ---
 hire = st.selectbox("Select Hiring Plan", 
                     ["Accelerated - Hire additional 20 by Jan 26",
                      "Moderate - Hire additional 10 by Jan 26",
-                     "Slow - Hire additional 20 by Jul 26"])
+                     "Slow - Hire additional 20 by Jul 26"], disabled=disable_inputs)
 
-stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50)
-pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
-eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
-secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50, disabled=disable_inputs)
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10, disabled=disable_inputs)
+eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"], disabled=disable_inputs)
+secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50, disabled=disable_inputs)
 
 
 #mapping and calculation for user selected values
@@ -88,7 +95,7 @@ years = list(range(2025, 2031))  # 2025 to 2030
 
 
 # --- start calculations
-if st.button("Start Simulation"):
+if st.button("Start Simulation") and not st.session_state.submitted:quota_status.markdown("🎉 All quotas have been applied.")
     #load right eot file
     filename = file_mapping.get(eot)
     task_df = None
@@ -121,8 +128,8 @@ if st.button("Start Simulation"):
 
     # Subtract deductions from capacity year by year
     adjusted_capacity = [cap - ded for cap, ded in zip(capacity, deductions)]
-    st.write("adjusted_capacity")
-    st.write(adjusted_capacity)
+    # st.write("adjusted_capacity")
+    # st.write(adjusted_capacity)
     
     #calculate AI gains
     est_AI_dict = {
@@ -136,8 +143,8 @@ if st.button("Start Simulation"):
         est_AI_dict["pf11"].append(pf11_val)
         est_AI_dict["pf12"].append(pf12_val)
 
-    st.write("PF11 and PF12 volumes over years 2025-2030:")
-    st.write(est_AI_dict)
+    # st.write("PF11 and PF12 volumes over years 2025-2030:")
+    # st.write(est_AI_dict)
 
     ai_dict = {
         "PAS - PF11": {
@@ -181,8 +188,8 @@ if st.button("Start Simulation"):
         ai_gains[year] = int(gain)  # Store as integer
 
         # Display result in Streamlit
-        st.write("AI Gains from 2025 to 2030:")
-        st.write(ai_gains)
+        # st.write("AI Gains from 2025 to 2030:")
+        # st.write(ai_gains)
 
 
     # Initialize dictionary
@@ -230,8 +237,8 @@ if st.button("Start Simulation"):
         adjusted_capacity[i] = int(value)  # Ensure it's stored as integer
 
     # Display updated deductions
-    st.write("Final updated cap after applying secdivert, QC Effort, and AI Gains:")
-    st.write(adjusted_capacity)
+    # st.write("Final updated cap after applying secdivert, QC Effort, and AI Gains:")
+    # st.write(adjusted_capacity)
 
 
     capacity_split = {
@@ -263,8 +270,8 @@ if st.button("Start Simulation"):
             capacity_with_incentives[div][year] = final_val
 
     # Display result in Streamlit
-    st.write("Capacity split by division with incentives added (2025-2030):")
-    st.write(capacity_with_incentives)
+    # st.write("Capacity split by division with incentives added (2025-2030):")
+    # st.write(capacity_with_incentives)
 
 
     quarterly_split = {
@@ -284,8 +291,8 @@ if st.button("Start Simulation"):
                 quarterly_capacity[div][year][qtr] = int(round(yearly_capacity * (pct / 100)))
 
     # Example output in Streamlit
-    st.write("Quarterly disbursed capacity by division and year:")
-    st.write(quarterly_capacity)
+    # st.write("Quarterly disbursed capacity by division and year:")
+    # st.write(quarterly_capacity)
 
 
     foa_base = {
@@ -307,8 +314,8 @@ if st.button("Start Simulation"):
     # Calculate % gains from 2025 for each year 2026-2030
     base_value = adjusted_capacity[0]  # 2025 value
     percentage_gains = {}
-    st.write("base value to adjust foa is:")
-    st.write(base_value)
+    # st.write("base value to adjust foa is:")
+    # st.write(base_value)
 
 
     for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030 
@@ -339,10 +346,10 @@ if st.button("Start Simulation"):
     # import pprint
     # pprint.pprint(updated_foa)
     # Example output in Streamlit
-    st.write("Display FOA result:")
-    st.write(updated_foa)
-    st.write("percentage gains:")
-    st.write(percentage_gains)
+    # st.write("Display FOA result:")
+    # st.write(updated_foa)
+    # st.write("percentage gains:")
+    # st.write(percentage_gains)
 
 
     # === Define Constants ===
@@ -459,7 +466,6 @@ if st.button("Start Simulation"):
     progress_bar.empty()
     quota_status.markdown("🎉 All quotas have been applied.")
 
-
     union_df = pd.concat([task_df_pf11, task_df_pf12])
     task_df_inhouse = union_df[union_df['Outsource Year'].isnull()]
     divisions = ['Div1', 'Div2', 'Div3', 'Div4']
@@ -472,6 +478,9 @@ if st.button("Start Simulation"):
             div_df.to_excel(writer, sheet_name=div, index=False)
     division_buffer.seek(0)
 
+    if "updated_excel" not in st.session_state:
+    st.error("Click Start Simulation")
+    st.stop()
 
     # Step 2: Read calendar file bytes into memory buffer once
     with open('WorkingDays25-30_withFY.xlsx', 'rb') as f:
@@ -618,12 +627,12 @@ if st.button("Start Simulation"):
     combined_buffer.seek(0)
 
     # Download button for the combined Excel file
-    st.download_button(
-        label="Download Complete Schedule (.xlsx)",
-        data=combined_buffer,
-        file_name="schedule_output.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    # st.download_button(
+        #label="Download Complete Schedule (.xlsx)",
+        #data=combined_buffer,
+        #file_name="schedule_output.xlsx",
+        #mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    #)
 
 
     #results here
@@ -654,19 +663,19 @@ if st.button("Start Simulation"):
     excel_merged['original time'] = (excel_merged['FOA'] - excel_merged['S&E Lodge Date']).dt.days / 30.5
     #excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
     
-    # Convert DataFrame to in-memory Excel file
-    excel_buffer = io.BytesIO()
-    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
-      excel_merged.to_excel(writer, index=False)
-    excel_buffer.seek(0)  # Important: move to the beginning of the buffer
+    # Convert DataFrame to in-memory Excel file (intermediate step for the following download)
+    # excel_buffer = io.BytesIO()
+    # with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
+      # excel_merged.to_excel(writer, index=False)
+    # excel_buffer.seek(0)  # Important: move to the beginning of the buffer
 
     # Download button for the combined Excel file
-    st.download_button(
-      label="Download Excel Merged File (.xlsx)",
-      data=excel_buffer,
-      file_name="excel_merged.xlsx",
-      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    #st.download_button(
+      #label="Download Excel Merged File (.xlsx)",
+      #data=excel_buffer,
+      #file_name="excel_merged.xlsx",
+      #mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    #)
 
 
     # --- Load outsource data ---
