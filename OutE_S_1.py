@@ -432,32 +432,17 @@ if st.button("Start Simulation"):
         task_df_pf12['Outsource Year'] = task_df_pf12.get('Outsource Year', pd.NA)
 
         # --- Apply quotas with visual progress and displayed quota counts ---
-    st.subheader("Applying Quotas for PF11 and PF12")
-    progress_text = "Allocating PF11 and PF12 quotas..."
-    progress_bar = st.progress(0, text=progress_text)
-    quota_status = st.empty()
-
-    total = len(pf11_quotas) + len(pf12_quotas)
-    current = 0
+    st.subheader("Starting simulation")
 
     # PF11 Quotas
     for year, qty in pf11_quotas.items():
         task_df_pf11 = apply_quotas_for_year(year, qty, task_df_pf11, pf11_thresholds[year], 'Outsource S')
-        current += 1
-        percent = current / total
-        progress_bar.progress(percent, text=f"{progress_text} (PF11 - {year})")
-        quota_status.markdown(f"✅ **PF11 - {year} Quota Applied**: {qty}")
 
     # PF12 Quotas
     for year, qty in pf12_quotas.items():
         task_df_pf12 = apply_quotas_for_year(year, qty, task_df_pf12, pf12_thresholds[year], 'Outsource E')
-        current += 1
-        percent = current / total
-        progress_bar.progress(percent, text=f"{progress_text} (PF12 - {year})")
-        quota_status.markdown(f"✅ **PF12 - {year} Quota Applied**: {qty}")
 
-    progress_bar.empty()
-    quota_status.markdown("🎉 All quotas have been applied.")
+    st.markdown("🎉 Preparing to start scheduling of FOAs by division...")
 
     union_df = pd.concat([task_df_pf11, task_df_pf12])
     task_df_inhouse = union_df[union_df['Outsource Year'].isnull()]
@@ -488,13 +473,13 @@ if st.button("Start Simulation"):
 
     # FOA scheduling by division
     # FOA scheduling by division with nested progress bars
-    st.subheader("Scheduling FOA by Division")
-
+    st.subheader("Scheduling FOAs by division")
+ 
     main_progress = st.progress(0, text="Starting FOA scheduling...")
     status_text = st.empty()
     total_divs = len(divisions)
     xls_divisions = pd.ExcelFile(division_buffer)
-
+    
     division_results_buffers = {}
     for i, current_div in enumerate(divisions):
         # Read division sheet from in-memory ExcelFile instead of disk
@@ -605,10 +590,11 @@ if st.button("Start Simulation"):
 
     div_progress.empty()
     status_text.markdown("✅ All divisions scheduled.")
+    status_text.markdown("⏳ Calculating results and plotting final FOA graph...")
     main_progress.empty()
-
+  
     # Combine all division buffers into a single Excel file with multiple sheets
-    combined_buffer = io.BytesIO()
+    combined_buffer = io.BytesIO()     
     with pd.ExcelWriter(combined_buffer, engine='xlsxwriter') as writer:
         for div_name, buffer in division_results_buffers.items():
             buffer.seek(0)
