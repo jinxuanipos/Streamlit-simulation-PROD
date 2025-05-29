@@ -307,6 +307,8 @@ if st.button("Start Simulation"):
     # Calculate % gains from 2025 for each year 2026-2030
     base_value = adjusted_capacity[0]  # 2025 value
     percentage_gains = {}
+    st.write("base value to adjust foa is:")
+    st.write(base_value)
 
     for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030
         current_value = adjusted_capacity[year_idx]
@@ -335,8 +337,10 @@ if st.button("Start Simulation"):
     # import pprint
     # pprint.pprint(updated_foa)
     # Example output in Streamlit
-    st.write("Display result for a sample")
+    st.write("Display FOA result:")
     st.write(updated_foa)
+    st.write("percentage gains:")
+    st.write(percentage_gains)
 
 
     # === Define Constants ===
