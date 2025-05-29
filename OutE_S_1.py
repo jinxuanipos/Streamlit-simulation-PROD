@@ -10,23 +10,16 @@ import io
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
-# --- Initialize session state ---
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
-
-# Disable widgets AFTER submission
-disable_inputs = st.session_state.submitted  # **This disables inputs only after button is clicked**
-
 # --- User Input ---
 hire = st.selectbox("Select Hiring Plan", 
                     ["Accelerated - Hire additional 20 by Jan 26",
                      "Moderate - Hire additional 10 by Jan 26",
-                     "Slow - Hire additional 20 by Jul 26"],disabled=disable_inputs)
+                     "Slow - Hire additional 20 by Jul 26"])
 
-stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50,disabled=disable_inputs)
-pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10,disabled=disable_inputs)
-eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"],disabled=disable_inputs)
-secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50,disabled=disable_inputs)
+stretch = st.slider("Enter % take up of incentive scheme", min_value=0, max_value=100, value=50)
+pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
+eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+secdivert = st.slider("Enter % of secondary job diversion for 2025-26", min_value=0, max_value=100, value=50)
 
 
 #mapping and calculation for user selected values
