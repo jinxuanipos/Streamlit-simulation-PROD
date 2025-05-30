@@ -16,7 +16,7 @@ hire = st.selectbox("Select Hiring Plan",
                      "Moderate - Hire additional 10 by Jan 26",
                      "Paced - Hire additional 20 by Jul 26"])
 
-stretch = st.slider("Enter addtional capacity from incentive scheme", min_value=0, max_value=20, value=10)
+stretch = st.slider("Enter % increase in capacity from incentive scheme", min_value=0, max_value=20, value=10)
 pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
 eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
 secdivert = st.slider("Enter % of secondary job diversion for 2025-26, where 0 = status quo and 100 = all secondary jobs diverted", min_value=0, max_value=100, value=50)
