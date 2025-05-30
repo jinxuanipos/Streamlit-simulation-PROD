@@ -80,11 +80,11 @@ secdivert_v = secdivert / 100
 def scale_incentives(incentives, stretch_2025, stretch_2026onwards):
     stretch_factors = {
         2025: stretch_2025 / 100/ 0.1,  # scale relative to base 10%
-        2026: stretch_2027_onward / 10/ 0.1,
-        2027: stretch_2027_onward / 10/ 0.1,
-        2028: stretch_2027_onward / 10/ 0.1,
-        2029: stretch_2027_onward / 10/ 0.1,
-	  2030: stretch_2027_onward / 10/ 0.1
+        2026: stretch_2026onwards / 100/ 0.1,
+        2027: stretch_2026onwards / 100/ 0.1,
+        2028: stretch_2026onwards / 100/ 0.1,
+        2029: stretch_2026onwards / 100/ 0.1,
+	  2030: stretch_2026onwards / 100/ 0.1
     }
 
     scaled = {}
@@ -118,7 +118,7 @@ if st.button("Start Simulation"):
     base_incentives = incentive_scheme_mapping[hire]
 
     # Scale incentives by stretch_v relative to 10%
-    selected_incentives = scale_incentives(base_incentives, stretch_v)
+    selected_incentives = scale_incentives(base_incentives, stretch_2025/100, stretch_2026onwards/100)
 
     # Show results
     #st.write(f"Incentive Scheme scaled by stretch value ({stretch}% take-up) for {hire}:")
