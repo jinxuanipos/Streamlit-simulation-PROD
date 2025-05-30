@@ -35,6 +35,14 @@ hire_mapping = {
     "Paced - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
 }
 
+ai_scenario_mapping = {
+    "Best - 55% by Jan30": "Best",
+    "Better - 45% by Jan30": "Better",
+    "Good - 35% by Jan30": "Good"
+}
+
+selected_ai_key = ai_scenario_mapping[AIgainschoice]
+ai_dict = ai_scenarios[selected_ai_key]
 
 # Base incentive schemes representing 10% take-up by default
 incentive_accelerated = {
