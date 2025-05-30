@@ -178,9 +178,6 @@ if st.button("Start Simulation"):
         "Report Drafter - PF11": {2025: 0.0, 2026: 0.0, 2027: 3.0, 2028: 6.0, 2029: 10.0, 2030: 10.0},
         "Report Drafter - PF12": {2025: 0.0, 2026: 0.0, 2027: 3.0, 2028: 6.0, 2029: 10.0, 2030: 10.0}}}
 
-    # Get the selected scenario's AI dictionary
-    ai_dict = ai_scenarios[AIgainschoice]
-
 
     ai_gains = {}
     for i, year in enumerate(years):
