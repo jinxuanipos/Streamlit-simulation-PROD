@@ -16,7 +16,13 @@ hire = st.selectbox("Select Hiring Plan",
                      "Moderate - Hire additional 10 by Jan 26",
                      "Paced - Hire additional 20 by Jul 26"])
 
-stretch = st.slider("Enter % increase in capacity from incentive scheme", min_value=0, max_value=20, value=10)
+AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", 
+                    ["Best - 55% by Jan30",
+                     "Better - 45% by Jan30",
+                     "Good - 35% by Jan30"])
+
+stretch_2025 = st.slider("Enter % increase in capacity from incentive scheme in 2025", min_value=0, max_value=20, value=10)
+stretch_2026onwards = st.slider("Enter % increase in capacity from incentive scheme from 2026 onwards", min_value=0, max_value=10, value=5)
 pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
 eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
 secdivert = st.slider("Enter % of secondary job diversion for 2025-26, where 0 = status quo and 100 = all secondary jobs diverted", min_value=0, max_value=100, value=50)
@@ -29,7 +35,7 @@ hire_mapping = {
     "Paced - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
 }
 
-stretch_v = stretch / 100
+
 # Base incentive schemes representing 10% take-up by default
 incentive_accelerated = {
     "Div1": {2025: 102, 2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
@@ -71,11 +77,22 @@ file_mapping = {
 secdivert_v = secdivert / 100
 
 
-def scale_incentives(incentives, stretch_v):
-    factor = stretch_v / 0.1  # scale relative to base 10%
+def scale_incentives(incentives, stretch_2025, stretch_2026onwards):
+    stretch_factors = {
+        2025: stretch_2025 / 100/ 0.1,  # scale relative to base 10%
+        2026: stretch_2027_onward / 10/ 0.1,
+        2027: stretch_2027_onward / 10/ 0.1,
+        2028: stretch_2027_onward / 10/ 0.1,
+        2029: stretch_2027_onward / 10/ 0.1,
+	  2030: stretch_2027_onward / 10/ 0.1
+    }
+
     scaled = {}
     for div, years in incentives.items():
-        scaled[div] = {year: int(round(val * factor)) for year, val in years.items()}
+        scaled[div] = {}
+        for year, val in years.items():
+            factor = stretch_factors.get(year)  
+            scaled[div][year] = int(round(val * factor))
     return scaled
 
 
@@ -139,32 +156,23 @@ if st.button("Start Simulation"):
     # st.write("PF11 and PF12 volumes over years 2025-2030:")
     # st.write(est_AI_dict)
 
-    ai_dict = {
-        "PAS - PF11": {
-            2025: 0.0,
-            2026: 10.0,
-            2027: 15.0,
-            2028: 20.0,
-            2029: 25.0,
-            2030: 25.0
-        },
-        "Report Drafter - PF11": {
-            2025: 0.0,
-            2026: 0.0,
-            2027: 3.0,
-            2028: 6.0,
-            2029: 10.0,
-            2030: 10.0
-        },
-        "Report Drafter - PF12": {
-            2025: 0.0,
-            2026: 0.0,
-            2027: 3.0,
-            2028: 6.0,
-            2029: 10.0,
-            2030: 10.0
-        }
-    }
+    ai_scenarios = {
+    "Best": {
+        "PAS - PF11": {2025: 0.0, 2026: 15.0, 2027: 22.5, 2028: 27.5, 2029: 35.0, 2030: 35.0},
+        "Report Drafter - PF11": {2025: 0.0, 2026: 10.0, 2027: 12.5, 2028: 15.0, 2029: 17.5, 2030: 20.0},
+        "Report Drafter - PF12": {2025: 0.0, 2026: 10.0, 2027: 12.5, 2028: 15.0, 2029: 17.5, 2030: 20.0}},
+    "Better": {
+        "PAS - PF11": {2025: 0.0, 2026: 10.0, 2027: 15.0, 2028: 20.0, 2029: 25.0, 2030: 25.0},
+        "Report Drafter - PF11": {2025: 0.0, 2026: 0.0, 2027: 5.0, 2028: 10.0, 2029: 15.0, 2030: 20.0},
+        "Report Drafter - PF12": {2025: 0.0, 2026: 0.0, 2027: 5.0, 2028: 10.0, 2029: 15.0, 2030: 20.0}},
+    "Good": {
+        "PAS - PF11": {2025: 0.0, 2026: 10.0, 2027: 15.0, 2028: 20.0, 2029: 25.0, 2030: 25.0},
+        "Report Drafter - PF11": {2025: 0.0, 2026: 0.0, 2027: 3.0, 2028: 6.0, 2029: 10.0, 2030: 10.0},
+        "Report Drafter - PF12": {2025: 0.0, 2026: 0.0, 2027: 3.0, 2028: 6.0, 2029: 10.0, 2030: 10.0}}}
+
+    # Get the selected scenario's AI dictionary
+    ai_dict = ai_scenarios[AIgainschoice]
+
 
     ai_gains = {}
     for i, year in enumerate(years):
