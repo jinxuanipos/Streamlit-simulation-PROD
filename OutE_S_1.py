@@ -18,31 +18,43 @@ row2 = st.container()
 with row1:
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("Quadrant 1")
+        st.subheader("Demand + S&E growth")
+	pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
+        eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+    with col2:
+        st.subheader("Capacity")
         hire = st.selectbox("Select Hiring Plan", 
                     ["Accelerated - Hire additional 20 by Jan 26",
                      "Moderate - Hire additional 10 by Jan 26",
-                     "Paced - Hire additional 20 by Jul 26"])
-    with col2:
-        st.subheader("Quadrant 2")
+		     "Paced - Hire additional 20 by Jul 26"])
         AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", 
                     ["Best - 55% by Jan30",
                      "Better - 45% by Jan30",
                      "Good - 35% by Jan30"])
-
+        stretch_2025 = st.slider("Enter % increase in capacity from incentive scheme in 2025", min_value=0, max_value=20, value=10)
+        stretch_2026onwards = st.slider("Enter yearly % increase in capacity from incentive scheme for 2026-2030", min_value=0, max_value=10, value=5)
+    
 # Second row: 2 columns (Quadrants 3 and 4)
 with row2:
     col3, col4 = st.columns(2)
-
+     
     with col3:
-        st.subheader("Quadrant 3")
-        stretch_2025 = st.slider("Enter % increase in capacity from incentive scheme in 2025", min_value=0, max_value=20, value=10)
-        stretch_2026onwards = st.slider("Enter yearly % increase in capacity from incentive scheme for 2026-2030", min_value=0, max_value=10, value=5)
-
+        st.subheader("OUtsource")
+        Outsource_S_2025 = st.slider("Enter Volume of Outsource Search 2025", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2026 = st.slider("Enter Volume of Outsource Search 2026", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2027 = st.slider("Enter Volume of Outsource Search 2027", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2028 = st.slider("Enter Volume of Outsource Search 2028", min_value=0, max_value=4000, value=3000)    
+	Outsource_S_2029 = st.slider("Enter Volume of Outsource Search 2029", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2030 = st.slider("Enter Volume of Outsource Search 2030", min_value=0, max_value=4000, value=3000)
+	Outsource_E_2025 = st.slider("Enter Volume of Collaborative exam 2025", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2026 = st.slider("Enter Volume of Collaborative exam 2026", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2027 = st.slider("Enter Volume of Collaborative exam 2027", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2028 = st.slider("Enter Volume of Collaborative exam 2028", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2029 = st.slider("Enter Volume of Collaborative exam 2029", min_value=0, max_value=4000, value=3000)
+	Outsource_S_2030 = st.slider("Enter Volume of Collaborative exam 2030", min_value=0, max_value=4000, value=3000)
+	    
     with col4:
         st.subheader("Quadrant 4")
-        pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
-        eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
         secdivert = st.slider("Enter % of secondary job diversion for 2025-26, where 0 = status quo and 100 = all secondary jobs diverted", min_value=0, max_value=100, value=50)
 
 
