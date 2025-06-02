@@ -34,8 +34,8 @@ with col2:
         "Better - 45% by Jan30",
         "Good - 35% by Jan30"
     ])
-    stretch_2025 = st.slider("Incentive capacity boost 2025 (%)", 0, 20, 10)
-    stretch_2026onwards = st.slider("Yearly incentive boost 2026-2030 (%)", 0, 10, 5)
+    stretch_2025 = st.slider("select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
+    stretch_2026onwards = st.slider("Select yearly capacity boost from incentive scheme 2026-2030 (%)", 0, 10, 5)
 
 # --- Second Row: Quadrants 3 and 4 ---
 col3, col4 = st.columns(2)
@@ -60,7 +60,7 @@ with col3:
     Outsource_E_2030 = st.slider("Collaborative Exam Volume 2030", 0, 4000, 3000)
 
 with col4:
-    st.subheader("Diversion Assumptions")
+    st.subheader("Diversion")
     secdivert = st.slider("Secondary job diversion (2025–2026)", 0, 100, 50)
 
 
