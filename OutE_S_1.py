@@ -38,9 +38,7 @@ with col2:
     ])
     stretch_2025 = st.slider("Select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
     stretch_2026onwards = st.slider("Select yearly capacity boost from incentive scheme 2026-2030 (%)", 0, 10, 5)
-    #stretch_2025 = st.slider("Select number of divisions that meet incentive scheme 2025, ", 0, 2, 4)
-    #stretch_2026 = st.slider("Select number of divisions that meet incentive scheme 2026, ", 0, 2, 4)
-    #stretch_2027 = st.slider("Select number of divisions that meet incentive scheme 2027, ", 0, 2, 4)
+   
 
 # --- Second Row: Quadrants 3 and 4 ---
 col3, col4 = st.columns(2)
