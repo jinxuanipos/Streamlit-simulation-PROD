@@ -18,6 +18,11 @@ with col1:
     st.subheader("Demand + S&E growth")
     pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
     eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+    #Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y 2027-2030", [
+    #    "Upper",
+    #    "Average",
+    #    "Lower"
+    #])
 
 with col2:
     st.subheader("Capacity")
