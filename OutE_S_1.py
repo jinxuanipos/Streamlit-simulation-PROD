@@ -19,9 +19,9 @@ with col1:
     pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
     eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
     #Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y 2027-2030", [
-    #    "Upper",
-    #    "Average",
-    #    "Lower"
+    #    "High - Upper bound of patent filing forecast",
+    #    "Moderate - Average",
+    #    "Slow - Lower bound of patent filing forecast"
     #])
 
 with col2:
