@@ -10,54 +10,59 @@ import io
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
-with row1:
-    col1, col2 = st.columns(2)
+import streamlit as st
 
-    with col1:
-        st.subheader("Demand + S&E growth")
-        pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
-        eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+st.title("Running FOA Simulations")
 
-    with col2:
-        st.subheader("Capacity")
-        hire = st.selectbox("Select Hiring Plan", 
-                    ["Accelerated - Hire additional 20 by Jan 26",
-                     "Moderate - Hire additional 10 by Jan 26",
-                     "Paced - Hire additional 20 by Jul 26"])
-        AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", 
-                    ["Best - 55% by Jan30",
-                     "Better - 45% by Jan30",
-                     "Good - 35% by Jan30"])
-        stretch_2025 = st.slider("Enter % increase in capacity from incentive scheme in 2025", min_value=0, max_value=20, value=10)
-        stretch_2026onwards = st.slider("Enter yearly % increase in capacity from incentive scheme for 2026-2030", min_value=0, max_value=10, value=5)
-    
-# Second row: 2 columns (Quadrants 3 and 4)
-# Second row: 2 columns (Quadrants 3 and 4)
-with row2:
-    col3, col4 = st.columns(2)
-    
-    with col3:
-        st.subheader("Outsource Search & Collaborative Exam Volumes")
-        
-        # Outsource Search
-        Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000)
-        Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000)
-        Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000)
-        Outsource_S_2028 = st.slider("Outsource Search Volume 2028", 0, 4000, 3000)
-        Outsource_S_2029 = st.slider("Outsource Search Volume 2029", 0, 4000, 3000)
-        Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, 3000)
+# --- First Row: Quadrants 1 and 2 ---
+col1, col2 = st.columns(2)
 
-        # Collaborative Exams
-        Outsource_E_2025 = st.slider("Collaborative Exam Volume 2025", 0, 4000, 3000)
-        Outsource_E_2026 = st.slider("Collaborative Exam Volume 2026", 0, 4000, 3000)
-        Outsource_E_2027 = st.slider("Collaborative Exam Volume 2027", 0, 4000, 3000)
-        Outsource_E_2028 = st.slider("Collaborative Exam Volume 2028", 0, 4000, 3000)
-        Outsource_E_2029 = st.slider("Collaborative Exam Volume 2029", 0, 4000, 3000)
-        Outsource_E_2030 = st.slider("Collaborative Exam Volume 2030", 0, 4000, 3000)
-    
-    with col4:
-        st.subheader("Quadrant 4")
-        secdivert = st.slider("Secondary job diversion (2025–2026)", 0, 100, 50)
+with col1:
+    st.subheader("Demand + S&E growth")
+    pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
+    eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+
+with col2:
+    st.subheader("Capacity")
+    hire = st.selectbox("Select Hiring Plan", [
+        "Accelerated - Hire additional 20 by Jan 26",
+        "Moderate - Hire additional 10 by Jan 26",
+        "Paced - Hire additional 20 by Jul 26"
+    ])
+    AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", [
+        "Best - 55% by Jan30",
+        "Better - 45% by Jan30",
+        "Good - 35% by Jan30"
+    ])
+    stretch_2025 = st.slider("Incentive capacity boost 2025 (%)", 0, 20, 10)
+    stretch_2026onwards = st.slider("Yearly incentive boost 2026-2030 (%)", 0, 10, 5)
+
+# --- Second Row: Quadrants 3 and 4 ---
+col3, col4 = st.columns(2)
+
+with col3:
+    st.subheader("Outsource Volumes")
+
+    # Outsource Search
+    Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000)
+    Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000)
+    Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000)
+    Outsource_S_2028 = st.slider("Outsource Search Volume 2028", 0, 4000, 3000)
+    Outsource_S_2029 = st.slider("Outsource Search Volume 2029", 0, 4000, 3000)
+    Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, 3000)
+
+    # Collaborative Exams
+    Outsource_E_2025 = st.slider("Collaborative Exam Volume 2025", 0, 4000, 3000)
+    Outsource_E_2026 = st.slider("Collaborative Exam Volume 2026", 0, 4000, 3000)
+    Outsource_E_2027 = st.slider("Collaborative Exam Volume 2027", 0, 4000, 3000)
+    Outsource_E_2028 = st.slider("Collaborative Exam Volume 2028", 0, 4000, 3000)
+    Outsource_E_2029 = st.slider("Collaborative Exam Volume 2029", 0, 4000, 3000)
+    Outsource_E_2030 = st.slider("Collaborative Exam Volume 2030", 0, 4000, 3000)
+
+with col4:
+    st.subheader("Diversion Assumptions")
+    secdivert = st.slider("Secondary job diversion (2025–2026)", 0, 100, 50)
+
 
 
 #mapping and calculation for user selected values
