@@ -31,7 +31,7 @@ with col2:
         "Better - 45% by Jan30",
         "Good - 35% by Jan30"
     ])
-    stretch_2025 = st.slider("select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
+    stretch_2025 = st.slider("Select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
     stretch_2026onwards = st.slider("Select yearly capacity boost from incentive scheme 2026-2030 (%)", 0, 10, 5)
 
 # --- Second Row: Quadrants 3 and 4 ---
