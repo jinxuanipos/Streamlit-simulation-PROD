@@ -22,7 +22,7 @@ AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS a
                      "Good - 35% by Jan30"])
 
 stretch_2025 = st.slider("Enter % increase in capacity from incentive scheme in 2025", min_value=0, max_value=20, value=10)
-stretch_2026onwards = st.slider("Enter % increase in capacity from incentive scheme from 2026 onwards", min_value=0, max_value=10, value=5)
+stretch_2026onwards = st.slider("Enter yearly % increase in capacity from incentive scheme for 2026-2030", min_value=0, max_value=10, value=5)
 pphgrowth = st.slider("Enter PPH Growth Y-o-Y", min_value=0, max_value=20, value=10)
 eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
 secdivert = st.slider("Enter % of secondary job diversion for 2025-26, where 0 = status quo and 100 = all secondary jobs diverted", min_value=0, max_value=100, value=50)
