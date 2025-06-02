@@ -135,13 +135,16 @@ def scale_incentives(incentives, stretch_2025, stretch_2026onwards):
 
 # --- Define PPH projections ---
 # change logic to growth of pph usage rate
-# multiplier = what user select
+# year_multiplier = what user select
 # base usage rate = 6.3%. formula = base usage rate * multiplier * respective year s&e request (need to take care of the 3 EOT scenarios and 3 demand scenarios) 
 pph_base_rate = 0.063
+# searchexam_base =  ___
+# def projected_pph(year_multiplier):
+#    return round(searchexam_base * (pph_base_rate ** year_multiplier))
 
 def projected_pph(year_multiplier):
     return round(pph_base * (pphgrowth_v ** year_multiplier))
-
+	
 deductions = [3050, 3632, 3852, 4132, 2564, 2079]
 years = list(range(2025, 2031))  # 2025 to 2030
 
