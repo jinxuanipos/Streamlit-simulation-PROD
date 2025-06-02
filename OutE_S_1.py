@@ -121,8 +121,8 @@ if st.button("Start Simulation"):
     selected_incentives = scale_incentives(base_incentives, stretch_2025/100, stretch_2026onwards/100)
 
     # Show results
-    st.write(f"Incentive Scheme scaled by stretch value ({stretch}% take-up) for {hire}:")
-    st.write(selected_incentives)
+    # st.write(f"Incentive Scheme scaled by stretch value ({stretch}% take-up) for {hire}:")
+    # st.write(selected_incentives)
 
     for i in range(len(deductions)):
         year_multiplier = i + 1  # 2025 corresponds to 1
