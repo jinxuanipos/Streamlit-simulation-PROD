@@ -10,9 +10,6 @@ import io
 # === STREAMLIT APP ===
 st.title("Running FOA Simulations")
 
-import streamlit as st
-
-st.title("Running FOA Simulations")
 
 # --- First Row: Quadrants 1 and 2 ---
 col1, col2 = st.columns(2)
