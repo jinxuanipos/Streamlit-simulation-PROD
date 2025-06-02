@@ -32,27 +32,32 @@ with row1:
         stretch_2026onwards = st.slider("Enter yearly % increase in capacity from incentive scheme for 2026-2030", min_value=0, max_value=10, value=5)
     
 # Second row: 2 columns (Quadrants 3 and 4)
+# Second row: 2 columns (Quadrants 3 and 4)
 with row2:
     col3, col4 = st.columns(2)
-     
+    
     with col3:
-        st.subheader("OUtsource")
-        Outsource_S_2025 = st.slider("Enter Volume of Outsource Search 2025", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2026 = st.slider("Enter Volume of Outsource Search 2026", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2027 = st.slider("Enter Volume of Outsource Search 2027", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2028 = st.slider("Enter Volume of Outsource Search 2028", min_value=0, max_value=4000, value=3000)    
-	Outsource_S_2029 = st.slider("Enter Volume of Outsource Search 2029", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2030 = st.slider("Enter Volume of Outsource Search 2030", min_value=0, max_value=4000, value=3000)
-	Outsource_E_2025 = st.slider("Enter Volume of Collaborative exam 2025", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2026 = st.slider("Enter Volume of Collaborative exam 2026", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2027 = st.slider("Enter Volume of Collaborative exam 2027", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2028 = st.slider("Enter Volume of Collaborative exam 2028", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2029 = st.slider("Enter Volume of Collaborative exam 2029", min_value=0, max_value=4000, value=3000)
-	Outsource_S_2030 = st.slider("Enter Volume of Collaborative exam 2030", min_value=0, max_value=4000, value=3000)
-	    
+        st.subheader("Outsource Search & Collaborative Exam Volumes")
+        
+        # Outsource Search
+        Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000)
+        Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000)
+        Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000)
+        Outsource_S_2028 = st.slider("Outsource Search Volume 2028", 0, 4000, 3000)
+        Outsource_S_2029 = st.slider("Outsource Search Volume 2029", 0, 4000, 3000)
+        Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, 3000)
+
+        # Collaborative Exams
+        Outsource_E_2025 = st.slider("Collaborative Exam Volume 2025", 0, 4000, 3000)
+        Outsource_E_2026 = st.slider("Collaborative Exam Volume 2026", 0, 4000, 3000)
+        Outsource_E_2027 = st.slider("Collaborative Exam Volume 2027", 0, 4000, 3000)
+        Outsource_E_2028 = st.slider("Collaborative Exam Volume 2028", 0, 4000, 3000)
+        Outsource_E_2029 = st.slider("Collaborative Exam Volume 2029", 0, 4000, 3000)
+        Outsource_E_2030 = st.slider("Collaborative Exam Volume 2030", 0, 4000, 3000)
+    
     with col4:
         st.subheader("Quadrant 4")
-        secdivert = st.slider("Enter % of secondary job diversion for 2025-26, where 0 = status quo and 100 = all secondary jobs diverted", min_value=0, max_value=100, value=50)
+        secdivert = st.slider("Secondary job diversion (2025–2026)", 0, 100, 50)
 
 
 #mapping and calculation for user selected values
