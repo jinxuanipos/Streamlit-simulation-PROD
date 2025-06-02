@@ -44,20 +44,20 @@ with col3:
     st.subheader("Outsource Volumes")
 
     # Outsource Search
-    Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000)
-    Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000)
-    Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000)
-    Outsource_S_2028 = st.slider("Outsource Search Volume 2028", 0, 4000, 3000)
-    Outsource_S_2029 = st.slider("Outsource Search Volume 2029", 0, 4000, 3000)
-    Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, 3000)
+    Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, step =100, 3000)
+    Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, step =100, 3000)
+    Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, step =100, 3000)
+    Outsource_S_2028 = st.slider("Outsource Search Volume 2028", 0, 4000, step =100, 3000)
+    Outsource_S_2029 = st.slider("Outsource Search Volume 2029", 0, 4000, step =100, 3000)
+    Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, step =100, 3000)
 
     # Collaborative Exams
-    Outsource_E_2025 = st.slider("Collaborative Exam Volume 2025", 0, 4000, 3000)
-    Outsource_E_2026 = st.slider("Collaborative Exam Volume 2026", 0, 4000, 3000)
-    Outsource_E_2027 = st.slider("Collaborative Exam Volume 2027", 0, 4000, 3000)
-    Outsource_E_2028 = st.slider("Collaborative Exam Volume 2028", 0, 4000, 3000)
-    Outsource_E_2029 = st.slider("Collaborative Exam Volume 2029", 0, 4000, 3000)
-    Outsource_E_2030 = st.slider("Collaborative Exam Volume 2030", 0, 4000, 3000)
+    Outsource_E_2025 = st.slider("Collaborative Exam Volume 2025", 0, 4000, step =100, 3000)
+    Outsource_E_2026 = st.slider("Collaborative Exam Volume 2026", 0, 4000, step =100, 3000)
+    Outsource_E_2027 = st.slider("Collaborative Exam Volume 2027", 0, 4000, step =100, 3000)
+    Outsource_E_2028 = st.slider("Collaborative Exam Volume 2028", 0, 4000, step =100, 3000)
+    Outsource_E_2029 = st.slider("Collaborative Exam Volume 2029", 0, 4000, step =100, 3000)
+    Outsource_E_2030 = st.slider("Collaborative Exam Volume 2030", 0, 4000, step =100, 3000)
 
 with col4:
     st.subheader("Diversion")
