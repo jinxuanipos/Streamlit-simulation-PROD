@@ -58,7 +58,7 @@ with col3:
 
 with col4:
     st.subheader("Diversion")
-    secdivert = st.slider("Secondary job diversion (2025–2026)", 0, 100, 50)
+    secdivert = st.slider("Yearly secondary job diversion; where 0 = status quo and 100 = divert all secondary jobs", 0, 100, 50)
 
 
 
