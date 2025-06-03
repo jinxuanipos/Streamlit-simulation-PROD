@@ -279,7 +279,7 @@ if st.button("Start Simulation"):
     # Convert 'S&E Year' to numeric (safely)
     task_df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
     # Filter only years in 2025–2030
-    filtered_df = df[df['S&E Year'].between(2025, 2030)]
+    filtered_df = task_df[task_df['S&E Year'].between(2025, 2030)]
     # Group by year and count rows
     year_counts = filtered_df['S&E Year'].value_counts().sort_index()
     # Convert to dictionary
