@@ -8,6 +8,7 @@ from openpyxl import load_workbook
 import io
 
 # === STREAMLIT APP ===
+st.set_page_config(layout="wide")
 st.title("Running FOA Simulations")
 
 
