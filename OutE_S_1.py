@@ -11,7 +11,6 @@ import io
 st.set_page_config(layout="wide")
 st.title("Running FOA Simulations")
 
-
 # --- First Row: Quadrants 1 and 2 ---
 col1, col2 = st.columns(2)
 
@@ -53,10 +52,7 @@ with col3:
     Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000, step =100)
     Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000, step =100)
     Outsource_S_282930 = st.slider("Yearly Outsource Search Volume 2028-2030; equal volumes across all 3 years", 0, 4000, 3000, step =100)
-
-    
-
-
+  
 with col4:
     st.subheader("Collaboration")
     st.markdown("*Volume of files kept constant at ...., age of files = .... *")	
@@ -170,14 +166,17 @@ outsource_e_time = turnaround_mapping[Outsource_e_select]
 
 # --- Define PPH projections ---
 # change logic to growth of pph usage rate
-# multiplier = what user select
-# base usage rate = 6.3%. formula = base usage rate * multiplier * respective year s&e request (need to take care of the 3 EOT scenarios and 3 demand scenarios) 
-pph_base_rate = 0.063
-# searchexam_base = ____
-#Y_values = {}
-#for year in range(2025, 2030):
-#    Y = (0.0063 ** (1+pphgrowth/100)) * searchexam_base
-#    Y_values[year] = Y
+# base usage rate = 6.3%. formula = base usage rate * user's selected growth rate * respective year s&e 
+#pph_base_rate = 0.063  # 6.3%
+#searchexam_base = task_df.shape[0]
+#projected_pph = {}
+
+#for i, year in enumerate(range(2025, 2030)):  # i from 0 to 4
+    #growth_factor = (1 + pphgrowth / 100) ** i
+    #projected_value = searchexam_base * pph_base_rate * growth_factor
+    #projected_pph[year] = projected_value
+    #projected_pph_list.append(projected_value) #this list will supercede the deductions variable
+
 
 def projected_pph(year_multiplier):
     return round(pph_base * (pphgrowth_v ** year_multiplier))
