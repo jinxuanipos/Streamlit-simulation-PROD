@@ -255,15 +255,14 @@ if st.button("Start Simulation"):
         try:
             task_df = pd.read_excel(excel_file, sheet_name=sheet_name)
             st.success(f"Successfully loaded '{excel_file}' | Sheet: '{sheet_name}'")
-            # st.dataframe(task_df)  # Optional: display the data
         except Exception as e:
             st.error(f"Failed to read '{sheet_name}' from '{excel_file}': {e}")
 
-    #total capacity
+    # total capacity
     selected_capacity = capacity_map[hire][incentivescheme]
     st.write("Total capacity based on hiring plan and incentive scheme")
     st.write(selected_capacity)
-	
+
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
     searchexam_base = task_df.shape[0]
@@ -276,31 +275,19 @@ if st.button("Start Simulation"):
         projected_pph[year] = projected_value
         projected_pph_list.append(projected_value)
 
-   # Adjusting projections (deductions = adjusted values)
-   deductions = {}
-
-for i, year in enumerate(range(2025, 2030)):
-    proj_pph = projected_pph[year]
-    adjusted_pph = proj_pph * 0.97  # 3% deduction
-    deductions[year] = proj_pph + adjusted_pph  # or just use adjusted_pph if that's what you want
-    
-    for i in range(len(deductions)):
-        year_multiplier = i + 1  # 2025 corresponds to 1
-        proj_pph = projected_pph(year_multiplier)
-        adjusted_pph = proj_pph * 0.97
-        deductions[i] = deductions[i] + adjusted_pph
-
-    #st.write("Updated deductions after adding adjusted PPH:")
-    #st.write(deductions)
+    # Adjusting projections (deductions = adjusted values)
+    deductions = {}
+    for i, year in enumerate(range(2025, 2030)):
+        proj_pph = projected_pph[year]
+        adjusted_pph = proj_pph * 0.97  # 3% deduction
+        deductions[year] = proj_pph + adjusted_pph  
 
     # Get capacity figures for selected hire plan
     capacity = hire_mapping[hire]
 
     # Subtract deductions from capacity year by year
-    adjusted_capacity = [cap - ded for cap, ded in zip(capacity, deductions)]
-    # st.write("adjusted_capacity")
-    # st.write(adjusted_capacity)
-    
+    adjusted_capacity = [cap - deductions[year] for cap, year in zip(capacity, range(2025, 2030))]
+
     #calculate AI gains
     est_AI_dict = {
         "pf11": [],
