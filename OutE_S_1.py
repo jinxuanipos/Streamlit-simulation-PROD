@@ -96,71 +96,136 @@ excel_file = hire_file_mapping[hire]
 sheet_name = eot_sheet_mapping[eot]
 
 
-hire_mapping = {
-    "Accelerated - Hire additional 20 by Jan 26": [7500, 8979, 10162, 11377, 12799, 13198],
-    "Moderate - Hire additional 10 by Jan 26":     [7500, 9157, 10016, 11043, 11914, 12174],
-    "Paced - Hire additional 20 by Jul 26":         [7500, 8979, 10162, 11377, 12607, 13186]
+# input capacity dictionary
+accelerated_worst = {
+    "Div1": {2025: 1942, 2026: 2431, 2027: 2784, 2028: 3112, 2029: 3447, 2030: 3490},
+    "Div2": {2025: 1844, 2026: 2216, 2027: 2386, 2028: 2719, 2029: 3039, 2030: 3233},
+    "Div3": {2025: 1469, 2026: 1728, 2027: 1964, 2028: 2380, 2029: 2776, 2030: 2848},
+    "Div4": {2025: 1903, 2026: 2196, 2027: 2565, 2028: 2650, 2029: 2955, 2030: 3027}
 }
 
-
-# Base incentive schemes representing 10% take-up by default
-incentive_accelerated = {
-    "Div1": {2025: 102, 2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
-    "Div2": {2025: 96,  2026: 232, 2027: 250, 2028: 284, 2029: 318, 2030: 339},
-    "Div3": {2025: 77,  2026: 181, 2027: 206, 2028: 249, 2029: 291, 2030: 299},
-    "Div4": {2025: 100, 2026: 230, 2027: 268, 2028: 278, 2029: 309, 2030: 318}
+accelerated_baseline_all = {
+    "Div1": {2025: 2035, 2026: 2547, 2027: 2917, 2028: 3260, 2029: 3611, 2030: 3656},
+    "Div2": {2025: 1932, 2026: 2322, 2027: 2500, 2028: 2848, 2029: 3184, 2030: 3387},
+    "Div3": {2025: 1539, 2026: 1810, 2027: 2058, 2028: 2493, 2029: 2908, 2030: 2984},
+    "Div4": {2025: 1994, 2026: 2301, 2027: 2687, 2028: 2776, 2029: 3096, 2030: 3171}
 }
 
-incentive_moderate = {
-    "Div1": {2025: 102,  2026: 255, 2027: 284, 2028: 313, 2029: 337, 2030: 340},
-    "Div2": {2025: 96,  2026: 232, 2027: 251, 2028: 272, 2029: 303, 2030: 313},
-    "Div3": {2025: 77,  2026: 190, 2027: 207, 2028: 245, 2029: 266, 2030: 273},
-    "Div4": {2025: 100,  2026: 239, 2027: 260, 2028: 274, 2029: 285, 2030: 292}
+accelerated_baseline_incentive_all = {
+    "Div1": {2025: 2137, 2026: 2802, 2027: 3209, 2028: 3260, 2029: 3611, 2030: 3656},
+    "Div2": {2025: 2028, 2026: 2554, 2027: 2750, 2028: 2848, 2029: 3184, 2030: 3387},
+    "Div3": {2025: 1616, 2026: 1991, 2027: 2264, 2028: 2493, 2029: 2908, 2030: 2984},
+    "Div4": {2025: 2094, 2026: 2531, 2027: 2955, 2028: 2776, 2029: 3096, 2030: 3171}
 }
 
-incentive_paced = {
-    "Div1": {2025: 102,  2026: 255, 2027: 292, 2028: 326, 2029: 362, 2030: 365},
-    "Div2": {2025: 96,  2026: 232, 2027: 250, 2028: 284, 2029: 318, 2030: 338},
-    "Div3": {2025: 77,  2026: 181, 2027: 206, 2028: 249, 2029: 281, 2030: 298},
-    "Div4": {2025: 100,  2026: 230, 2027: 268, 2028: 278, 2029: 300, 2030: 317}
+accelerated_incentive_25 = {
+    "Div1": {2025: 2137, 2026: 2547, 2027: 2917, 2028: 3260, 2029: 3611, 2030: 3656},
+    "Div2": {2025: 2028, 2026: 2322, 2027: 2500, 2028: 2848, 2029: 3184, 2030: 3387},
+    "Div3": {2025: 1616, 2026: 1810, 2027: 2058, 2028: 2493, 2029: 2908, 2030: 2984},
+    "Div4": {2025: 2094, 2026: 2301, 2027: 2687, 2028: 2776, 2029: 3096, 2030: 3171}
 }
 
-incentive_scheme_mapping = {
-    "Accelerated - Hire additional 20 by Jan 26": incentive_accelerated,
-    "Moderate - Hire additional 10 by Jan 26": incentive_moderate,
-    "Paced - Hire additional 20 by Jul 26": incentive_paced
+accelerated_incentive_2627 = {
+    "Div1": {2025: 2035, 2026: 2802, 2027: 3209, 2028: 3260, 2029: 3611, 2030: 3656},
+    "Div2": {2025: 1932, 2026: 2554, 2027: 2750, 2028: 2848, 2029: 3184, 2030: 3387},
+    "Div3": {2025: 1539, 2026: 1991, 2027: 2264, 2028: 2493, 2029: 2908, 2030: 2984},
+    "Div4": {2025: 1994, 2026: 2531, 2027: 2955, 2028: 2776, 2029: 3096, 2030: 3171}
 }
 
-pphgrowth_v = 1 + pphgrowth / 100
-pph_base = 714
+moderate_worst = {
+    "Div1": {2025: 1943, 2026: 2428, 2027: 2703, 2028: 2987, 2029: 3213, 2030: 3245},
+    "Div2": {2025: 1844, 2026: 2214, 2027: 2398, 2028: 2593, 2029: 2896, 2030: 2989},
+    "Div3": {2025: 1469, 2026: 1815, 2027: 1975, 2028: 2346, 2029: 2542, 2030: 2604},
+    "Div4": {2025: 1903, 2026: 2283, 2027: 2484, 2028: 2616, 2029: 2720, 2030: 2783}
+}
 
-#FOR EOT FILES
-#file_mapping = {
-    #"26%": "DivisionFiles_All_26.xlsx",
-    #"30%": "DivisionFiles_All_30.xlsx",
-    #"35%": "DivisionFiles_All_35.xlsx"
-#}
+moderate_baseline_all = {
+    "Div1": {2025: 2035, 2026: 2544, 2027: 2832, 2028: 3129, 2029: 3366, 2030: 3400},
+    "Div2": {2025: 1932, 2026: 2319, 2027: 2512, 2028: 2716, 2029: 3034, 2030: 3131},
+    "Div3": {2025: 1539, 2026: 1901, 2027: 2069, 2028: 2458, 2029: 2663, 2030: 2728},
+    "Div4": {2025: 1994, 2026: 2392, 2027: 2602, 2028: 2741, 2029: 2850, 2030: 2915}
+}
 
-secdivert_v = secdivert / 100
+moderate_incentive_all = {
+    "Div1": {2025: 2137, 2026: 2799, 2027: 3116, 2028: 3129, 2029: 3366, 2030: 3400},
+    "Div2": {2025: 2028, 2026: 2551, 2027: 2763, 2028: 2716, 2029: 3034, 2030: 3131},
+    "Div3": {2025: 1616, 2026: 2091, 2027: 2276, 2028: 2458, 2029: 2663, 2030: 2728},
+    "Div4": {2025: 2094, 2026: 2631, 2027: 2862, 2028: 2741, 2029: 2850, 2030: 2915}
+}
 
+moderate_incentive_25 = {
+    "Div1": {2025: 2137, 2026: 2544, 2027: 2832, 2028: 3129, 2029: 3366, 2030: 3400},
+    "Div2": {2025: 2028, 2026: 2319, 2027: 2512, 2028: 2716, 2029: 3034, 2030: 3131},
+    "Div3": {2025: 1616, 2026: 1901, 2027: 2069, 2028: 2458, 2029: 2663, 2030: 2728},
+    "Div4": {2025: 2094, 2026: 2392, 2027: 2602, 2028: 2741, 2029: 2850, 2030: 2915}
+}
 
-def scale_incentives(incentives, stretch_2025, stretch_2026onwards):
-    stretch_factors = {
-        2025: stretch_2025 / 100/ 0.1,  # scale relative to base 10%
-        2026: stretch_2026onwards / 100/ 0.1,
-        2027: stretch_2026onwards / 100/ 0.1,
-        2028: stretch_2026onwards / 100/ 0.1,
-        2029: stretch_2026onwards / 100/ 0.1,
-	2030: stretch_2026onwards / 100/ 0.1
+moderate_incentive_2627 = {
+    "Div1": {2025: 2035, 2026: 2799, 2027: 3116, 2028: 3129, 2029: 3366, 2030: 3400},
+    "Div2": {2025: 1932, 2026: 2551, 2027: 2763, 2028: 2716, 2029: 3034, 2030: 3131},
+    "Div3": {2025: 1539, 2026: 2091, 2027: 2276, 2028: 2458, 2029: 2663, 2030: 2728},
+    "Div4": {2025: 1994, 2026: 2631, 2027: 2862, 2028: 2741, 2029: 2850, 2030: 2915}
+}
+
+slow_worst = {
+    "Div1": {2025: 1943, 2026: 2431, 2027: 2784, 2028: 3112, 2029: 3447, 2030: 3487},
+    "Div2": {2025: 1844, 2026: 2216, 2027: 2386, 2028: 2719, 2029: 3039, 2030: 3230},
+    "Div3": {2025: 1469, 2026: 1728, 2027: 1964, 2028: 2380, 2029: 2685, 2030: 2846},
+    "Div4": {2025: 1903, 2026: 2196, 2027: 2565, 2028: 2650, 2029: 2864, 2030: 3024}
+}
+
+slow_baseline_all = {
+    "Div1": {2025: 2035, 2026: 2547, 2027: 2917, 2028: 3260, 2029: 3611, 2030: 3653},
+    "Div2": {2025: 1932, 2026: 2322, 2027: 2500, 2028: 2848, 2029: 3184, 2030: 3384},
+    "Div3": {2025: 1539, 2026: 1810, 2027: 2058, 2028: 2493, 2029: 2813, 2030: 2981},
+    "Div4": {2025: 1994, 2026: 2301, 2027: 2687, 2028: 2776, 2029: 3000, 2030: 3168}
+}
+
+slow_incentive_all = {
+    "Div1": {2025: 2137, 2026: 2802, 2027: 3209, 2028: 3260, 2029: 3611, 2030: 3653},
+    "Div2": {2025: 2028, 2026: 2554, 2027: 2750, 2028: 2848, 2029: 3184, 2030: 3384},
+    "Div3": {2025: 1616, 2026: 1991, 2027: 2264, 2028: 2493, 2029: 2813, 2030: 2981},
+    "Div4": {2025: 2094, 2026: 2531, 2027: 2955, 2028: 2776, 2029: 3000, 2030: 3168}
+}
+
+slow_incentive_25 = {
+    "Div1": {2025: 2137, 2026: 2547, 2027: 2917, 2028: 3260, 2029: 3611, 2030: 3653},
+    "Div2": {2025: 2028, 2026: 2322, 2027: 2500, 2028: 2848, 2029: 3184, 2030: 3384},
+    "Div3": {2025: 1616, 2026: 1810, 2027: 2058, 2028: 2493, 2029: 2813, 2030: 2981},
+    "Div4": {2025: 2094, 2026: 2301, 2027: 2687, 2028: 2776, 2029: 3000, 2030: 3168}
+}
+
+slow_incentive_2627 = {
+    "Div1": {2025: 2035, 2026: 2802, 2027: 3209, 2028: 3260, 2029: 3611, 2030: 3653},
+    "Div2": {2025: 1932, 2026: 2554, 2027: 2750, 2028: 2848, 2029: 3184, 2030: 3384},
+    "Div3": {2025: 1539, 2026: 1991, 2027: 2264, 2028: 2493, 2029: 2813, 2030: 2981},
+    "Div4": {2025: 1994, 2026: 2531, 2027: 2955, 2028: 2776, 2029: 3000, 2030: 3168}
+}
+
+# Mapping for capacity dictionaries by hire plan and incentive scheme choice
+capacity_map = {
+    "Accelerated - Hire additional 20 by Jan 26": {
+        "Do not meet baseline target across all years for 2025-2030": accelerated_worst,
+        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027": accelerated_incentive_25,
+        "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025": accelerated_incentive_2627,
+        "Meet baseline target + incentive scheme for 2025, 2026 and 2027": accelerated_baseline_incentive_all,
+        "Meet baseline target only for 2025, 2026 and 2027": accelerated_baseline_all,
+    },
+    "Moderate - Hire additional 10 by Jan 26": {
+        "Do not meet baseline target across all years for 2025-2030": moderate_worst,
+        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027": moderate_incentive_25,
+        "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025": moderate_incentive_2627,
+        "Meet baseline target + incentive scheme for 2025, 2026 and 2027": moderate_incentive_all,
+        "Meet baseline target only for 2025, 2026 and 2027": moderate_baseline_all,
+    },
+    "Paced - Hire additional 20 by Jul 26": {
+        "Do not meet baseline target across all years for 2025-2030": slow_worst,
+        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027": slow_incentive_25,
+        "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025": slow_incentive_2627,
+        "Meet baseline target + incentive scheme for 2025, 2026 and 2027": slow_incentive_all,
+        "Meet baseline target only for 2025, 2026 and 2027": slow_baseline_all,
     }
-
-    scaled = {}
-    for div, years in incentives.items():
-        scaled[div] = {}
-        for year, val in years.items():
-            factor = stretch_factors.get(year)  
-            scaled[div][year] = int(round(val * factor))
-    return scaled
+}
 
 
 # Mapping logic to extract numeric months
@@ -174,24 +239,6 @@ turnaround_mapping = {
 outsource_e_time = turnaround_mapping[Outsource_e_select]
 
 
-# --- Define PPH projections ---
-# change logic to growth of pph usage rate
-# base usage rate = 6.3%. formula = base usage rate * user's selected growth rate * respective year s&e 
-#pph_base_rate = 0.063  # 6.3%
-#searchexam_base = task_df.shape[0]
-#projected_pph = {}
-
-#for i, year in enumerate(range(2025, 2030)):  # i from 0 to 4
-    #growth_factor = (1 + pphgrowth / 100) ** i
-    #projected_value = searchexam_base * pph_base_rate * growth_factor
-    #projected_pph[year] = projected_value
-    #projected_pph_list.append(projected_value) #this list will supercede the deductions variable
-
-
-def projected_pph(year_multiplier):
-    return round(pph_base * (pphgrowth_v ** year_multiplier))
-	
-deductions = [3050, 3632, 3852, 4132, 2564, 2079]
 years = list(range(2025, 2031))  # 2025 to 2030
 
 
@@ -212,16 +259,24 @@ if st.button("Start Simulation"):
         except Exception as e:
             st.error(f"Failed to read '{sheet_name}' from '{excel_file}': {e}")
 
-    # Get base incentives per hiring plan
-    base_incentives = incentive_scheme_mapping[hire]
+    #total capacity
+    selected_capacity = capacity_map[hire][incentivescheme]
+    st.write("Total capacity based on hiring plan and incentive scheme")
+    st.write(deductions)
+    
+    # --- Define PPH projections ---
+    # base usage rate = 6.3%. formula = base usage rate ** user's selected growth rate * respective year s&e 
+    pph_base_rate = 0.063  # 6.3%
+    searchexam_base = task_df.shape[0]
+    projected_pph = {}
 
-    # Scale incentives by stretch_v relative to 10%
-    selected_incentives = scale_incentives(base_incentives, stretch_2025/100, stretch_2026onwards/100)
-
-    # Show results
-    # st.write(f"Incentive Scheme scaled by stretch value ({stretch}% take-up) for {hire}:")
-    # st.write(selected_incentives)
-
+    for i, year in enumerate(range(2025, 2030)):  # i from 0 to 4
+        growth_factor = (1 + pphgrowth / 100) ** i
+        projected_value = searchexam_base * pph_base_rate * growth_factor
+        projected_pph[year] = projected_value
+        projected_pph_list.append(projected_value) 
+    deductions = projected_pph
+    
     for i in range(len(deductions)):
         year_multiplier = i + 1  # 2025 corresponds to 1
         proj_pph = projected_pph(year_multiplier)
