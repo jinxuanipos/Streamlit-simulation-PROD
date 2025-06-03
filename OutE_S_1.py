@@ -275,12 +275,20 @@ if st.button("Start Simulation"):
 
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
-    searchexam_base = len(task_df)
-    projected_pph = {}
-    projected_pph_list = []
-    st.write("len(task_df)")
+
+    # Convert 'S&E Year' to numeric (safely)
+    df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
+    # Filter only years in 2025–2030
+    filtered_df = df[df['S&E Year'].between(2025, 2030)]
+    # Group by year and count rows
+    year_counts = filtered_df['S&E Year'].value_counts().sort_index()
+    # Convert to dictionary
+    searchexambase = year_counts.to_dict()
+    
     st.write(searchexam_base)
 
+    projected_pph = {}
+    projected_pph_list = []
     for i, year in enumerate(range(2025, 2031)):  
         growth_factor = (1 + pphgrowth / 100) ** i
         projected_value = searchexam_base * pph_base_rate * growth_factor
