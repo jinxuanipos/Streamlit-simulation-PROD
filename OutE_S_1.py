@@ -259,7 +259,16 @@ if st.button("Start Simulation"):
             st.error(f"Failed to read '{sheet_name}' from '{excel_file}': {e}")
 
     # total capacity
-    capacity = capacity_map[hire][incentivescheme]
+    capacitybydiv = capacity_map[hire][incentivescheme]
+    # All years as strings
+    years = [str(year) for year in range(2025, 2031)]  # includes 2030
+    # Initialize a dict to hold combined capacity per year
+    capacity = {}
+    for year in years:
+        total = 0
+        for division in capacity:
+            total += capacity[division][year]
+        combined_capacity[year] = total
     st.write("Total capacity based on hiring plan and incentive scheme")
     st.write(capacity)
 
@@ -285,7 +294,10 @@ if st.button("Start Simulation"):
     st.write(deductions)
 
     # Subtract deductions from capacity year by year 
-    adjusted_capacity = [float(capacity[str(year)]) - deductions[year] for year in range(2025, 2030)]
+    adjusted_capacity = capacity[year]) - deductions[year] for year in range(2025, 2031)]
+    st.write("adjusted capacity")
+    st.write(adjusted_capacity)
+	
  
 
     #calculate AI gains
