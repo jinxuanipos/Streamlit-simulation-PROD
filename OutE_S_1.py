@@ -277,7 +277,7 @@ if st.button("Start Simulation"):
     pph_base_rate = 0.063  # 6.3%
 
     # Convert 'S&E Year' to numeric (safely)
-    df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
+    task_df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
     # Filter only years in 2025–2030
     filtered_df = df[df['S&E Year'].between(2025, 2030)]
     # Group by year and count rows
