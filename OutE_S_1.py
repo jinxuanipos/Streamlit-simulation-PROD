@@ -38,6 +38,7 @@ with col2:
     ])
     stretch_2025 = st.slider("Select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
     stretch_2026onwards = st.slider("Select yearly capacity boost from incentive scheme 2026-2030 (%)", 0, 10, 5)
+    secdivert = st.slider("Yearly secondary job diversion for 2025-2026; where 0 = status quo and 100 = divert all secondary jobs", 0, 100, 50)	
    
 
 # --- Second Row: Quadrants 3 and 4 ---
@@ -45,24 +46,25 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.subheader("Outsource Volumes")
-
+    st.markdown("*Age of files = ... *")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
     Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000, step =100)
     Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000, step =100)
     Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000, step =100)
     Outsource_S_282930 = st.slider("Yearly Outsource Search Volume 2028-2030; equal volumes across all 3 years", 0, 4000, 3000, step =100)
 
-    # Collaborative Exams - vary turnaround time instead
-    Outsource_e_select = st.selectbox("Select partner's turnaround time for Collarboartion files", [
+    
+
+
+with col4:
+    st.subheader("Collaboration")
+    st.markdown("*Volume of files kept constant at ...., age of files = .... *")	
+    # Collaboration Exams - vary turnaround time instead
+    Outsource_e_select = st.selectbox("Select partner's turnaround time for Collarboration files", [
         "Fast - 6 months",
         "Moderate - 9 months",
         "Good - 12 months"
     ])
-
-
-with col4:
-    st.subheader("Diversion")
-    secdivert = st.slider("Yearly secondary job diversion for 2025-2026; where 0 = status quo and 100 = divert all secondary jobs", 0, 100, 50)
 
 
 
