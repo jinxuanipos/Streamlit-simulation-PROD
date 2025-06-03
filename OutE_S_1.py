@@ -260,17 +260,14 @@ if st.button("Start Simulation"):
 
     # total capacity
     capacitybydiv = capacity_map[hire][incentivescheme]
-    st.write("capacity by division")
-    st.write(capacitybydiv)
-    st.write("Year keys in Div1:", list(capacitybydiv["Div1"].keys()))	
-    # All years as strings
-    years = [str(year) for year in range(2025, 2031)]  # includes 2030
+    years = list(range(2025, 2031))
+
     # Initialize a dict to hold combined capacity per year
     totalcapacity = {}
     for year in years:
         total = 0
-        for division in capacitybydiv:  # <-- Corrected: iterate over actual divisions
-            total += capacitybydiv[division][year]  # year is already a string
+        for division in capacitybydiv:
+            total += capacitybydiv[division].get(year, 0)  # Safe access
         totalcapacity[year] = total
 
     st.write("Total capacity based on hiring plan and incentive scheme")
@@ -278,7 +275,7 @@ if st.button("Start Simulation"):
 
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
-    searchexam_base = task_df.shape[0]
+    searchexam_base = task_df.shpe[0]
     projected_pph = {}
     projected_pph_list = []
 
