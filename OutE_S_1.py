@@ -280,7 +280,9 @@ if st.button("Start Simulation"):
     for i, year in enumerate(range(2025, 2030)):
         proj_pph = projected_pph[year]
         adjusted_pph = proj_pph * 0.97  # 3% deduction
-        deductions[year] = proj_pph + adjusted_pph  
+        deductions[year] = proj_pph + adjusted_pph 
+    st.write("pph deductions")
+    st.write(deductions)
 
     # Subtract deductions from capacity year by year 
     adjusted_capacity = [float(capacity[str(year)]) - deductions[year] for year in range(2025, 2030)]
