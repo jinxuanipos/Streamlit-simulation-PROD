@@ -278,6 +278,8 @@ if st.button("Start Simulation"):
     searchexam_base = len(task_df)
     projected_pph = {}
     projected_pph_list = []
+    st.write("len(task_df)")
+    st.write(searchexam_base)
 
     for i, year in enumerate(range(2025, 2031)):  
         growth_factor = (1 + pphgrowth / 100) ** i
