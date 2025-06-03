@@ -15,14 +15,14 @@ st.title("Running FOA Simulations")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Demand + S&E growth")
+    st.subheader("Demand")
     pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
     eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
-    #Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y 2027-2030", [
-    #    "High - Upper bound of patent filing forecast",
-    #    "Moderate - Average",
-    #    "Slow - Lower bound of patent filing forecast"
-    #])
+    Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y 2027-2030 based on projections of patent filings", [
+        "High - Upper bound of patent filing forecast",
+        "Moderate - Average",
+        "Slow - Lower bound of patent filing forecast"
+    ])
 
 with col2:
     st.subheader("Capacity")
@@ -50,9 +50,7 @@ with col3:
     Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000, step =100)
     Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000, step =100)
     Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000, step =100)
-    #Outsource_S_2028 = st.slider("Outsource Search Volume 2028", 0, 4000, 3000, step =100)
-    #Outsource_S_2029 = st.slider("Outsource Search Volume 2029", 0, 4000, 3000, step =100)
-    #Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, 3000, step =100)
+    Outsource_S_282930 = st.slider("Yearly Outsource Search Volume 2028-2030; equal volumes across all 3 years", 0, 4000, 3000, step =100)
 
     # Collaborative Exams - vary turnaround time instead
     Outsource_e_select = st.selectbox("Select partner's turnaround time for Collarboartion files", [
@@ -69,6 +67,26 @@ with col4:
 
 
 #mapping and calculation for user selected values
+
+# --- MAP the hire selection to respective file names ---
+hire_file_mapping = {
+    "Accelerated - Hire additional 20 by Jan 26": "DivisionFiles_HighGrowth.xlsx",
+    "Moderate - Hire additional 10 by Jan 26": "DivisionFiles_MidGrowth.xlsx",
+    "Paced - Hire additional 20 by Jul 26": "DivisionFiles_LowGrowth.xlsx"
+}
+
+# --- MAP the EOT selection to sheet names ---
+eot_sheet_mapping = {
+    "26%": "26",
+    "30%": "30",
+    "35%": "35"
+}
+
+# --- Resolve the Excel file and sheet name ---
+excel_file = hire_file_mapping[hire]
+sheet_name = eot_sheet_mapping[eot]
+
+
 hire_mapping = {
     "Accelerated - Hire additional 20 by Jan 26": [7500, 8979, 10162, 11377, 12799, 13198],
     "Moderate - Hire additional 10 by Jan 26":     [7500, 9157, 10016, 11043, 11914, 12174],
@@ -167,13 +185,20 @@ years = list(range(2025, 2031))  # 2025 to 2030
 
 # --- start calculations
 if st.button("Start Simulation"):
-    #load right eot file
-    filename = file_mapping.get(eot)
+    # Resolve file and sheet name based on user input
+    excel_file = hire_file_mapping[hire]
+    sheet_name = eot_sheet_mapping[eot]
+    
     task_df = None
-    if not os.path.exists(filename):
-        st.error(f"File '{filename}' not found in the current directory.")
+    if not os.path.exists(excel_file):
+        st.error(f"File '{excel_file}' not found in the current directory.")
     else:
-        task_df = pd.read_excel(filename)
+        try:
+            task_df = pd.read_excel(excel_file, sheet_name=sheet_name)
+            st.success(f"Successfully loaded '{excel_file}' | Sheet: '{sheet_name}'")
+            # st.dataframe(task_df)  # Optional: display the data
+        except Exception as e:
+            st.error(f"Failed to read '{sheet_name}' from '{excel_file}': {e}")
 
     # Get base incentives per hiring plan
     base_incentives = incentive_scheme_mapping[hire]
