@@ -280,9 +280,9 @@ if st.button("Start Simulation"):
         "pf12": []
     }
 
-    for i in range(len(adjusted_capacity)):
-        pf11_val = int(adjusted_capacity[i] * 0.7 / 0.97)
-        pf12_val = int(adjusted_capacity[i] * 0.3 / 0.47)
+    for i in range(len(total_capacity)):
+        pf11_val = int(total_capacity[i] * 0.7 / 0.97)
+        pf12_val = int(total_capacity[i] * 0.3 / 0.47)
         est_AI_dict["pf11"].append(pf11_val)
         est_AI_dict["pf12"].append(pf12_val)
 
