@@ -269,7 +269,7 @@ if st.button("Start Simulation"):
     projected_pph = {}
     projected_pph_list = []
 
-    for i, year in enumerate(range(2025, 2030)):  # i from 0 to 4
+    for i, year in enumerate(range(2025, 2031)):  
         growth_factor = (1 + pphgrowth / 100) ** i
         projected_value = searchexam_base * pph_base_rate * growth_factor
         projected_pph[year] = projected_value
@@ -277,7 +277,7 @@ if st.button("Start Simulation"):
 
     # Adjusting projections (deductions = adjusted values)
     deductions = {}
-    for i, year in enumerate(range(2025, 2030)):
+    for i, year in enumerate(range(2025, 2031)):
         proj_pph = projected_pph[year]
         adjusted_pph = proj_pph * 0.97  # 3% deduction
         deductions[year] = proj_pph + adjusted_pph 
