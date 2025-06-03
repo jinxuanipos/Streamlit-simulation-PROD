@@ -260,6 +260,8 @@ if st.button("Start Simulation"):
 
     # total capacity
     capacitybydiv = capacity_map[hire][incentivescheme]
+    st.write("capacity by division")
+    st.write(capacitybydiv)	
     # All years as strings
     years = [str(year) for year in range(2025, 2031)]  # includes 2030
     # Initialize a dict to hold combined capacity per year
