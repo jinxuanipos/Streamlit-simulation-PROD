@@ -296,8 +296,8 @@ if st.button("Start Simulation"):
     	projected_value = base * pph_base_rate * growth_factor
     	projected_pph[year] = projected_value
     	projected_pph_list.append(projected_value)
-	st.write("projected_pph_list")
-	st.write(projected_pph_list)
+    st.write("projected_pph_list")
+    st.write(projected_pph_list)
 
     # Adjusting projections (deductions = adjusted values)
     deductions = {}
