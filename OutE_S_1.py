@@ -259,9 +259,9 @@ if st.button("Start Simulation"):
             st.error(f"Failed to read '{sheet_name}' from '{excel_file}': {e}")
 
     # total capacity
-    selected_capacity = capacity_map[hire][incentivescheme]
+    capacity = capacity_map[hire][incentivescheme]
     st.write("Total capacity based on hiring plan and incentive scheme")
-    st.write(selected_capacity)
+    st.write(capacity)
 
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
@@ -281,9 +281,6 @@ if st.button("Start Simulation"):
         proj_pph = projected_pph[year]
         adjusted_pph = proj_pph * 0.97  # 3% deduction
         deductions[year] = proj_pph + adjusted_pph  
-
-    # Get capacity figures for selected hire plan
-    capacity = hire_mapping[hire]
 
     # Subtract deductions from capacity year by year
     adjusted_capacity = [cap - deductions[year] for cap, year in zip(capacity, range(2025, 2030))]
