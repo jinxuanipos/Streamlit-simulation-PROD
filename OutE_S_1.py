@@ -283,7 +283,7 @@ if st.button("Start Simulation"):
     # Group by year and count rows
     year_counts = filtered_df['S&E Year'].value_counts().sort_index()
     # Convert to dictionary
-    searchexambase = year_counts.to_dict()
+    searchexam_base = year_counts.to_dict()
     
     st.write(searchexam_base)
 
