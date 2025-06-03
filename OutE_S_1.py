@@ -275,7 +275,7 @@ if st.button("Start Simulation"):
 
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
-    searchexam_base = task_df.shpe[0]
+    searchexam_base = len(task_df)
     projected_pph = {}
     projected_pph_list = []
 
