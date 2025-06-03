@@ -263,14 +263,14 @@ if st.button("Start Simulation"):
     # All years as strings
     years = [str(year) for year in range(2025, 2031)]  # includes 2030
     # Initialize a dict to hold combined capacity per year
-    capacity = {}
+    totalcapacity = {}
     for year in years:
         total = 0
-        for division in capacity:
-            total += capacity[division][year]
-        combined_capacity[year] = total
+        for division in totalcapacity:
+            total += capacitybydiv[division][year]
+        totalcapacity[year] = total
     st.write("Total capacity based on hiring plan and incentive scheme")
-    st.write(capacity)
+    st.write(totalcapacity)
 
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
@@ -294,7 +294,7 @@ if st.button("Start Simulation"):
     st.write(deductions)
 
     # Subtract deductions from capacity year by year 
-    adjusted_capacity = [capacity[year] - deductions[year] for year in range(2025, 2031)]
+    adjusted_capacity = [totalcapacity[year] - deductions[year] for year in range(2025, 2031)]
     st.write("adjusted capacity")
     st.write(adjusted_capacity)
 	
