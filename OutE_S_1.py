@@ -26,6 +26,7 @@ with col1:
 
 with col2:
     st.subheader("Capacity")
+    secdivert = st.slider("Yearly secondary job diversion for 2025-2026 (%); where 0 = status quo and 100 = divert all secondary jobs", 0, 100, 50)	
     hire = st.selectbox("Select Hiring Plan", [
         "Accelerated - Hire additional 20 by Jan 26",
         "Moderate - Hire additional 10 by Jan 26",
@@ -36,9 +37,18 @@ with col2:
         "Better - 45% by Jan30",
         "Good - 35% by Jan30"
     ])
+    st.markdown("**Incentive scheme options explanation**")
+    st.caption("Incentive scheme is only valid for 2025-2027. \n_Have grouped 2026 and 2027 together. \n_As the worst case scenario, assume that not meeting baseline target happens for all years.")	
+    incentivescheme = st.selectbox("Select success of incentive scheme", [
+        "Do not meet baseline target across all years for 2025-2030",
+        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027",
+	"Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025",
+	"Meet baseline target + incentive scheme for 2025, 2026 and 2027",
+	"Meet baseline target only for 2025, 2026 and 2027"
+    ])
     stretch_2025 = st.slider("Select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
     stretch_2026onwards = st.slider("Select yearly capacity boost from incentive scheme 2026-2030 (%)", 0, 10, 5)
-    secdivert = st.slider("Yearly secondary job diversion for 2025-2026 (%); where 0 = status quo and 100 = divert all secondary jobs", 0, 100, 50)	
+   	
    
 
 # --- Second Row: Quadrants 3 and 4 ---
