@@ -126,11 +126,11 @@ pphgrowth_v = 1 + pphgrowth / 100
 pph_base = 714
 
 #FOR EOT FILES
-file_mapping = {
-    "26%": "DivisionFiles_All_26.xlsx",
-    "30%": "DivisionFiles_All_30.xlsx",
-    "35%": "DivisionFiles_All_35.xlsx"
-}
+#file_mapping = {
+    #"26%": "DivisionFiles_All_26.xlsx",
+    #"30%": "DivisionFiles_All_30.xlsx",
+    #"35%": "DivisionFiles_All_35.xlsx"
+#}
 
 secdivert_v = secdivert / 100
 
@@ -142,7 +142,7 @@ def scale_incentives(incentives, stretch_2025, stretch_2026onwards):
         2027: stretch_2026onwards / 100/ 0.1,
         2028: stretch_2026onwards / 100/ 0.1,
         2029: stretch_2026onwards / 100/ 0.1,
-	  2030: stretch_2026onwards / 100/ 0.1
+	2030: stretch_2026onwards / 100/ 0.1
     }
 
     scaled = {}
