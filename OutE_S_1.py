@@ -55,11 +55,11 @@ with col3:
     #Outsource_S_2030 = st.slider("Outsource Search Volume 2030", 0, 4000, 3000, step =100)
 
     # Collaborative Exams - vary turnaround time instead
-    # outsource_e_time = st.selectbox("Select partner's turnaround time for Collarboartion files", [
-    #    "Fast - 6 months",
-    #    "Moderate - 9 months",
-    #    "Good - 12 months"
-    #])
+    Outsource_e_select = st.selectbox("Select partner's turnaround time for Collarboartion files", [
+        "Fast - 6 months",
+        "Moderate - 9 months",
+        "Good - 12 months"
+    ])
 
 
 with col4:
@@ -134,6 +134,17 @@ def scale_incentives(incentives, stretch_2025, stretch_2026onwards):
             factor = stretch_factors.get(year)  
             scaled[div][year] = int(round(val * factor))
     return scaled
+
+
+# Mapping logic to extract numeric months
+turnaround_mapping = {
+    "Fast - 6 months": 6,
+    "Moderate - 9 months": 9,
+    "Good - 12 months": 12
+}
+
+# Get numeric value
+outsource_e_time = turnaround_mapping[Outsource_e_select]
 
 
 # --- Define PPH projections ---
