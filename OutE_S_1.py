@@ -282,8 +282,9 @@ if st.button("Start Simulation"):
         adjusted_pph = proj_pph * 0.97  # 3% deduction
         deductions[year] = proj_pph + adjusted_pph  
 
-    # Subtract deductions from capacity year by year (cast cap to float)
-    adjusted_capacity = [capacity[year] - deductions[year] for year in range(2025, 2030)]  
+    # Subtract deductions from capacity year by year 
+    adjusted_capacity = adjusted_capacity = [float(capacity[str(year)]) - deductions[year] for year in range(2025, 2030)
+ 
 
     #calculate AI gains
     est_AI_dict = {
