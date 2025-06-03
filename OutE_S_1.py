@@ -263,19 +263,26 @@ if st.button("Start Simulation"):
     selected_capacity = capacity_map[hire][incentivescheme]
     st.write("Total capacity based on hiring plan and incentive scheme")
     st.write(selected_capacity)
-    
+	
     # --- Define PPH projections ---
-    # base usage rate = 6.3%. formula = base usage rate ** user's selected growth rate * respective year s&e 
     pph_base_rate = 0.063  # 6.3%
     searchexam_base = task_df.shape[0]
     projected_pph = {}
+    projected_pph_list = []
 
     for i, year in enumerate(range(2025, 2030)):  # i from 0 to 4
         growth_factor = (1 + pphgrowth / 100) ** i
         projected_value = searchexam_base * pph_base_rate * growth_factor
         projected_pph[year] = projected_value
-        projected_pph_list.append(projected_value) 
-    deductions = projected_pph
+        projected_pph_list.append(projected_value)
+
+   # Adjusting projections (deductions = adjusted values)
+   deductions = {}
+
+for i, year in enumerate(range(2025, 2030)):
+    proj_pph = projected_pph[year]
+    adjusted_pph = proj_pph * 0.97  # 3% deduction
+    deductions[year] = proj_pph + adjusted_pph  # or just use adjusted_pph if that's what you want
     
     for i in range(len(deductions)):
         year_multiplier = i + 1  # 2025 corresponds to 1
