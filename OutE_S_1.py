@@ -68,7 +68,7 @@ with col4:
     st.markdown("*Volume of files kept constant at ...., age of files = .... *")	
     # Collaboration Exams - vary turnaround time instead
     Outsource_e_select = st.selectbox("Select partner's turnaround time for Collarboration files", [
-        "Fast - 6 months",
+        "Fast - 7 months",
         "Moderate - 9 months",
         "Good - 12 months"
     ])
@@ -230,7 +230,7 @@ capacity_map = {
 
 # Mapping logic to extract numeric months
 turnaround_mapping = {
-    "Fast - 6 months": 6,
+    "Fast - 7 months": 7,
     "Moderate - 9 months": 9,
     "Good - 12 months": 12
 }
