@@ -262,7 +262,7 @@ if st.button("Start Simulation"):
     #total capacity
     selected_capacity = capacity_map[hire][incentivescheme]
     st.write("Total capacity based on hiring plan and incentive scheme")
-    st.write(deductions)
+    st.write(selected_capacity)
     
     # --- Define PPH projections ---
     # base usage rate = 6.3%. formula = base usage rate ** user's selected growth rate * respective year s&e 
