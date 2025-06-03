@@ -267,7 +267,7 @@ if st.button("Start Simulation"):
     for year in years:
         total = 0
         for division in totalcapacity:
-            total += capacitybydiv[division][year]
+            total += capacitybydiv[division][str(year)]
         totalcapacity[year] = total
     st.write("Total capacity based on hiring plan and incentive scheme")
     st.write(totalcapacity)
