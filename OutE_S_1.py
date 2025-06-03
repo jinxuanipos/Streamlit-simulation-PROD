@@ -294,7 +294,7 @@ if st.button("Start Simulation"):
     st.write(deductions)
 
     # Subtract deductions from capacity year by year 
-    adjusted_capacity = capacity[year]) - deductions[year] for year in range(2025, 2031)]
+    adjusted_capacity = capacity[year] - deductions[year] for year in range(2025, 2031)]
     st.write("adjusted capacity")
     st.write(adjusted_capacity)
 	
