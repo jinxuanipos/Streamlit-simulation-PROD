@@ -912,7 +912,10 @@ if st.button("Start Simulation"):
     task_df_pf11 = task_df[task_df['Outsource S'] == 'Y']
 
     # --- Define quantities ---
-    e_qty = [0, 0, 1583, 2167, 3000, 3083]
+    if Filingsgrowth == "Slow - Lower bound of patent filing forecast": 
+        e_qty = [0, 2000, 2500, 0, 0, 0]
+    else: 
+        e_qty = [0, 1500, 2000, 3000, 3000, 3500]
     s_qty = [Outsource_S_2025, Outsource_S_2026, Outsource_S_2027, 5232, 5784, 6168]
     outsource_s_time = 5
     # outsource_e_time already defined at the top	
