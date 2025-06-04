@@ -34,9 +34,9 @@ with col2:
         "Paced - Hire additional 20 by Jul 26"
     ])
     AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", [
-        "Best - 55% by Jan30",
-        "Better - 45% by Jan30",
-        "Good - 35% by Jan30"
+        "Accelerated - 55% by Jan30",
+        "On schedule - 45% by Jan30",
+        "Delayed gains - 35% by Jan30"
     ])
     st.markdown("**Incentive scheme options explanation**")
     st.caption("Incentive scheme is only valid for 2025-2027. Have grouped 2026 and 2027 together. As the worst case scenario, assume that not meeting baseline target happens for all years.")	
@@ -328,23 +328,23 @@ if st.button("Start Simulation"):
     # st.write(est_AI_dict)
 
     ai_scenarios = {
-    "Best": {
+    "Accelerated": {
         "PAS - PF11": {2025: 0.0, 2026: 15.0, 2027: 22.5, 2028: 27.5, 2029: 35.0, 2030: 35.0},
         "Report Drafter - PF11": {2025: 0.0, 2026: 10.0, 2027: 12.5, 2028: 15.0, 2029: 17.5, 2030: 20.0},
         "Report Drafter - PF12": {2025: 0.0, 2026: 10.0, 2027: 12.5, 2028: 15.0, 2029: 17.5, 2030: 20.0}},
-    "Better": {
+    "On schedule": {
         "PAS - PF11": {2025: 0.0, 2026: 10.0, 2027: 15.0, 2028: 20.0, 2029: 25.0, 2030: 25.0},
         "Report Drafter - PF11": {2025: 0.0, 2026: 0.0, 2027: 5.0, 2028: 10.0, 2029: 15.0, 2030: 20.0},
         "Report Drafter - PF12": {2025: 0.0, 2026: 0.0, 2027: 5.0, 2028: 10.0, 2029: 15.0, 2030: 20.0}},
-    "Good": {
+    "Delayed gains": {
         "PAS - PF11": {2025: 0.0, 2026: 0.0, 2027: 10.0, 2028: 15.0, 2029: 20.0, 2030: 25.0},
         "Report Drafter - PF11": {2025: 0.0, 2026: 0.0, 2027: 0.0, 2028: 3.0, 2029: 6.0, 2030: 10.0},
         "Report Drafter - PF12": {2025: 0.0, 2026: 0.0, 2027: 0.0, 2028: 3.0, 2029: 6.0, 2030: 10.0}}}
    
     ai_scenario_mapping = {
-    "Best - 55% by Jan30": "Best",
-    "Better - 45% by Jan30": "Better",
-    "Good - 35% by Jan30": "Good"}
+    "Accelerated - 55% by Jan30": "Accelerated",
+    "On schedule - 45% by Jan30": "On schedule",
+    "Delayed gains - 35% by Jan30": "Delayed gains"}
 
     selected_ai_key = ai_scenario_mapping[AIgainschoice]
     ai_dict = ai_scenarios[selected_ai_key]
