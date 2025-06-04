@@ -16,13 +16,14 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Demand")
-    pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
-    eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
     Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y 2027-2030 based on projections of patent filings", [
         "High - Upper bound of patent filing forecast",
         "Moderate - Average",
         "Slow - Lower bound of patent filing forecast"
-    ])
+    ])	
+    pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
+    eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
+
 
 with col2:
     st.subheader("Capacity")
@@ -38,7 +39,7 @@ with col2:
         "Good - 35% by Jan30"
     ])
     st.markdown("**Incentive scheme options explanation**")
-    st.caption("Incentive scheme is only valid for 2025-2027. \n_Have grouped 2026 and 2027 together. \n_As the worst case scenario, assume that not meeting baseline target happens for all years.")	
+    st.caption("Incentive scheme is only valid for 2025-2027. Have grouped 2026 and 2027 together. As the worst case scenario, assume that not meeting baseline target happens for all years.")	
     incentivescheme = st.selectbox("Select success of incentive scheme", [
         "Do not meet baseline target across all years for 2025-2030",
         "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027",
@@ -46,33 +47,27 @@ with col2:
 	"Meet baseline target + incentive scheme for 2025, 2026 and 2027",
 	"Meet baseline target only for 2025, 2026 and 2027"
     ])
-    stretch_2025 = st.slider("Select capacity boost from incentive scheme 2025 (%)", 0, 20, 10)
-    stretch_2026onwards = st.slider("Select yearly capacity boost from incentive scheme 2026-2030 (%)", 0, 10, 5)
-   	
-   
-
+    	
 # --- Second Row: Quadrants 3 and 4 ---
 col3, col4 = st.columns(2)
 
 with col3:
-    st.subheader("Outsource Volumes")
-    st.markdown("*Age of files = ... *")	
+    st.subheader("Outsource Search")
+    st.caption("Age of files fixed at ____. Turnaroud time fixed at ___. Vary the volume of Outsource Search.")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
-    Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000, step =100)
-    Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 5000, 4000, step =100)
-    Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 5000, 4000, step =100)
-    Outsource_S_282930 = st.slider("Yearly Outsource Search Volume 2028-2030; equal volumes across all 3 years", 0, 3000, 2000, step =100)
+    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 4000, 3000, step =100)
+    Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 5000, 4000, step =100)
+    Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 5000, 4000, step =100)
+    Outsource_S_282930 = st.slider("Select yearly outsource Search volume 2028-2030; equal volumes across all 3 years", 0, 3000, 2000, step =100)
   
 with col4:
     st.subheader("Collaboration")
-    st.markdown("*Volume of files kept constant at ...., age of files = .... *")	
-    # Collaboration Exams - vary turnaround time instead
-    Outsource_e_select = st.selectbox("Select partner's turnaround time for Collarboration files", [
+    st.caption("Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively. Age of files = ___. Vary the partner's turnaround time for working on Collaboration files.")	
+    Outsource_e_select = st.selectbox("Select partner's turnaround time", [
         "Fast - 7 months",
         "Moderate - 9 months",
         "Good - 12 months"
     ])
-
 
 
 #mapping and calculation for user selected values
@@ -228,7 +223,7 @@ capacity_map = {
 }
 
 
-# Mapping logic to extract numeric months
+# Mapping logic to extract numeric months for outsource E
 turnaround_mapping = {
     "Fast - 7 months": 7,
     "Moderate - 9 months": 9,
@@ -237,7 +232,6 @@ turnaround_mapping = {
 
 # Get numeric value
 outsource_e_time = turnaround_mapping[Outsource_e_select]
-
 
 years = list(range(2025, 2031))  # 2025 to 2030
 
@@ -316,9 +310,8 @@ if st.button("Start Simulation"):
     adjusted_capacity = [totalcapacity[year] - deductions[year] for year in range(2025, 2031)]
     st.write("adjusted capacity")
     st.write(adjusted_capacity)
-	
- 
 
+	
     #calculate AI gains
     est_AI_dict = {
         "pf11": [],
