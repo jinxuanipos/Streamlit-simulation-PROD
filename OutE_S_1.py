@@ -470,6 +470,28 @@ if st.button("Start Simulation"):
         2029: 399,
         2030: 465
     }
+	
+    # Define mapping dictionary
+    collab_mapping = {
+        "Slow - Lower bound of patent filing forecast": {
+            "Fast - 7 months": "qccutvol-7m",
+            "Moderate - 9 months": "qccutvol-9m",
+            "Good - 12 months": "qccutvol-12m"
+        },
+        "High - Upper bound of patent filing forecast": {
+            "Fast - 7 months": "qcdefaultvol-7m",
+            "Moderate - 9 months": "qcdefaultvol-9m",
+            "Good - 12 months": "qcdefaultvol-12m"
+        },
+        "Moderate - Average": {
+            "Fast - 7 months": "qcdefaultvol-7m",
+            "Moderate - 9 months": "qcdefaultvol-9m",
+            "Good - 12 months": "qcdefaultvol-12m"
+        }
+    }
+
+    # Get the appropriate code-mapping name
+    selected_mapping = collab_mapping[Filingsgrowth][Outsource_e_select]
 
 
     for i, year in enumerate(years):
