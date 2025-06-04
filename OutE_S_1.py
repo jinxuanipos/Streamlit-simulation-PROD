@@ -518,16 +518,24 @@ if st.button("Start Simulation"):
     for i, year in enumerate(years):
         # Start with current deduction value
         value = adjusted_capacity[i]
+	st.write("adjusted_capacity_current")
+        st.write(value)
         
         # Subtract secdivert only for 2025 and 2026
         if year in secdivert_deductions:
             value -= secdivert_deductions[year]
+	st.write("minus secdivert_deductions")
+        st.write(value)
     
         # Subtract qc_effort
         value -= qc_effort[year]
+	st.write("minus qc effort")
+        st.write(value)
 
         # Add AI gains
         value += ai_gains[year]
+	st.write("add ai gains")
+	st.write(value)	 
     
         # Update the cap list
         adjusted_capacity[i] = int(value)  # Ensure it's stored as integer
