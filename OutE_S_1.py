@@ -55,7 +55,7 @@ with col3:
     st.subheader("Outsource Search")
     st.markdown("Age of files fixed at 7 months. Turnaround time fixed at 5 months. Vary the volume of Outsource Search for 2025-2027. Volume kept constant at 5232, 5784, 6168")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
-    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 4000, 3000, step =500)
+    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 3000, 3000, step =500)
     Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 4200, 3000, step =500)
     Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 4656, 3000, step =500)
   
@@ -368,7 +368,7 @@ if st.button("Start Simulation"):
         st.write(f"{year}: totalcapacity={total}, IPFast={ipfast}, ISA={isa}, IPEA={ipea}, pph={pph_val}, OSSearch={ossearch}, adjusted={adjusted}")
 
     # Subtract deductions from all above 
-    adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] for year in range(2025, 2031)]
+    adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] - OSSearch[year] for year in range(2025, 2031)]
     st.write("adjusted capacity before AI")
     st.write(adjusted_capacity)
 	
