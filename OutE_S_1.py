@@ -535,7 +535,7 @@ if st.button("Start Simulation"):
         # Add AI gains
         value += ai_gains[year]
         st.write("add ai gains")
-	st.write(value)	 
+        st.write(value)	 
     
         # Update the cap list
         adjusted_capacity[i] = int(value)  # Ensure it's stored as integer
