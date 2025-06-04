@@ -460,14 +460,14 @@ if st.button("Start Simulation"):
     # Apply diversion logic for 2025 to 2030
     for i, year in enumerate(range(2025, 2031)):
         if year in [2025, 2026]:
-            diverted_val = adjusted_capacity[i] * 0.25 * secdivert_v
+            deducted_val = adjusted_capacity[i] * 0.25 * (1 - secdivert_v)
         else:  # For 2027 to 2030
-            diverted_val = adjusted_capacity[i] * 0.25
-        secdivert_deductions[year] = int(diverted_val)
+            deducted_val = adjusted_capacity[i] * 0.25
+        secdivert_deductions[year] = int(deducted_val)
       
     # Display in Streamlit
-    #st.write("Deductions after applying secondary diversion (2025–2026 only):")
-    #st.write(secdivert_deductions)
+    st.write("Deductions after applying secondary diversion (2025–2026 only):")
+    st.write(secdivert_deductions)
 
 
     #qc for out e	
