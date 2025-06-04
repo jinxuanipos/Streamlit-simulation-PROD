@@ -281,7 +281,7 @@ if st.button("Start Simulation"):
     st.write("Total capacity based on hiring plan and incentive scheme across all divisions")
     st.write(totalcapacity)
 
-            # Outsource quotas
+    # Outsource quotas
     pf11_quotas = {
         2025: Outsource_S_2025,
         2026: Outsource_S_2026,
@@ -290,15 +290,25 @@ if st.button("Start Simulation"):
         2029: 5784,
         2030: 6168
     }
+
+    if Filingsgrowth == "Slow - Lower bound of patent filing forecast":
+        pf12_quotas = {
+            2026: 2000,
+            2027: 2500,
+            2028: 0,
+            2029: 0,
+            2030: 0
+        }
+    else:
+        pf12_quotas = {
+            2026: 1500,
+            2027: 2000,
+            2028: 3000,
+            2029: 3000,
+            2030: 3500
+        }
  
  
-    pf12_quotas = {
-        2026: 1500,
-        2027: 2000,
-        2028: 3000,
-        2029: 3000,
-        2030: 3500
-    }
     # Thresholds
     pf11_thresholds = {
         2025: date(2024, 1, 1),
