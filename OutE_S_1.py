@@ -335,7 +335,7 @@ if st.button("Start Simulation"):
     	growth_factor = (1 + pphgrowth / 100) ** (i+1)
     	base = searchexam_base.get(year, 0)  # use 0 if year is missing
     	projected_value = base * pph_base_rate * growth_factor
-    	projected_pph[year] = projected_value
+    	projected_pph[i] = projected_value  # Use index as key: 0 for 2025, 1 for 2026, ...
     	projected_pph_list.append(projected_value)
     st.write("growth_factor")
     st.write(growth_factor)
@@ -349,7 +349,7 @@ if st.button("Start Simulation"):
     for i, year in enumerate(range(2025, 2031)):
         proj_pph = projected_pph[year]
         pphpoints = proj_pph * 0.97
-        pph[year] = pphpoints 
+        pph[year] = pphpoints  # still use year as key for downstream compatibility 
     
     #Out Source Search efforts in points
     OSSearch = {year: pf11_quotas[year] * 0.97 * 0.5 for year in pf11_quotas}
@@ -943,8 +943,8 @@ if st.button("Start Simulation"):
 
     # --- Updated total_sum_count using both age and time ---
     def total_sum_count(fy, s_qty, e_qty=0, s_age=0, e_age=0, s_time=0, e_time=0, year_mult=0):
-        projected_sum = projected_pph(year_mult) * 10
-        projected_count = projected_pph(year_mult)
+        projected_sum = projected_pph[year_mult] * 10
+        projected_count = projected_pph[year_mult]
 
         total_sum = (
             fy_sums.get(fy, 0)
