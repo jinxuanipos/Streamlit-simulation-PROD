@@ -284,7 +284,7 @@ if st.button("Start Simulation"):
     projected_pph_list = []
 
     for i, year in enumerate(range(2025, 2031)):
-    	growth_factor = (1 + pphgrowth / 100) ** i+1
+    	growth_factor = (1 + pphgrowth / 100) ** (i+1)
     	base = searchexam_base.get(year, 0)  # use 0 if year is missing
     	projected_value = base * pph_base_rate * growth_factor
     	projected_pph[year] = projected_value
