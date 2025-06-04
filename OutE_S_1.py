@@ -534,8 +534,8 @@ if st.button("Start Simulation"):
         2025: Outsource_S_2025,
         2026: Outsource_S_2026,
         2027: Outsource_S_2027,
-        2028: 5232
-        2029: 5784
+        2028: 5232,
+        2029: 5784,
         2030: 6168
     }
 
