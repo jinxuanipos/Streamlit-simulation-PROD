@@ -445,11 +445,8 @@ if st.button("Start Simulation"):
             # base capacity (e.g., cap) for the year
             base_capacity = adjusted_capacity[year - 2025]
         
-            # incentive for division and year
-            incentive_val = selected_incentives[div][year]
-        
             # calculate final value
-            final_val = int(round(base_capacity * split + incentive_val))
+            final_val = int(round(base_capacity * split ))
         
             # store in dictionary
             capacity_with_incentives[div][year] = final_val
