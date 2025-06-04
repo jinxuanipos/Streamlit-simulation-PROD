@@ -6,6 +6,7 @@ import openpyxl
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 import io
+import sample
 
 # === STREAMLIT APP ===
 st.set_page_config(layout="wide")
@@ -613,7 +614,54 @@ if st.button("Start Simulation"):
 
         # --- Apply quotas with visual progress and displayed quota counts ---
     st.subheader("Starting simulation")
-
+    # Add PPH flags
+    task_df_pf11['PPH'] = 'N'
+    task_df_pf12['PPH'] = 'N'
+ 
+    # Add year and month columns
+    task_df_pf11['Lodge Year'] = task_df_pf11['S&E Lodge Date'].dt.year
+    task_df_pf11['Lodge Month'] = task_df_pf11['S&E Lodge Date'].dt.month
+ 
+    task_df_pf12['Lodge Year'] = task_df_pf12['S&E Lodge Date'].dt.year
+    task_df_pf12['Lodge Month'] = task_df_pf12['S&E Lodge Date'].dt.month
+ 
+    start_year = 2025
+ 
+    for idx, pph_total in enumerate(projected_pph_list):
+        year = start_year + idx
+        if pd.isna(pph_total) or pph_total == 0:
+            continue
+ 
+        # Split PPH volume equally between PF11 and PF12
+        pph_pf11_total = pph_total // 2
+        pph_pf12_total = pph_total - pph_pf11_total
+ 
+        for task_df in [task_df_pf11, task_df_pf12]:
+            pph_volume = pph_pf11_total if task_df is task_df_pf11 else pph_pf12_total
+ 
+            monthly_div_quota = int(pph_volume) // (4 * 12)
+            total_regular = monthly_div_quota * 4 * 12
+            remainder = int(pph_volume) - total_regular
+            december_extra = remainder // 4  # equally for each division in December
+ 
+            for div in div_order:
+                for month in range(1, 13):
+                    current_quota = monthly_div_quota
+ 
+                    if month == 12:
+                        current_quota += december_extra
+ 
+                    eligible = task_df[
+                        (task_df['Lodge Year'] == year) &
+                        (task_df['Lodge Month'] == month) &
+                        (task_df['Division Transformed'] == div) &
+                        (task_df['PPH'] != 'Y')]
+ 
+                    sample_n = min(current_quota, len(eligible))
+                    if sample_n > 0:
+                        sampled_indices = random.sample(list(eligible.index), sample_n)
+                        task_df.loc[sampled_indices, 'PPH'] = 'Y'
+			    
     # PF11 Quotas
     for year, qty in pf11_quotas.items():
         task_df_pf11 = apply_quotas_for_year(year, qty, task_df_pf11, pf11_thresholds[year], 'Outsource S')
@@ -625,7 +673,7 @@ if st.button("Start Simulation"):
     st.markdown("🎉 Preparing to start scheduling of FOAs by division...")
 
     union_df = pd.concat([task_df_pf11, task_df_pf12])
-    task_df_inhouse = union_df[union_df['Outsource Year'].isnull()]
+    task_df_inhouse = union_df[union_df['Outsource Year'].isnull() & (union_df['PPH'] != 'Y')]
     divisions = ['Div1', 'Div2', 'Div3', 'Div4']
 
     # Use BytesIO instead of writing to a file
