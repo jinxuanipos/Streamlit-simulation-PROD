@@ -253,7 +253,7 @@ years = list(range(2025, 2031))  # 2025 to 2030
 # --- start calculations
 if st.button("Start Simulation"):
     # Resolve file and sheet name based on user input
-    excel_file = hire_file_mapping[hire]
+    excel_file = filings_file_mapping[Filingsgrowth]
     sheet_name = eot_sheet_mapping[eot]
     
     task_df = None
