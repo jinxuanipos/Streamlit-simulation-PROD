@@ -52,7 +52,7 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.subheader("Outsource Search")
-    st.markdown("Age of files fixed at ____. Turnaroud time fixed at ___. Vary the volume of Outsource Search.")	
+    st.markdown("Age of files fixed at ____. Turnaround time fixed at ___. Vary the volume of Outsource Search.")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
     Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 4000, 3000, step =100)
     Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 5000, 4000, step =100)
