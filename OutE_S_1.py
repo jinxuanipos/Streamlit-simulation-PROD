@@ -347,7 +347,7 @@ if st.button("Start Simulation"):
     # pph in points
     pph = {}
     for i, year in enumerate(range(2025, 2031)):
-        proj_pph = projected_pph[year]
+        proj_pph = projected_pph[i]  # i instead of year
         pphpoints = proj_pph * 0.97
         pph[year] = pphpoints  # still use year as key for downstream compatibility 
     
