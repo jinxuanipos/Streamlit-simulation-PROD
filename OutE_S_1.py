@@ -524,17 +524,17 @@ if st.button("Start Simulation"):
         # Subtract secdivert only for 2025 and 2026
         if year in secdivert_deductions:
             value -= secdivert_deductions[year]
-	st.write("minus secdivert_deductions")
+        st.write("minus secdivert_deductions")
         st.write(value)
     
         # Subtract qc_effort
         value -= qc_effort[year]
-	st.write("minus qc effort")
+        st.write("minus qc effort")
         st.write(value)
 
         # Add AI gains
         value += ai_gains[year]
-	st.write("add ai gains")
+        st.write("add ai gains")
 	st.write(value)	 
     
         # Update the cap list
