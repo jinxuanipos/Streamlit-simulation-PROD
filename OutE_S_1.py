@@ -461,16 +461,10 @@ if st.button("Start Simulation"):
     #st.write(secdivert_deductions)
 
 
-    #qc for out e
-    qc_effort = {
-        2025: 0,
-        2026: 0,
-        2027: 262,
-        2028: 290,
-        2029: 399,
-        2030: 465
-    }
-	
+    #qc for out e	
+    # Define years
+    years = [2025, 2026, 2027, 2028, 2029, 2030]
+
     # Define mapping dictionary
     collab_mapping = {
         "Slow - Lower bound of patent filing forecast": {
@@ -490,9 +484,26 @@ if st.button("Start Simulation"):
         }
     }
 
-    # Get the appropriate code-mapping name
-    selected_mapping = collab_mapping[Filingsgrowth][Outsource_e_select]
+    # Define collaboration volume data
+    collab_volume_data = {
+        "qcdefaultvol-12m": [0, 0, 187, 292, 358, 440],
+        "qcdefaultvol-9m": [0, 0, 415, 326, 405, 468],
+        "qcdefaultvol-7m": [0, 31, 448, 354, 417, 475],
+        "qccutvol-12m":    [0, 0, 249, 376, 218, 44],
+        "qccutvol-9m":     [0, 0, 545, 339, 131, 0],
+        "qccutvol-7m":     [0, 42, 423, 332, 161, 0]
+    }
 
+    # Get the code-mapping name based on user selections
+    selected_mapping_key = collab_mapping[Filingsgrowth][Outsource_e_select]
+
+    # Get the corresponding volume list
+    selected_volume_list = collab_volume_data[selected_mapping_key]
+
+    # Combine into a year-to-volume dictionary
+    qc_effort = dict(zip(years, selected_volume_list))
+
+	
 
     for i, year in enumerate(years):
         # Start with current deduction value
