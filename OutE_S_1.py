@@ -311,7 +311,7 @@ if st.button("Start Simulation"):
  
     # Thresholds
     pf11_thresholds = {
-        2025: date(2024, 1, 1),
+        2025: date(2024, 3, 1),
         2026: date(2025, 5, 1),
         2027: date(2026, 5, 1),
         2028: date(2027, 5, 1),
