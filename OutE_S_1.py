@@ -17,97 +17,70 @@ st.title("Running FOA Simulations")
 col1, col2 = st.columns(2)
 
 with col1:
-    with st.container():
-        st.markdown("""
-            <div style="border: 2px solid #d3d3d3; padding: 20px; border-radius: 10px; background-color: #f9f9f9;">
-        """, unsafe_allow_html=True)
+    st.subheader("Demand")
+    Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y for 2027-2030 based on patent filings projection", [
+        "High - Upper bound of patent filing forecast",
+        "Moderate - Average",
+        "Slow - Lower bound of patent filing forecast"
+    ])	
+    pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
+    eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
 
-        st.subheader("Demand")
-        Filingsgrowth = st.selectbox("Select projected S&E Growth Y-o-Y for 2027-2030 based on patent filings projection", [
-            "High - Upper bound of patent filing forecast",
-            "Moderate - Average",
-            "Slow - Lower bound of patent filing forecast"
-        ])	
-        pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10)
-        eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"])
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
-    with st.container():
-        st.markdown("""
-            <div style="border: 2px solid #d3d3d3; padding: 20px; border-radius: 10px; background-color: #f9f9f9;">
-        """, unsafe_allow_html=True)
-
-        st.subheader("Capacity")
-        secdivert = st.slider("Select yearly secondary job diversion for 2025 and 2026 (%); where 0 = status quo and 100 = divert all secondary jobs; equal % across both years", 0, 100, 50)	
-        hire = st.selectbox("Select Hiring Plan", [
-            "Accelerated - Hire additional 20 by Jan 26",
-            "Moderate - Hire additional 10 by Jan 26",
-            "Paced - Hire additional 20 by Jul 26"
-        ])
-        AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", [
-            "Accelerated - 55% by Jan30",
-            "On schedule - 45% by Jan30",
-            "Delayed gains - 35% by Jan30"
-        ])
-        st.markdown("""
-        - Incentive scheme is only valid for 2025-2027.  
-        - Have grouped 2026 and 2027 together.  
-        - As the worst case scenario, assume that not meeting baseline target happens for all years.
-        """)	
-        incentivescheme = st.selectbox("Select success of incentive scheme", [
-            "Do not meet baseline target across all years for 2025-2030",
-            "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027",
-            "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025",
-            "Meet baseline target + incentive scheme for 2025, 2026 and 2027",
-            "Meet baseline target only for 2025, 2026 and 2027"
-        ])
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
+    st.subheader("Capacity")
+    secdivert = st.slider("Select yearly secondary job diversion for 2025 and 2026 (%); where 0 = status quo and 100 = divert all secondary jobs; equal % across both years", 0, 100, 50)	
+    hire = st.selectbox("Select Hiring Plan", [
+        "Accelerated - Hire additional 20 by Jan 26",
+        "Moderate - Hire additional 10 by Jan 26",
+        "Paced - Hire additional 20 by Jul 26"
+    ])
+    AIgainschoice = st.selectbox("Select projected S&E Productivity gains from PAS and Report Drafter", [
+        "Accelerated - 55% by Jan30",
+        "On schedule - 45% by Jan30",
+        "Delayed gains - 35% by Jan30"
+    ])
+    st.markdown("""
+    - Incentive scheme is only valid for 2025-2027. 
+    - Have grouped 2026 and 2027 together. 
+    - As the worst case scenario, assume that not meeting baseline target happens for all years.
+    """)	
+    incentivescheme = st.selectbox("Select success of incentive scheme", [
+        "Do not meet baseline target across all years for 2025-2030",
+        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027",
+	"Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025",
+	"Meet baseline target + incentive scheme for 2025, 2026 and 2027",
+	"Meet baseline target only for 2025, 2026 and 2027"
+    ])
+    	
 # --- Second Row: Quadrants 3 and 4 ---
 col3, col4 = st.columns(2)
 
 with col3:
-    with st.container():
-        st.markdown("""
-            <div style="border: 2px solid #d3d3d3; padding: 20px; border-radius: 10px; background-color: #f9f9f9;">
-        """, unsafe_allow_html=True)
-
-        st.subheader("Outsource Search")
-        st.markdown("""
-        - Age of files fixed at 7 months.  
-        - Turnaround time fixed at 5 months.  
-        - Vary the volume of Outsource Search for 2025-2027.  
-        - Volume kept constant at 5232, 5784, 6168 for 2028, 2029, 2030 respectively.
-        """)	
-        Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 3000, 3000, step=500)
-        Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 4200, 3000, step=500)
-        Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 4656, 3000, step=500)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
+    st.subheader("Outsource Search")
+    st.markdown("""
+    - Age of files fixed at 7 months. 
+    - Turnaround time fixed at 5 months. 
+    - Vary the volume of Outsource Search for 2025-2027. Volume kept constant at 5232, 5784, 6168 for 2028,2029, 2030 respectively.
+    """)	
+    # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
+    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 3000, 3000, step =500)
+    Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 4200, 3000, step =500)
+    Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 4656, 3000, step =500)
+  
 with col4:
-    with st.container():
-        st.markdown("""
-            <div style="border: 2px solid #d3d3d3; padding: 20px; border-radius: 10px; background-color: #f9f9f9;">
-        """, unsafe_allow_html=True)
-
-        st.subheader("Collaboration")
-        st.markdown("""
-        - Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively for moderate and high patent growth.  
-        - Volume fixed at 2000, 2500, 0, 0, 0 for 2026, 2027, 2028, 2029, 2030 respectively for slow patent growth.  
-        - Age of files fixed at 12 months.  
-        - Vary turnaround time for working on Collaboration files.
-        """)
-        Outsource_e_select = st.selectbox("Select turnaround time; equal across all years", [
-            "Fast - 7 months",
-            "Moderate - 9 months",
-            "Good - 12 months"
-        ])
-
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.subheader("Collaboration")
+    st.markdown("""
+    - Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively for moderate and high patent growth. 
+    - Volume fixed at 2000, 2500, 0, 0, 0 for 2026, 2027, 2028, 2029, 2030 respectively for slow patent growth. 
+    - Age of files fixed at 12 months. 
+    - Vary turnaround time for working on Collaboration files.
+    """)	
+    Outsource_e_select = st.selectbox("Select turnaround time; equal across all years", [
+        "Fast - 7 months",
+        "Moderate - 9 months",
+        "Good - 12 months"
+    ])
 
 
 
