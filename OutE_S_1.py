@@ -578,43 +578,6 @@ if st.button("Start Simulation"):
     # === Define Constants ===
     div_order = ['Div1', 'Div2', 'Div3', 'Div4']
 
-    # Outsource quotas
-    pf11_quotas = {
-        2025: Outsource_S_2025,
-        2026: Outsource_S_2026,
-        2027: Outsource_S_2027,
-        2028: 5232,
-        2029: 5784,
-        2030: 6168
-    }
-
-
-    pf12_quotas = {
-        2026: 1500,
-        2027: 2000,
-        2028: 3000,
-        2029: 3000,
-        2030: 3500
-    }
-
-    # Thresholds
-    pf11_thresholds = {
-        2025: date(2024, 1, 1),
-        2026: date(2025, 5, 1),
-        2027: date(2026, 5, 1),
-        2028: date(2027, 5, 1),
-        2029: date(2028, 5, 1),
-        2030: date(2029, 5, 1),
-    }
-
-    pf12_thresholds = {
-        2026: date(2026, 1, 1),
-        2027: date(2026, 10, 1),
-        2028: date(2027, 10, 1),
-        2029: date(2028, 10, 1),
-        2030: date(2029, 10, 1),
-    }
-
     def calculate_division_quotas(div_shares, year_qty, div_order):
         raw_quotas = {div: div_shares.get(div, 0) * year_qty for div in div_order}
         quotas = {div: int(raw_quotas[div]) for div in div_order}
