@@ -539,12 +539,12 @@ if st.button("Start Simulation"):
 
     # Outsource quotas
     pf11_quotas = {
-        2025: 3000,
-        2026: 4200,
-        2027: 4656,
-        2028: 5232,
-        2029: 2000,
-        2030: 1000
+        2025: Outsource_S_2025,
+        2026: Outsource_S_2026,
+        2027: Outsource_S_2027,
+        2028: Outsource_S_282930,
+        2029: Outsource_S_282930,
+        2030: Outsource_S_282930,
     }
 
 
