@@ -53,7 +53,7 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.subheader("Outsource Search")
-    st.markdown("Age of files fixed at 7 months. Turnaround time fixed at 12 months. Vary the volume of Outsource Search for 2025-2027. Volume kept constant at 5232, 5784, 6168")	
+    st.markdown("Age of files fixed at 7 months. Turnaround time fixed at 5 months. Vary the volume of Outsource Search for 2025-2027. Volume kept constant at 5232, 5784, 6168")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
     Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 4000, 3000, step =500)
     Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 4200, 3000, step =500)
@@ -263,7 +263,7 @@ if st.button("Start Simulation"):
             total += capacitybydiv[division].get(year, 0)  # Safe access
         totalcapacity[year] = total
 
-    st.write("Total capacity based on hiring plan and incentive scheme")
+    st.write("Total capacity based on hiring plan and incentive scheme across all divisions")
     st.write(totalcapacity)
 
     # --- Define PPH projections ---
@@ -323,8 +323,8 @@ if st.button("Start Simulation"):
         est_AI_dict["pf11"].append(pf11_val)
         est_AI_dict["pf12"].append(pf12_val)
 
-    # st.write("PF11 and PF12 volumes over years 2025-2030:")
-    # st.write(est_AI_dict)
+    st.write("PF11 and PF12 volumes over years 2025-2030:")
+    st.write(est_AI_dict)
 
     ai_scenarios = {
     "Accelerated": {
@@ -414,8 +414,8 @@ if st.button("Start Simulation"):
         adjusted_capacity[i] = int(value)  # Ensure it's stored as integer
 
     # Display updated deductions
-    # st.write("Final updated cap after applying secdivert, QC Effort, and AI Gains:")
-    # st.write(adjusted_capacity)
+    st.write("Final updated cap after applying secdivert, QC Effort, and AI Gains:")
+    st.write(adjusted_capacity)
 
 
     capacity_split = {
@@ -465,8 +465,8 @@ if st.button("Start Simulation"):
                 quarterly_capacity[div][year][qtr] = int(round(yearly_capacity * (pct / 100)))
 
     # Example output in Streamlit
-    # st.write("Quarterly disbursed capacity by division and year:")
-    # st.write(quarterly_capacity)
+    st.write("Quarterly disbursed capacity by division and year:")
+    st.write(quarterly_capacity)
 
 
     foa_base = {
@@ -488,8 +488,8 @@ if st.button("Start Simulation"):
     # Calculate % gains from 2025 for each year 2026-2030
     base_value = adjusted_capacity[0]  # 2025 value
     percentage_gains = {}
-    # st.write("base value to adjust foa is:")
-    # st.write(base_value)
+    st.write("base value to adjust foa is:")
+    st.write(base_value)
 
 
     for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030 
@@ -520,10 +520,10 @@ if st.button("Start Simulation"):
     # import pprint
     # pprint.pprint(updated_foa)
     # Example output in Streamlit
-    # st.write("Display FOA result:")
-    # st.write(updated_foa)
-    # st.write("percentage gains:")
-    # st.write(percentage_gains)
+    st.write("Display FOA result:")
+    st.write(updated_foa)
+    st.write("percentage gains:")
+    st.write(percentage_gains)
 
 
     # === Define Constants ===
@@ -889,15 +889,14 @@ if st.button("Start Simulation"):
 
     # --- Define quantities ---
     e_qty = [0, 0, 1583, 2167, 3000, 3083]
-    s_qty = [3000, 4200, 4656, 5232, 2000, 1000]
-    outsource_e_time, outsource_s_time = 9, 5
-
+    s_qty = [Outsource_S_2025, Outsource_S_2026, Outsource_S_2027, 5232, 5784, 6168]
+    outsource_s_time = 5
+    # outsource_e_time already defined at the top	
 
     # --- Fiscal year start/end dates ---
     sdates_e = [datetime(2026, 4, 1)] + [datetime(y, 1, 1) for y in range(2027, 2031)]
     sdates = [datetime(y, 1, 1) for y in range(2025, 2031)]
     edates = [datetime(y, 12, 31) for y in range(2025, 2031)]
-
 
     # Compute avg_E_age properly using min and max dates per year
     min_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].min().tolist()
