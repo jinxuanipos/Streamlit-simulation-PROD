@@ -377,6 +377,7 @@ if st.button("Start Simulation"):
 
 
     # Initialize dictionary
+    secdivert_v = secdivert / 100
     secdivert_deductions = {}
 
     # Apply diversion logic for 2025 to 2030
