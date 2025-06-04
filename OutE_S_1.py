@@ -518,7 +518,7 @@ if st.button("Start Simulation"):
     for i, year in enumerate(years):
         # Start with current deduction value
         value = adjusted_capacity[i]
-	st.write("adjusted_capacity_current")
+        st.write("adjusted_capacity_current")
         st.write(value)
         
         # Subtract secdivert only for 2025 and 2026
