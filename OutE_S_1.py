@@ -986,7 +986,7 @@ if st.button("Start Simulation"):
             e_age=avg_E_age - outsource_e_time,
             s_time=outsource_s_time,
             e_time=outsource_e_time,
-            year_mult=i + 1
+            year_mult=i  # FIXED: don't use i + 1
         )
         foa_values.append(round(foa_sum / foa_count, 1))
 
