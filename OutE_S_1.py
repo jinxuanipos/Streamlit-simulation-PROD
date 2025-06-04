@@ -86,11 +86,11 @@ with col4:
 
 #mapping and calculation for user selected values
 
-# --- MAP the hire selection to respective file names ---
-hire_file_mapping = {
-    "Accelerated - Hire additional 20 by Jan 26": "DivisionFiles_HighGrowth.xlsx",
-    "Moderate - Hire additional 10 by Jan 26": "DivisionFiles_MidGrowth.xlsx",
-    "Paced - Hire additional 20 by Jul 26": "DivisionFiles_LowGrowth.xlsx"
+# --- MAP the patent forecast selection to respective file names ---
+filings_file_mapping = {
+    "High - Upper bound of patent filing forecast": "DivisionFiles_HighGrowth.xlsx",
+    "Moderate - Average": "DivisionFiles_MidGrowth.xlsx",
+    "Slow - Lower bound of patent filing forecast": "DivisionFiles_LowGrowth.xlsx"
 }
 
 # --- MAP the EOT selection to sheet names ---
@@ -101,7 +101,7 @@ eot_sheet_mapping = {
 }
 
 # --- Resolve the Excel file and sheet name ---
-excel_file = hire_file_mapping[hire]
+excel_file = filings_file_mapping[Filingsgrowth]
 sheet_name = eot_sheet_mapping[eot]
 
 
