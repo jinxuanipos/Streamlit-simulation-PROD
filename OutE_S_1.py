@@ -6,7 +6,7 @@ import openpyxl
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 import io
-import sample
+
 
 # === STREAMLIT APP ===
 st.set_page_config(layout="wide")
