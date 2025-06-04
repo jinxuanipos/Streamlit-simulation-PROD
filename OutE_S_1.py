@@ -511,7 +511,8 @@ if st.button("Start Simulation"):
 
     # Combine into a year-to-volume dictionary
     qc_effort = dict(zip(years, selected_volume_list))
-
+    st.write("qc_effort")
+    st.write(qc_effort)
 	
 
     for i, year in enumerate(years):
