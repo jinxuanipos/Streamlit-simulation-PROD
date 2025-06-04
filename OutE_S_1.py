@@ -59,9 +59,9 @@ with col3:
     st.markdown("*Age of files = ... *")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
     Outsource_S_2025 = st.slider("Outsource Search Volume 2025", 0, 4000, 3000, step =100)
-    Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 4000, 3000, step =100)
-    Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 4000, 3000, step =100)
-    Outsource_S_282930 = st.slider("Yearly Outsource Search Volume 2028-2030; equal volumes across all 3 years", 0, 4000, 3000, step =100)
+    Outsource_S_2026 = st.slider("Outsource Search Volume 2026", 0, 5000, 4000, step =100)
+    Outsource_S_2027 = st.slider("Outsource Search Volume 2027", 0, 5000, 4000, step =100)
+    Outsource_S_282930 = st.slider("Yearly Outsource Search Volume 2028-2030; equal volumes across all 3 years", 0, 3000, 2000, step =100)
   
 with col4:
     st.subheader("Collaboration")
