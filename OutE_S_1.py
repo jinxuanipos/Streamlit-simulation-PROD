@@ -72,7 +72,6 @@ with col4:
     st.markdown("""
     - Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively for moderate and high patent growth. 
     - Volume fixed at 2000, 2500, 0, 0, 0 for 2026, 2027, 2028, 2029, 2030 respectively for slow patent growth. 
-    
     - Age of files fixed at 12 months. 
     - Vary turnaround time for working on Collaboration files.
     """)	
