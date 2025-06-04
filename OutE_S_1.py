@@ -355,7 +355,7 @@ if st.button("Start Simulation"):
     OSSearch = {year: pf11_quotas[year] * 0.97 * 0.5 for year in pf11_quotas}
  
     # Subtract deductions from all above 
-    adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] for year in range(2025, 2031)]
+    adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] - OSSearch[year] for year in range(2025, 2031)]
     st.write("adjusted capacity before AI")
     st.write(adjusted_capacity)
 	
