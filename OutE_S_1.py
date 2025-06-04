@@ -367,7 +367,11 @@ if st.button("Start Simulation"):
  
         st.write(f"{year}: totalcapacity={total}, IPFast={ipfast}, ISA={isa}, IPEA={ipea}, pph={pph_val}, OSSearch={ossearch}, adjusted={adjusted}")
 
-
+    # Subtract deductions from all above 
+    adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] for year in range(2025, 2031)]
+    st.write("adjusted capacity before AI")
+    st.write(adjusted_capacity)
+	
     #calculate AI gains
     est_AI_dict = {
         "pf11": [],
