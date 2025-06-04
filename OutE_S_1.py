@@ -61,11 +61,10 @@ with col3:
   
 with col4:
     st.subheader("Collaboration")
-        "Moderate - 9 months",
     st.markdown("Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively for moderate and high patent growth. Volume fixed at 2000, 2500, 0, 0, 0 for 2026, 2027, 2028, 2029, 2030 respectively for low patent growth. Age of files fixed at 12 months. Vary turnaround time for working on Collaboration files.")	
     Outsource_e_select = st.selectbox("Select turnaround time; equal across all years", [
         "Fast - 7 months",
-        "Moderate - 9 months
+        "Moderate - 9 months",
         "Good - 12 months"
     ])
 
