@@ -52,17 +52,16 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.subheader("Outsource Search")
-    st.markdown("Age of files fixed at ____. Turnaround time fixed at ___. Vary the volume of Outsource Search.")	
+    st.markdown("Age of files fixed at 7 months. Turnaround time fixed at 12 months. Vary the volume of Outsource Search for 2025-2027. Volume kept constant at 5232, 5784, 6168")	
     # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
-    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 4000, 3000, step =100)
-    Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 5000, 4000, step =100)
-    Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 5000, 4000, step =100)
-    Outsource_S_282930 = st.slider("Select yearly outsource Search volume 2028-2030; equal volumes across all 3 years", 0, 3000, 2000, step =100)
+    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 4000, 3000, step =500)
+    Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 4200, 3000, step =500)
+    Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 4656, 3000, step =500)
   
 with col4:
     st.subheader("Collaboration")
-    st.markdown("Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively. Age of files fixed at___. Vary the partner's turnaround time for working on Collaboration files.")	
-    Outsource_e_select = st.selectbox("Select partner's turnaround time; equal turnaround time across all years", [
+    st.markdown("Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively. Age of files fixed at 12 months. Vary turnaround time for working on Collaboration files.")	
+    Outsource_e_select = st.selectbox("Select turnaround time; equal across all years", [
         "Fast - 7 months",
         "Moderate - 9 months",
         "Good - 12 months"
@@ -534,9 +533,9 @@ if st.button("Start Simulation"):
         2025: Outsource_S_2025,
         2026: Outsource_S_2026,
         2027: Outsource_S_2027,
-        2028: Outsource_S_282930,
-        2029: Outsource_S_282930,
-        2030: Outsource_S_282930,
+        2028: 5232
+        2029: 5784
+        2030: 6168
     }
 
 
