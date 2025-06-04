@@ -266,9 +266,57 @@ if st.button("Start Simulation"):
     st.write("Total capacity based on hiring plan and incentive scheme across all divisions")
     st.write(totalcapacity)
 
+            # Outsource quotas
+    pf11_quotas = {
+        2025: Outsource_S_2025,
+        2026: Outsource_S_2026,
+        2027: Outsource_S_2027,
+        2028: 5232,
+        2029: 5784,
+        2030: 6168
+    }
+ 
+ 
+    pf12_quotas = {
+        2026: 1500,
+        2027: 2000,
+        2028: 3000,
+        2029: 3000,
+        2030: 3500
+    }
+ 
+    # Thresholds
+    pf11_thresholds = {
+        2025: date(2024, 1, 1),
+        2026: date(2025, 5, 1),
+        2027: date(2026, 5, 1),
+        2028: date(2027, 5, 1),
+        2029: date(2028, 5, 1),
+        2030: date(2029, 5, 1),
+    }
+ 
+    pf12_thresholds = {
+        2026: date(2026, 1, 1),
+        2027: date(2026, 10, 1),
+        2028: date(2027, 10, 1),
+        2029: date(2028, 10, 1),
+        2030: date(2029, 10, 1),
+    }
+    
+    
+    # IPFast in points: years 2025-2030 with value 144
+    IPFast = {year: 144 for year in range(2025, 2031)}
+ 
+    # ISA in points: years 2025-2030 with value 1440
+    ISA = {year: 1440 for year in range(2025, 2031)}
+ 
+    # IPEA in points: years 2025-2026 = 11, years 2027-2030 = 10
+    IPEA = {year: 11 if year in (2025, 2026) else 10 for year in range(2025, 2031)}
+ 
+    
     # --- Define PPH projections ---
     pph_base_rate = 0.063  # 6.3%
-
+ 
     # Convert 'S&E Year' to numeric (safely)
     task_df['S&E Year'] = pd.to_numeric(task_df['S&E Year'], errors='coerce')
     # Filter only years in 2025–2030
@@ -279,10 +327,10 @@ if st.button("Start Simulation"):
     searchexam_base = year_counts.to_dict()
     
     st.write(searchexam_base)
-
+ 
     projected_pph = {}
     projected_pph_list = []
-
+ 
     for i, year in enumerate(range(2025, 2031)):
     	growth_factor = (1 + pphgrowth / 100) ** (i+1)
     	base = searchexam_base.get(year, 0)  # use 0 if year is missing
@@ -295,21 +343,22 @@ if st.button("Start Simulation"):
     st.write(base)
     st.write("projected_pph_list")
     st.write(projected_pph_list)
-
-    # Adjusting projections (deductions = adjusted values)
-    deductions = {}
+ 
+    # pph in points
+    pph = {}
     for i, year in enumerate(range(2025, 2031)):
         proj_pph = projected_pph[year]
-        adjusted_pph = proj_pph * 0.97  # 3% deduction
-        deductions[year] = proj_pph + adjusted_pph 
-    st.write("pph deductions")
-    st.write(deductions)
-
-    # Subtract deductions from capacity year by year 
-    adjusted_capacity = [totalcapacity[year] - deductions[year] for year in range(2025, 2031)]
-    st.write("adjusted capacity")
+        pphpoints = proj_pph * 0.97
+        pph[year] = pphpoints 
+    
+    #Out Source Search efforts in points
+    OSSearch = {year: pf11_quotas[year] * 0.97 * 0.5 for year in pf11_quotas}
+ 
+    # Subtract deductions from all above 
+    adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] for year in range(2025, 2031)]
+    st.write("adjusted capacity before AI")
     st.write(adjusted_capacity)
-
+	
 	
     #calculate AI gains
     est_AI_dict = {
