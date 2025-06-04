@@ -39,7 +39,11 @@ with col2:
         "On schedule - 45% by Jan30",
         "Delayed gains - 35% by Jan30"
     ])
-    st.markdown("Incentive scheme is only valid for 2025-2027. Have grouped 2026 and 2027 together. As the worst case scenario, assume that not meeting baseline target happens for all years.")	
+    st.markdown("""
+    - Incentive scheme is only valid for 2025-2027. 
+    - Have grouped 2026 and 2027 together. 
+    - As the worst case scenario, assume that not meeting baseline target happens for all years.
+    """)	
     incentivescheme = st.selectbox("Select success of incentive scheme", [
         "Do not meet baseline target across all years for 2025-2030",
         "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027",
