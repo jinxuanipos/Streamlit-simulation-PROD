@@ -933,12 +933,12 @@ if st.button("Start Simulation"):
     combined_buffer.seek(0)
 
     # Download button for the combined Excel file
-    # st.download_button(
-        # label="Download Complete FOA in house (.xlsx)",
-        # data=combined_buffer,
-        # file_name="FOA_output.xlsx",
-        # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    # )
+    st.download_button(
+        label="Download Complete FOA in house (.xlsx)",
+        data=combined_buffer,
+        file_name="FOA_output.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
 
     #results here
