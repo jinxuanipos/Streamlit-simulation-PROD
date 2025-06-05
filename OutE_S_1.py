@@ -612,8 +612,8 @@ if st.button("Start Simulation"):
                 quarterly_capacity[div][year][qtr] = int(round(yearly_capacity * (pct / 100)))
 
     # Example output in Streamlit
-    st.write("Quarterly disbursed capacity by division and year:")
-    st.write(quarterly_capacity)
+    # st.write("Quarterly disbursed capacity by division and year:")
+    # st.write(quarterly_capacity)
 
 
     foa_base = {
