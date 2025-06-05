@@ -24,96 +24,74 @@ st.title("Running FOA Simulations")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Demand")
-    Filingsgrowth = st.selectbox(
-        "Select projected S&E Growth Y-o-Y for 2027-2030 based on patent filings projection",
-        [
-            "High - Upper bound of patent filing forecast",
-            "Moderate - Average",
-            "Slow - Lower bound of patent filing forecast"
-        ],
-        key="filingsgrowth"
-    )
-    pphgrowth = st.slider("Enter Growth Rate of PPH Usage Rate Y-o-Y", min_value=0, max_value=20, value=10, key="pphgrowth")
-    eot = st.selectbox("Select EOT Waiver Success Rate", ["26%", "30%", "35%"], key="eot")
+    st.subheader("Demand Parameters")
+    Filingsgrowth = st.selectbox("Select projected Patent Filing growth", [
+        "High growth",
+        "Moderate growth",
+        "Low growth"
+    ])	
+    pphgrowth = st.slider("Choose Y-o-Y growth rate of PPH usage", min_value=0, max_value=20, value=10)
+    eot = st.selectbox("Select EOT Fee Waiver success rate", ["26%", "30%", "35%"])
+
 
 with col2:
-    st.subheader("Capacity")
-    secdivert = st.slider(
-        "Select yearly secondary job diversion for 2025 and 2026 (%)",
-        0, 100, 50, key="secdivert"
-    )
-    hire = st.selectbox(
-        "Select Hiring Plan",
-        [
-            "Accelerated - Hire additional 20 by Jan 26",
-            "Moderate - Hire additional 10 by Jan 26",
-            "Paced - Hire additional 20 by Jul 26"
-        ],
-        key="hire"
-    )
-    AIgainschoice = st.selectbox(
-        "Select projected S&E Productivity gains from PAS and Report Drafter",
-        [
-            "Accelerated - 55% by Jan30",
-            "On schedule - 45% by Jan30",
-            "Delayed gains - 35% by Jan30"
-        ],
-        key="AIgainschoice"
-    )
-    st.markdown("""
-    - Incentive scheme is only valid for 2025-2027. 
-    - Have grouped 2026 and 2027 together. 
-    - As the worst case scenario, assume that not meeting baseline target happens for all years.
-    """)
-    incentivescheme = st.selectbox(
-        "Select success of incentive scheme",
-        [
-            "Do not meet baseline target across all years for 2025-2030",
-            "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027",
-            "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025",
-            "Meet baseline target + incentive scheme for 2025, 2026 and 2027",
-            "Meet baseline target only for 2025, 2026 and 2027"
-        ],
-        key="incentivescheme"
-    )
-
+    st.subheader("Capacity Measures")
+    secdivert = st.slider("Choose % of secondary job efforts to divert to FOA for 2025-2026(0 = don't divert, 100 = divert all)", 0, 100, 50)	
+    hire = st.selectbox("Select hiring plan", [
+        "Accelerated - Hire additional 20 by Jan 26",
+        "Moderate - Hire additional 10 by Jan 26",
+        "Paced - Hire additional 20 by Jul 26"
+    ])
+    AIgainschoice = st.selectbox("Select progress of AI gains", [
+        "Accelerated",
+        "On track",
+        "Delayed"
+    ])
+    incentivescheme = st.selectbox("New productivity scheme starts from Jul25, with the bonus incentive scheme running from Jul25-2027. Select success of these schemes", [
+        "Did not meet new baseline targets across all years from 2025-2030",
+        "Meet new baseline targets for all years, but incentive scheme targets not met",
+        "Meet new baseline targets for all years, with incentive scheme targets met only for 2025",
+        "Meet new baseline targets for all years, with incentive scheme targets met for 2026-2027 but not 2025",
+        "Meet new baseline targets for all years, with incentive scheme targets met for all years"
+    ])
+    	
 # --- Second Row: Quadrants 3 and 4 ---
 col3, col4 = st.columns(2)
 
 with col3:
     st.subheader("Outsource Search")
     st.markdown("""
-    - Age of files fixed at 7 months. 
+    - Age of files chosen for outsource fixed at 7 months. 
     - Turnaround time fixed at 5 months. 
-    - Vary the volume of Outsource Search for 2025-2027. Volume kept constant at 5232, 5784, 6168 for 2028,2029, 2030 respectively.
-    """)
-    Outsource_S_2025 = st.slider("Select outsource Search volume 2025", 0, 3000, 3000, step=500, key="Outsource_S_2025")
-    Outsource_S_2026 = st.slider("Select outsource Search volume 2026", 0, 4200, 3000, step=500, key="Outsource_S_2026")
-    Outsource_S_2027 = st.slider("Select outsource Search volume 2027", 0, 4656, 3000, step=500, key="Outsource_S_2027")
-
+    - Vary the volume of Outsource Search files for 2025-2027. Volumes for 2028-2030 fixed at possible max volumes.
+    """)	
+    # Outsource Search - vary for 2025-2027. 2028-2030 keep constant. 
+    Outsource_S_2025 = st.slider("Select Outsource Search volume 2025", 0, 3000, 3000, step =500)
+    Outsource_S_2026 = st.slider("Select Outsource Search volume 2026", 0, 4200, 4200, step =500)
+    Outsource_S_2027 = st.slider("Select Outsource Search volume 2027", 0, 4656, 4656, step =500)
+  
 with col4:
-    st.subheader("Collaboration")
+    st.subheader("Exam Partner Collaboration")
     st.markdown("""
-    - Volume fixed at 1500, 2000, 3000, 3000, 3500 for 2026, 2027, 2028, 2029, 2030 respectively for moderate and high patent growth. 
-    - Volume fixed at 2000, 2500, 0, 0, 0 for 2026, 2027, 2028, 2029, 2030 respectively for slow patent growth. 
-    - Age of files fixed at 12 months. 
-    - Vary turnaround time for working on Collaboration files.
-    """)
-    Outsource_e_select = st.selectbox(
-        "Select turnaround time; equal across all years",
-        ["Fast - 7 months", "Moderate - 9 months", "Good - 12 months"],
-        key="Outsource_e_select"
-    )
+    - Volumes are fixed at 1.5K|2K|3K|3K|3.5K from 2026-2030 for moderate-high patent growth; 2K|2.5K from 2026-2027 for low patent growth. 
+    - Age of exam files chosen fixed at 3 months.
+    - Vary exam partner turnaround time.
+    """)	
+    Outsource_e_select = st.selectbox("Select turnaround time; same across all years", [
+        "Fast - 7 months",
+        "Good - 9 months",
+        "Slow - 12 months"
+    ])
+
 
 
 #mapping and calculation for user selected values
 
 # --- MAP the patent forecast selection to respective file names ---
 filings_file_mapping = {
-    "High - Upper bound of patent filing forecast": "DivisionFiles_HighGrowth.xlsx",
-    "Moderate - Average": "DivisionFiles_MidGrowth.xlsx",
-    "Slow - Lower bound of patent filing forecast": "DivisionFiles_LowGrowth.xlsx"
+    "High growth": "DivisionFiles_HighGrowth.xlsx",
+    "Moderate growth": "DivisionFiles_MidGrowth.xlsx",
+    "Low growth": "DivisionFiles_LowGrowth.xlsx"
 }
 
 # --- MAP the EOT selection to sheet names ---
@@ -237,34 +215,36 @@ slow_incentive_2627 = {
 # Mapping for capacity dictionaries by hire plan and incentive scheme choice
 capacity_map = {
     "Accelerated - Hire additional 20 by Jan 26": {
-        "Do not meet baseline target across all years for 2025-2030": accelerated_worst,
-        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027": accelerated_incentive_25,
-        "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025": accelerated_incentive_2627,
-        "Meet baseline target + incentive scheme for 2025, 2026 and 2027": accelerated_baseline_incentive_all,
-        "Meet baseline target only for 2025, 2026 and 2027": accelerated_baseline_all,
+        "Did not meet new baseline targets across all years from 2025-2030": accelerated_worst,
+        "Meet new baseline targets for all years, with incentive scheme targets met only for 2025": accelerated_incentive_25,
+        "Meet new baseline targets for all years, with incentive scheme targets met for 2026-2027 but not 2025": accelerated_incentive_2627,
+        "Meet new baseline targets for all years, with incentive scheme targets met for all years": accelerated_baseline_incentive_all,
+        "Meet new baseline targets for all years, but incentive scheme targets not met": accelerated_baseline_all,
     },
     "Moderate - Hire additional 10 by Jan 26": {
-        "Do not meet baseline target across all years for 2025-2030": moderate_worst,
-        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027": moderate_incentive_25,
-        "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025": moderate_incentive_2627,
-        "Meet baseline target + incentive scheme for 2025, 2026 and 2027": moderate_incentive_all,
-        "Meet baseline target only for 2025, 2026 and 2027": moderate_baseline_all,
+        "Did not meet new baseline targets across all years from 2025-2030": moderate_worst,
+        "Meet new baseline targets for all years, with incentive scheme targets met only for 2025": moderate_incentive_25,
+        "Meet new baseline targets for all years, with incentive scheme targets met for 2026-2027 but not 2025": moderate_incentive_2627,
+        "Meet new baseline targets for all years, with incentive scheme targets met for all years": moderate_incentive_all,
+        "Meet new baseline targets for all years, but incentive scheme targets not met": moderate_baseline_all,
     },
     "Paced - Hire additional 20 by Jul 26": {
-        "Do not meet baseline target across all years for 2025-2030": slow_worst,
-        "Meet baseline target + incentive scheme for 2025, meet baseline target only for 2026 and 2027": slow_incentive_25,
-        "Meet baseline target + incentive scheme for 2026 and 2027, meet baseline target only for 2025": slow_incentive_2627,
-        "Meet baseline target + incentive scheme for 2025, 2026 and 2027": slow_incentive_all,
-        "Meet baseline target only for 2025, 2026 and 2027": slow_baseline_all,
+        "Did not meet new baseline targets across all years from 2025-2030": slow_worst,
+        "Meet new baseline targets for all years, with incentive scheme targets met only for 2025": slow_incentive_25,
+        "Meet new baseline targets for all years, with incentive scheme targets met for 2026-2027 but not 2025": slow_incentive_2627,
+        "Meet new baseline targets for all years, with incentive scheme targets met for all years": slow_incentive_all,
+        "Meet new baseline targets for all years, but incentive scheme targets not met": slow_baseline_all,
     }
 }
+
+
 
 
 # Mapping logic to extract numeric months for outsource E
 turnaround_mapping = {
     "Fast - 7 months": 7,
-    "Moderate - 9 months": 9,
-    "Good - 12 months": 12
+    "Good - 9 months": 9,
+    "Slow - 12 months": 12
 }
 
 # Get numeric value
@@ -285,7 +265,7 @@ if st.button("Start Simulation"):
     else:
         try:
             task_df = pd.read_excel(excel_file, sheet_name=sheet_name)
-            st.success(f"Successfully loaded '{excel_file}' | Sheet: '{sheet_name}'")
+            # st.success(f"Successfully loaded '{excel_file}' | Sheet: '{sheet_name}'")
         except Exception as e:
             st.error(f"Failed to read '{sheet_name}' from '{excel_file}': {e}")
 
@@ -301,8 +281,8 @@ if st.button("Start Simulation"):
             total += capacitybydiv[division].get(year, 0)  # Safe access
         totalcapacity[year] = total
 
-    st.write("Total capacity based on hiring plan and incentive scheme across all divisions")
-    st.write(totalcapacity)
+    # st.write("Total capacity based on hiring plan and incentive scheme across all divisions")
+    # st.write(totalcapacity)
 
     # Outsource quotas
     pf11_quotas = {
@@ -314,7 +294,7 @@ if st.button("Start Simulation"):
         2030: 6168
     }
 
-    if Filingsgrowth == "Slow - Lower bound of patent filing forecast":
+    if Filingsgrowth == "Low growth":
         pf12_quotas = {
             2026: 2000,
             2027: 2500,
@@ -333,8 +313,10 @@ if st.button("Start Simulation"):
  
  
     # Thresholds
+    # Thresholds
+
     pf11_thresholds = {
-        2025: date(2024, 3, 1),
+        2025: date(2024, 1, 1),
         2026: date(2025, 5, 1),
         2027: date(2026, 5, 1),
         2028: date(2027, 5, 1),
@@ -343,13 +325,13 @@ if st.button("Start Simulation"):
     }
  
     pf12_thresholds = {
-        2026: date(2025, 11, 1),
-        2027: date(2026, 8, 1),
-        2028: date(2027, 8, 1),
-        2029: date(2028, 8, 1),
-        2030: date(2029, 8, 1),
+        2026: date(2026, 1, 1),
+        2027: date(2026, 10, 1),
+        2028: date(2027, 10, 1),
+        2029: date(2028, 10, 1),
+        2030: date(2029, 10, 1),
     }
-    
+ 
     
     # IPFast in points: years 2025-2030 with value 144
     IPFast = {year: 144 for year in range(2025, 2031)}
@@ -373,7 +355,7 @@ if st.button("Start Simulation"):
     # Convert to dictionary
     searchexam_base = year_counts.to_dict()
     
-    st.write(searchexam_base)
+    # st.write(searchexam_base)
  
     projected_pph = {}
     projected_pph_list = []
@@ -384,12 +366,12 @@ if st.button("Start Simulation"):
     	projected_value = base * pph_base_rate * growth_factor
     	projected_pph[i] = projected_value  # Use index as key: 0 for 2025, 1 for 2026, ...
     	projected_pph_list.append(projected_value)
-    st.write("growth_factor")
-    st.write(growth_factor)
-    st.write("base")
-    st.write(base)
-    st.write("projected_pph_list")
-    st.write(projected_pph_list)
+    # st.write("growth_factor")
+    # st.write(growth_factor)
+    # st.write("base")
+    # st.write(base)
+    # st.write("projected_pph_list")
+    # st.write(projected_pph_list)
  
     # pph in points
     pph = {}
@@ -412,12 +394,12 @@ if st.button("Start Simulation"):
         ossearch = OSSearch[year]
         adjusted = total - ipfast - isa - ipea - pph_val - ossearch
  
-        st.write(f"{year}: totalcapacity={total}, IPFast={ipfast}, ISA={isa}, IPEA={ipea}, pph={pph_val}, OSSearch={ossearch}, adjusted={adjusted}")
+        # st.write(f"{year}: totalcapacity={total}, IPFast={ipfast}, ISA={isa}, IPEA={ipea}, pph={pph_val}, OSSearch={ossearch}, adjusted={adjusted}")
 
     # Subtract deductions from all above 
     adjusted_capacity = [totalcapacity[year] - IPFast[year] - ISA[year] - IPEA[year] - pph[year] - OSSearch[year] for year in range(2025, 2031)]
-    st.write("adjusted capacity before AI")
-    st.write(adjusted_capacity)
+    # st.write("adjusted capacity before AI")
+    # st.write(adjusted_capacity)
 	
     #calculate AI gains
     est_AI_dict = {
@@ -431,8 +413,8 @@ if st.button("Start Simulation"):
         est_AI_dict["pf11"].append(pf11_val)
         est_AI_dict["pf12"].append(pf12_val)
 
-    st.write("PF11 and PF12 volumes over years 2025-2030:")
-    st.write(est_AI_dict)
+    # st.write("PF11 and PF12 volumes over years 2025-2030:")
+    # st.write(est_AI_dict)
 
     ai_scenarios = {
     "Accelerated": {
@@ -448,10 +430,12 @@ if st.button("Start Simulation"):
         "Report Drafter - PF11": {2025: 0.0, 2026: 0.0, 2027: 0.0, 2028: 3.0, 2029: 6.0, 2030: 10.0},
         "Report Drafter - PF12": {2025: 0.0, 2026: 0.0, 2027: 0.0, 2028: 3.0, 2029: 6.0, 2030: 10.0}}}
    
+
+
     ai_scenario_mapping = {
-    "Accelerated - 55% by Jan30": "Accelerated",
-    "On schedule - 45% by Jan30": "On schedule",
-    "Delayed gains - 35% by Jan30": "Delayed gains"}
+    "Accelerated": "Accelerated",
+    "On track": "On schedule",
+    "Delayed": "Delayed gains"}
 
     selected_ai_key = ai_scenario_mapping[AIgainschoice]
     ai_dict = ai_scenarios[selected_ai_key]
@@ -472,8 +456,8 @@ if st.button("Start Simulation"):
         ai_gains[year] = int(gain)  # Store as integer
 
         # Display result in Streamlit
-        st.write("AI Gains from 2025 to 2030:")
-        st.write(ai_gains)
+        # st.write("AI Gains from 2025 to 2030:")
+        # st.write(ai_gains)
 
 
     # Initialize dictionary
@@ -489,83 +473,96 @@ if st.button("Start Simulation"):
         secdivert_deductions[year] = int(deducted_val)
       
     # Display in Streamlit
-    st.write("Deductions after applying secondary diversion (2025–2026 only):")
-    st.write(secdivert_deductions)
+    # st.write("Deductions after applying secondary diversion (2025–2026 only):")
+    # st.write(secdivert_deductions)
 
 
     #qc for out e	
     # Define years
-    years = [2025, 2026, 2027, 2028, 2029, 2030]
+    out_e_years = [2025, 2026, 2027, 2028, 2029, 2030]
 
     # Define mapping dictionary
     collab_mapping = {
-        "Slow - Lower bound of patent filing forecast": {
+        "Low growth": {
             "Fast - 7 months": "qccutvol-7m",
-            "Moderate - 9 months": "qccutvol-9m",
-            "Good - 12 months": "qccutvol-12m"
+            "Good - 9 months": "qccutvol-9m",
+            "Slow - 12 months": "qccutvol-12m"
         },
-        "High - Upper bound of patent filing forecast": {
+        "High growth": {
             "Fast - 7 months": "qcdefaultvol-7m",
-            "Moderate - 9 months": "qcdefaultvol-9m",
-            "Good - 12 months": "qcdefaultvol-12m"
+            "Good - 9 months": "qcdefaultvol-9m",
+            "Slow - 12 months": "qcdefaultvol-12m"
         },
-        "Moderate - Average": {
+        "Moderate growth": {
             "Fast - 7 months": "qcdefaultvol-7m",
-            "Moderate - 9 months": "qcdefaultvol-9m",
-            "Good - 12 months": "qcdefaultvol-12m"
-        }
+            "Good - 9 months": "qcdefaultvol-9m",
+            "Slow - 12 months": "qcdefaultvol-12m"
+	}
     }
+    
 
-    # Define collaboration volume data
-    collab_volume_data = {
-        "qcdefaultvol-12m": [0, 0, 187, 292, 358, 440],
+    # Define collaboration qc data
+    collab_qc_data = {
+        "qcdefaultvol-12m": [0, 0, 333, 338, 388, 458],
         "qcdefaultvol-9m": [0, 0, 415, 326, 405, 468],
         "qcdefaultvol-7m": [0, 31, 448, 354, 417, 475],
-        "qccutvol-12m":    [0, 0, 249, 376, 218, 44],
+        "qccutvol-12m":    [0, 0, 443, 433, 175, 0],
         "qccutvol-9m":     [0, 0, 545, 339, 131, 0],
         "qccutvol-7m":     [0, 42, 423, 332, 161, 0]
     }
 
-    # Get the code-mapping name based on user selections
-    selected_mapping_key = collab_mapping[Filingsgrowth][Outsource_e_select]
+    # Define collaboration foa returned 
+    collab_foa_data = {
+        "qcdefaultvol-12m": [0, 0, 1500, 2000, 3000, 3000],
+        "qcdefaultvol-9m": [0, 0, 2000, 2250, 3000, 3125],
+        "qcdefaultvol-7m": [0, 125, 2208, 2417, 3000, 3208],
+        "qccutvol-12m":    [0, 0, 2000, 2500, 0, 0],
+        "qccutvol-9m":     [0, 0, 2625, 1875, 0, 0],
+        "qccutvol-7m":     [0, 167, 2042, 2292, 0, 0]
+    }
+    
+    # Get the qc points and foa returned for out. e based on user selections
+    selected_qc_key = collab_mapping[Filingsgrowth][Outsource_e_select]
 
-    # Get the corresponding volume list
-    selected_volume_list = collab_volume_data[selected_mapping_key]
-
+    # Get the corresponding qc point and foa volume list
+    selected_qc_list = collab_qc_data[selected_qc_key]
+    selected_oute_foalist = collab_foa_data[selected_qc_key]
+    
     # Combine into a year-to-volume dictionary
-    qc_effort = dict(zip(years, selected_volume_list))
-    st.write("qc_effort")
-    st.write(qc_effort)
+    qc_effort = dict(zip(out_e_years, selected_qc_list))
+    foa_oute = dict(zip(out_e_years, selected_oute_foalist))
+    # st.write("qc_effort")
+    # st.write(qc_effort)
 	
 
     for i, year in enumerate(years):
         # Start with current deduction value
         value = adjusted_capacity[i]
-        st.write("adjusted_capacity_current")
-        st.write(value)
+        # st.write("adjusted_capacity_current")
+        # st.write(value)
         
         # Subtract secdivert only for 2025 and 2026
         if year in secdivert_deductions:
             value -= secdivert_deductions[year]
-        st.write("minus secdivert_deductions")
-        st.write(value)
+        # st.write("minus secdivert_deductions")
+        # st.write(value)
     
         # Subtract qc_effort
         value -= qc_effort[year]
-        st.write("minus qc effort")
-        st.write(value)
+        # st.write("minus qc effort")
+        # st.write(value)
 
         # Add AI gains
         value += ai_gains[year]
-        st.write("add ai gains")
-        st.write(value)	 
+        # st.write("add ai gains")
+        # st.write(value)	 
     
         # Update the cap list
         adjusted_capacity[i] = int(value)  # Ensure it's stored as integer
 
     # Display updated deductions
-    st.write("Final updated cap after applying secdivert, QC Effort, and AI Gains:")
-    st.write(adjusted_capacity)
+    # st.write("Final updated cap after applying secdivert, QC Effort, and AI Gains:")
+    # st.write(adjusted_capacity)
 
 
     capacity_split = {
@@ -638,14 +635,14 @@ if st.button("Start Simulation"):
     # Calculate % gains from 2025 for each year 2026-2030
     base_value = adjusted_capacity[0]  # 2025 value
     percentage_gains = {}
-    st.write("base value to adjust foa is:")
-    st.write(base_value)
+    # st.write("base value to adjust foa is:")
+    # st.write(base_value)
 
 
     for year_idx in range(1, 6):  # indices 1 to 5 correspond to 2026-2030 
         current_value = adjusted_capacity[year_idx]
         gain = (current_value - base_value) / base_value
-        gain = round(gain, 2)  # Round gain to 2 decimal places
+        gain = round(gain, 1)  # Round gain to 2 decimal places
         percentage_gains[2025 + year_idx] = max(gain, 0)  # Convert negative gains to 0
  
     # Now update foa_per_quarter for each year 2026-2030
@@ -670,10 +667,10 @@ if st.button("Start Simulation"):
     # import pprint
     # pprint.pprint(updated_foa)
     # Example output in Streamlit
-    st.write("Display FOA result:")
-    st.write(updated_foa)
-    st.write("percentage gains:")
-    st.write(percentage_gains)
+    # st.write("Display FOA result:")
+    # st.write(updated_foa)
+    # st.write("percentage gains:")
+    # st.write(percentage_gains)
 
 
     # === Define Constants ===
@@ -689,7 +686,7 @@ if st.button("Start Simulation"):
         return quotas
 
     def apply_quotas_for_year(year, year_qty, task_df, date_threshold, flag_col):
-        task_df_remaining = task_df[task_df[flag_col] != 'Y'].copy()
+        task_df_remaining = task_df[(task_df[flag_col] != 'Y') & (task_df['PPH'] != 'Y')].copy()
         division_counts = task_df_remaining['Division Transformed'].value_counts().to_dict()
         total_now = len(task_df_remaining)
         div_shares = {div: division_counts.get(div, 0) / total_now for div in div_order}
@@ -698,7 +695,7 @@ if st.button("Start Simulation"):
         div_counts = {div: 0 for div in div_order}
 
         for index, task in task_df.iterrows():
-            if task.get(flag_col) == 'Y' or task['S&E Lodge Date'].date() < date_threshold:
+            if task.get(flag_col) == 'Y' or task['PPH'] == 'Y' or task['S&E Lodge Date'].date() < date_threshold:
                 continue
             current_div = task['Division Transformed']
             if div_counts.get(current_div, 0) >= quotas.get(current_div, 0):
@@ -863,12 +860,14 @@ if st.button("Start Simulation"):
             SAndEType = task['S&E']
             SAndEPoint = SAndE_Points.get(SAndEType, 0)
 
+            # Case 1: Assign foa on same day
             if max_capacity > capacity_used and max_tasks_per_day > task_completed:
                 foa = working_days_df['Date'].iloc[working_day_index]
                 fy = working_days_df['FY'].iloc[working_day_index]
                 capacity_used += SAndEPoint
                 task_completed += 1
 
+            # Case 2: Daily quota reached, move to next working day   
             elif max_capacity > capacity_used and max_tasks_per_day == task_completed:
                 currentday_quarter = quarter_label
                 working_day_index += 1
@@ -880,17 +879,7 @@ if st.button("Start Simulation"):
                 capacity_used = SAndEPoint if quarter_label != currentday_quarter else capacity_used + SAndEPoint
                 task_completed = 1
 
-            #elif max_capacity <= capacity_used:
-                #next_quarter = 'Q' + str(int(quarter_label[1:]) + 1)
-                #while working_day_index < maxwkdays and working_days_df['Quarter'].iloc[working_day_index] != next_quarter:
-                    #working_day_index += 1
-                #if working_day_index >= maxwkdays:
-                    #break
-                #foa = working_days_df['Date'].iloc[working_day_index]
-                #fy = working_days_df['FY'].iloc[working_day_index]
-                #capacity_used = SAndEPoint
-                #task_completed = 1
-
+            # Case 3: Quarterly capacity exhausted — move to next quarter
             elif max_capacity <= capacity_used:
                 current_quarter = working_days_df['Quarter'].iloc[working_day_index]
                 current_year = working_days_df['Date'].iloc[working_day_index].year
@@ -945,11 +934,11 @@ if st.button("Start Simulation"):
 
     # Download button for the combined Excel file
     # st.download_button(
-        #label="Download Complete Schedule (.xlsx)",
-        #data=combined_buffer,
-        #file_name="schedule_output.xlsx",
-        #mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    #)
+        # label="Download Complete FOA in house (.xlsx)",
+        # data=combined_buffer,
+        # file_name="FOA_output.xlsx",
+        # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    # )
 
 
     #results here
@@ -1000,11 +989,9 @@ if st.button("Start Simulation"):
     task_df_pf12 = task_df[task_df['Outsource E'] == 'Y']
     task_df_pf11 = task_df[task_df['Outsource S'] == 'Y']
 
+
     # --- Define quantities ---
-    if Filingsgrowth == "Slow - Lower bound of patent filing forecast": 
-        e_qty = [0, 2000, 2500, 0, 0, 0]
-    else: 
-        e_qty = [0, 1500, 2000, 3000, 3000, 3500]
+    e_foa_qty = [foa_oute.get(year, 0) for year in out_e_years]
     s_qty = [Outsource_S_2025, Outsource_S_2026, Outsource_S_2027, 5232, 5784, 6168]
     outsource_s_time = 5
     # outsource_e_time already defined at the top	
@@ -1019,14 +1006,14 @@ if st.button("Start Simulation"):
     max_dates = task_df_pf12.groupby('Outsource Year')['S&E Lodge Date'].max().tolist()
 
     avg_list = []
-    for i in range(len(e_qty) - 1):
+    for i in range(len(e_foa_qty) - 1):
         try:
             avg_days = ((sdates_e[i] - min_dates[i]).days + (edates[i+1] - max_dates[i]).days) / 2
         except IndexError:
             avg_days = 0
-        avg_list.append(e_qty[i+1] * avg_days)
+        avg_list.append(e_foa_qty[i+1] * avg_days)
 
-    avg_E_age = sum(avg_list) / sum(e_qty) / 30.5 + outsource_e_time
+    avg_E_age = sum(avg_list) / sum(e_foa_qty) / 30.5 + outsource_e_time
 
 
     # --- Calculate average age of outsourced S ---
@@ -1040,27 +1027,27 @@ if st.button("Start Simulation"):
         avg_S_list.append((avg_days / 30.5) + outsource_s_time)
     print(avg_S_list)
 
-    # --- Merge all FOA counts and averages ---
-    fy_sums = excel_merged.groupby('FY')['time_c'].sum().to_dict()
-    fy_counts = excel_merged.groupby('FY')['time_c'].count().to_dict()
+    # --- pivot table on inhouse FOA counts and averages ---
+    inhouse_foa_sums = excel_merged.groupby('FY')['time_c'].sum().to_dict()
+    inhouse_foa_counts = excel_merged.groupby('FY')['time_c'].count().to_dict()
 
 
     # --- Updated total_sum_count using both age and time ---
     def total_sum_count(fy, s_qty, e_qty=0, s_age=0, e_age=0, s_time=0, e_time=0, year_mult=0):
-        projected_sum = projected_pph[year_mult] * 10
-        projected_count = projected_pph[year_mult]
+        projected_pph_totaltime = projected_pph[year_mult] * 10
+        projected_pph_count = projected_pph[year_mult]
 
         total_sum = (
-            fy_sums.get(fy, 0)
+            inhouse_foa_sums.get(fy, 0)
             + (s_qty * (s_age + s_time))
             + (e_qty * (e_age + e_time))
-            + projected_sum
+            + projected_pph_totaltime
         )
         total_count = (
-            fy_counts.get(fy, 0)
+            inhouse_foa_counts.get(fy, 0)
             + s_qty
             + e_qty
-            + projected_count
+            + projected_pph_count
         )
         return total_sum, total_count
 
@@ -1069,7 +1056,7 @@ if st.button("Start Simulation"):
     fy_list = ['FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']
     for i, fy in enumerate(fy_list):
         # Use e_qty directly
-        e = e_qty[i] if i < len(e_qty) else 0
+        e = e_foa_qty[i] if i < len(e_foa_qty) else 0
         foa_sum, foa_count = total_sum_count(
             fy,
             s_qty[i],
@@ -1086,16 +1073,29 @@ if st.button("Start Simulation"):
     years = ['FY23', 'FY24', 'FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30']
     values = [15.4, 19.8] + foa_values
 
-    # --- Plot ---
+    # Plot setup
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(years, values, marker='o')
-    ax.set_title('FOA')
-    ax.set_xlabel('Fiscal Year')
-    ax.set_ylabel('FOA (months)')
-    ax.grid(True)
 
+    # Plot the full line to keep it continuous
+    ax.plot(years, values, color='blue', linewidth=2)
+
+    # Overlay actual values (first 2 points)
+    ax.plot(years[:2], values[:2], marker='o', color='black', label='Actual', linewidth=2)
+
+    # Overlay projected values (from FY25 onward)
+    ax.plot(years[2:], values[2:], marker='o', color='blue', label='Projected', linewidth=2)
+
+    # Add data labels
     for i, v in enumerate(values):
-        ax.text(i, v + 0.2, f'{v:.1f}', ha='center')
+        ax.text(i, v + 0.3, f'{v:.1f}', ha='center', fontsize=10)
 
+    # Formatting
+    ax.set_title('FOA by Fiscal Year', fontsize=16)
+    ax.set_xlabel('Fiscal Year', fontsize=12)
+    ax.set_ylabel('FOA (months)', fontsize=12)
     ax.set_ylim(min(values) - 1, max(values) + 2)
+    ax.grid(True, linestyle='--', alpha=0.7)
+    ax.legend()  # Order is preserved based on plot calls
+
+    # Show in Streamlit
     st.pyplot(fig)
