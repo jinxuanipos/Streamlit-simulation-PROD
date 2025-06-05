@@ -8,9 +8,17 @@ from openpyxl import load_workbook
 import io
 import random
 
-
 # === STREAMLIT APP ===
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="My App", page_icon="📊", layout="wide", initial_sidebar_state="expanded")
+st.markdown("""
+    <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+    </style>
+    """, unsafe_allow_html=True)
+
+
 st.title("Running FOA Simulations")
 
 # --- First Row: Quadrants 1 and 2 ---
