@@ -384,7 +384,7 @@ if st.button("Start Simulation"):
     OSSearch = {year: pf11_quotas[year] * 0.97 * 0.5 for year in pf11_quotas}
  
     # Subtract deductions from all above 
-    st.write("Adjusted capacity breakdown per year:")
+    # st.write("Adjusted capacity breakdown per year:")
     for year in range(2025, 2031):
         total = totalcapacity[year]
         ipfast = IPFast[year]
