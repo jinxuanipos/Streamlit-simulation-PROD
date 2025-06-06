@@ -73,7 +73,7 @@ with col3:
 with col4:
     st.subheader("Exam Partner Collaboration")
     st.markdown("""
-    - Volumes are fixed at 1.5K|2K|3K|3K|3.5K from 2026-2030 for moderate-high patent growth; 2K|2.5K from 2026-2027 for low patent growth. 
+    - Volumes are fixed at 1.5K|2K|3K|3K|3.5K from 2026-2030 for moderate-high patent growth; 1.5|1.5K|1.5K from 2026-2028 for low patent growth. 
     - Age of exam files chosen fixed at 3 months.
     - Vary exam partner turnaround time.
     """)	
@@ -506,9 +506,9 @@ if st.button("Start Simulation"):
         "qcdefaultvol-12m": [0, 0, 333, 338, 388, 458],
         "qcdefaultvol-9m": [0, 0, 415, 326, 405, 468],
         "qcdefaultvol-7m": [0, 31, 448, 354, 417, 475],
-        "qccutvol-12m":    [0, 0, 443, 433, 175, 0],
-        "qccutvol-9m":     [0, 0, 545, 339, 131, 0],
-        "qccutvol-7m":     [0, 42, 423, 332, 161, 0]
+        "qccutvol-12m":    [0, 0, 333, 286, 229, 105],
+        "qccutvol-9m":     [0, 0, 389, 255, 198, 79],
+        "qccutvol-7m":     [0, 42, 311, 229, 219, 96]
     }
 
     # Define collaboration foa returned 
@@ -516,9 +516,9 @@ if st.button("Start Simulation"):
         "qcdefaultvol-12m": [0, 0, 1500, 2000, 3000, 3000],
         "qcdefaultvol-9m": [0, 0, 2000, 2250, 3000, 3125],
         "qcdefaultvol-7m": [0, 125, 2208, 2417, 3000, 3208],
-        "qccutvol-12m":    [0, 0, 2000, 2500, 0, 0],
-        "qccutvol-9m":     [0, 0, 2625, 1875, 0, 0],
-        "qccutvol-7m":     [0, 167, 2042, 2292, 0, 0]
+        "qccutvol-12m":    [0, 0, 1500, 1500, 1500, 0],
+        "qccutvol-9m":     [0, 0, 1875, 1500, 1125, 0],
+        "qccutvol-7m":     [0, 125, 1500, 1500, 1375, 0]
     }
     
     # Get the qc points and foa returned for out. e based on user selections
