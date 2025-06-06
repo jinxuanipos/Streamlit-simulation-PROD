@@ -830,7 +830,7 @@ if st.button("Start Simulation"):
         capacity_used = 0
 
         status_text.markdown(f"📄 Processing **{current_div}**...")
-        div_progress = st.progress(0, text=f"Scheduling tasks for {current_div}...")
+        # div_progress = st.progress(0, text=f"Scheduling tasks for {current_div}...")
         total_tasks = len(div_task_df)
 
         # Default in case no condition met
