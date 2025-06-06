@@ -933,12 +933,12 @@ if st.button("Start Simulation"):
     combined_buffer.seek(0)
 
     # Download button for the combined Excel file
-    st.download_button(
-        label="Download Complete FOA in house (.xlsx)",
-        data=combined_buffer,
-        file_name="FOA_output.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    # st.download_button(
+        # label="Download Complete FOA in house (.xlsx)",
+        # data=combined_buffer,
+        # file_name="FOA_output.xlsx",
+        # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    # )
 
 
     #results here
@@ -970,18 +970,18 @@ if st.button("Start Simulation"):
     #excel_merged.to_excel('Div1-4Combined.xlsx', index=False)
     
     # Convert DataFrame to in-memory Excel file (intermediate step for the following download)
-    excel_buffer = io.BytesIO()
-    with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
-      excel_merged.to_excel(writer, index=False)
-    excel_buffer.seek(0)  # Important: move to the beginning of the buffer
+    # excel_buffer = io.BytesIO()
+    # with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
+      # excel_merged.to_excel(writer, index=False)
+    # excel_buffer.seek(0)  # Important: move to the beginning of the buffer
 
     # Download button for the combined Excel file
-    st.download_button(
-      label="Download Excel Merged File (.xlsx)",
-      data=excel_buffer,
-      file_name="excel_merged.xlsx",
-      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    # st.download_button(
+      # label="Download Excel Merged File (.xlsx)",
+      # data=excel_buffer,
+      # file_name="excel_merged.xlsx",
+      # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    # )
 
 
     # --- Load outsource data ---
