@@ -904,7 +904,7 @@ if st.button("Start Simulation"):
             div_task_df.at[index, 'FOA'] = foa
             div_task_df.at[index, 'FY'] = fy
 
-            div_progress.progress((j + 1) / total_tasks, text=f"{current_div}: {j + 1}/{total_tasks} tasks scheduled")
+            # div_progress.progress((j + 1) / total_tasks, text=f"{current_div}: {j + 1}/{total_tasks} tasks scheduled")
 
        # Save results to an in-memory buffer instead of a file
         output_buffer = io.BytesIO()
@@ -918,7 +918,7 @@ if st.button("Start Simulation"):
         # Update main progress bar
         main_progress.progress((i + 1) / total_divs, text=f"Completed {current_div}")
 
-    div_progress.empty()
+    # div_progress.empty()
     status_text.markdown("✅ All divisions scheduled.")
     status_text.markdown("⏳ Calculating results and plotting final FOA graph...")
     main_progress.empty()
