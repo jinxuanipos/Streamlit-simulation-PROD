@@ -73,7 +73,7 @@ with col3:
 with col4:
     st.subheader("Exam Partner Collaboration")
     st.markdown("""
-    - Volumes are fixed at 1.5K|2K|3K|3K|3.5K from 2026-2030 for moderate-high patent growth; 1.5|1.5K|1.5K from 2026-2028 for low patent growth. 
+    - Volumes are fixed at 1.5K|2K|3K|3K|3.5K from 2026-2030 for moderate-high patent growth; 1.5K per year from 2026-2028 for low patent growth. 
     - Age of exam files chosen fixed at 3 months.
     - Vary exam partner turnaround time.
     """)	
