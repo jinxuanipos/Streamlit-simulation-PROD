@@ -296,9 +296,9 @@ if st.button("Start Simulation"):
 
     if Filingsgrowth == "Low growth":
         pf12_quotas = {
-            2026: 2000,
-            2027: 2500,
-            2028: 0,
+            2026: 1500,
+            2027: 1500,
+            2028: 1500,
             2029: 0,
             2030: 0
         }
